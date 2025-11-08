@@ -1,5 +1,5 @@
 <template>
-  <!-- 右侧：详情表单卡片 -->
+  <!-- 右侧：详情表单卡片 iu9n9un9un -->
   <el-card v-if="selectedNode" class="pastel-card dictionary-detail-card">
     <template #header>
       <div class="flex flex-col gap-2">
