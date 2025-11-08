@@ -68,42 +68,5 @@ const handleTabClick = (pane) => {
 </script>
 
 <style scoped>
-.secondary-tabs :deep(.el-tabs__header) {
-  @apply m-0 border-none;
-}
 
-.secondary-tabs :deep(.el-tabs__nav) {
-  @apply bg-transparent;
-}
-
-.secondary-tabs :deep(.el-tabs__item) {
-  @apply mx-2 rounded-full border border-transparent bg-white/80 px-6 py-2 text-sm font-medium text-slate-500 shadow-sm shadow-pink-100/40 transition-all duration-200;
-}
-
-.secondary-tabs :deep(.el-tabs__item:hover) {
-  @apply border-pink-200 bg-pink-50/70 text-pink-500 shadow-pink-100/60;
-}
-
-.secondary-tabs :deep(.is-active) {
-  @apply border-pink-300 bg-pink-100 text-pink-600 shadow-md shadow-pink-200/70;
-}
-
-.secondary-tabs :deep(.el-tabs__item.is-active::before) {
-  display: none;
-}
-
-.secondary-tabs :deep(.el-tabs__content) {
-  display: none;
-}
-
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.25s ease;
-}
-
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
 </style>
