@@ -56,7 +56,7 @@
       >
         <!-- 自定义节点内容插槽 -->
         <template #default="{ data }">
-          <div class="node-shell">
+          <div :class="['node-shell', `node-${data.type}`]">
             <!-- 左侧：节点信息 -->
             <div class="node-content">
               <!-- 类型指示器圆点 -->
@@ -226,9 +226,11 @@ defineExpose({
 <style scoped>
 .dictionary-tree-card {
   border: 1px solid rgba(15, 118, 110, 0.08);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 20px 50px rgba(15, 118, 110, 0.08);
   backdrop-filter: blur(10px);
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .btn-soft {
@@ -247,7 +249,11 @@ defineExpose({
   flex: 1;
   max-height: 540px;
   overflow-y: auto;
-  padding-right: 0.25rem;
+  padding: 0.8rem;
+  padding-right: 0.3rem;
+  background: rgba(249, 250, 251, 0.4);
+  border-radius: 10px;
+  margin: 0.2rem 0;
 }
 
 @media (min-width: 1280px) {
@@ -271,12 +277,14 @@ defineExpose({
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  border-radius: 18px;
-  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  margin: 12px 0;
   border: 1px solid rgba(14, 165, 233, 0.08);
   background: rgba(255, 255, 255, 0.92);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   backdrop-filter: blur(4px);
+  position: relative;
+  z-index: 1;
 }
 
 /* 左侧节点内容区域 */
@@ -284,7 +292,7 @@ defineExpose({
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.8rem;
   min-width: 0;
   overflow: hidden;
 }
@@ -293,12 +301,19 @@ defineExpose({
 .node-text {
   flex: 1;
   min-width: 0;
+  line-height: 1.2;
 }
 
 .node-text p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin: 0.1rem 0;
+  font-size: 13px;
+}
+
+.node-text p:last-child {
+  margin-bottom: 0;
 }
 
 /* 右侧操作按钮区域 */
@@ -306,22 +321,23 @@ defineExpose({
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .type-dot {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.2rem;
+  height: 1.2rem;
   border-radius: 999px;
   display: inline-flex;
   flex-shrink: 0;
   box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
+  margin-right: 0.3rem;
 }
 
 .node-shell:hover {
   border-color: rgba(14, 165, 233, 0.35);
   box-shadow: 0 12px 20px rgba(156, 163, 175, 0.2);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 /* 当前选中节点样式 */
@@ -329,19 +345,83 @@ defineExpose({
   background: rgba(14, 165, 233, 0.12);
   border-color: rgba(14, 165, 233, 0.45);
   box-shadow: 0 18px 28px rgba(14, 165, 233, 0.2);
+  transform: scale(1.02);
+}
+
+/* 不同节点类型的高度样式 */
+.node-school {
+  min-height: 60px;
+  padding: 0.8rem 1.2rem;
+}
+
+.node-grade {
+  min-height: 52px;
+  padding: 0.6rem 1.2rem;
+}
+
+.node-class {
+  min-height: 48px;
+  padding: 0.5rem 1.2rem;
+}
+
+.node-subject {
+  min-height: 44px;
+  padding: 0.4rem 1.2rem;
+}
+
+/* 树节点子元素 */
+:deep(.el-tree-node__children) {
+  padding-left: 20px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+/* 树节点内容样式 */
+:deep(.el-tree-node__content) {
+  min-height: 0;
+  padding: 0;
+  height: 75px;
+}
+
+/* 树节点样式 */
+:deep(.el-tree-node) {
+  line-height: 1.5;
+}
+
+/* 树节点展开图标样式 */
+:deep(.el-tree-node__expand-icon) {
+  margin-right: 12px;
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+}
+
+/* 树节点缩进样式 */
+:deep(.el-tree-node__indent) {
+  width: 16px;
 }
 
 .node-actions .btn-link {
   color: #0ea5e9 !important;
   font-weight: 600;
   box-shadow: none !important;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(14, 165, 233, 0.05);
 }
 
 .node-actions .btn-link:hover {
   color: #0284c7 !important;
+  background: rgba(14, 165, 233, 0.1);
 }
 
 .node-actions .btn-link.danger {
   color: #f43f5e !important;
+  background: rgba(244, 63, 94, 0.05);
+}
+
+.node-actions .btn-link.danger:hover {
+  background: rgba(244, 63, 94, 0.1);
 }
 </style>
