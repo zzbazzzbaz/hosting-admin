@@ -37,8 +37,7 @@ export const navigationMenus = [
     label: '字典',
     icon: Collection,
     children: [
-      { key: 'dictionary-schools', label: '学校字典', path: '/dictionary/schools' },
-      { key: 'dictionary-subjects', label: '科目字典', path: '/dictionary/subjects' },
+      { key: 'dictionary-schools', label: '字典总览', path: '/dictionary/schools' },
     ],
   },
 ]
@@ -85,12 +84,6 @@ const layoutChildren = [
     name: 'SchoolDictionary',
     component: () => import('@/views/dictionary/SchoolDictionary.vue'),
     meta: { title: '学校字典', menuKey: 'dictionary-schools', parentKey: 'dictionary' },
-  },
-  {
-    path: 'dictionary/subjects',
-    name: 'SubjectDictionary',
-    component: () => import('@/views/dictionary/SubjectDictionary.vue'),
-    meta: { title: '科目字典', menuKey: 'dictionary-subjects', parentKey: 'dictionary' },
   },
 ]
 
