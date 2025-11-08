@@ -1,32 +1,5 @@
 <template>
   <section class="dictionary-screen space-y-6">
-    <el-card class="pastel-card dictionary-hero">
-      <div class="flex flex-wrap items-start justify-between gap-6">
-        <div class="space-y-3">
-          <el-breadcrumb separator="›" class="text-xs text-slate-400">
-            <el-breadcrumb-item>字典</el-breadcrumb-item>
-            <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
-          </el-breadcrumb>
-          <div class="flex flex-wrap items-center gap-3">
-            <h2 class="text-3xl font-semibold text-slate-900">{{ title }}</h2>
-            <span class="caption-chip">{{ caption }}</span>
-          </div>
-          <p class="text-sm text-slate-500">{{ description }}</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-3">
-          <el-button type="primary" @click="handleAdd('school')">新增学校</el-button>
-          <el-button class="btn-soft" @click="handleRefresh">刷新</el-button>
-        </div>
-      </div>
-      <div class="stat-grid mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <article v-for="stat in summaryStats" :key="stat.key" class="stat-card">
-          <p class="stat-key">{{ stat.key }}</p>
-          <p class="stat-value">{{ stat.value }}</p>
-          <p class="stat-label">{{ stat.label }}</p>
-        </article>
-      </div>
-    </el-card>
-
     <div class="grid gap-6 xl:grid-cols-[1.4fr_2fr]">
       <el-card class="pastel-card dictionary-tree-card">
         <template #header>
@@ -53,46 +26,44 @@
             </el-icon>
           </template>
         </el-input>
-        <el-tree
-          ref="treeRef"
-          :data="dictionaryTree"
-          node-key="id"
-          :props="treeProps"
-          :filter-node-method="filterNode"
-          default-expand-all
-          highlight-current
-          :expand-on-click-node="false"
-          @node-click="handleNodeClick"
-        >
-          <template #default="{ data }">
-            <div class="node-shell flex flex-1 items-center justify-between gap-3">
-              <div class="flex items-center gap-3">
-                <div :class="['flex h-9 w-9 items-center justify-center rounded-full text-white', typeMeta[data.type].chipClass]">
-                  <el-icon :size="18">
-                    <component :is="typeMeta[data.type].icon" />
-                  </el-icon>
+        <div class="tree-wrapper">
+          <el-tree
+            ref="treeRef"
+            :data="dictionaryTree"
+            node-key="id"
+            :props="treeProps"
+            :filter-node-method="filterNode"
+            default-expand-all
+            highlight-current
+            :expand-on-click-node="false"
+            @node-click="handleNodeClick"
+          >
+            <template #default="{ data }">
+              <div class="node-shell flex flex-1 items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <span :class="['type-dot', typeMeta[data.type].chipClass]" />
+                  <div>
+                    <p class="text-sm font-medium text-slate-900">{{ data.label }}</p>
+                    <p class="text-xs text-slate-400">{{ typeMeta[data.type].label }}</p>
+                  </div>
                 </div>
-                <div>
-                  <p class="text-sm font-medium text-slate-900">{{ data.label }}</p>
-                  <p class="text-xs text-slate-400">{{ typeMeta[data.type].label }}</p>
+                <div class="node-actions flex items-center gap-2 text-xs">
+                  <el-button
+                    v-if="nextTypeMap[data.type]"
+                    size="small"
+                    text
+                    class="btn-link"
+                    @click.stop="handleAdd(nextTypeMap[data.type], data)"
+                  >
+                    新增
+                  </el-button>
+                  <el-button size="small" text class="btn-link" @click.stop="handleEdit(data)">编辑</el-button>
+                  <el-button size="small" text class="btn-link danger" @click.stop="handleRemove(data)">删除</el-button>
                 </div>
               </div>
-              <div class="node-actions flex items-center gap-2 text-xs">
-                <el-button
-                  v-if="nextTypeMap[data.type]"
-                  size="small"
-                  text
-                  class="btn-link"
-                  @click.stop="handleAdd(nextTypeMap[data.type], data)"
-                >
-                  新增
-                </el-button>
-                <el-button size="small" text class="btn-link" @click.stop="handleEdit(data)">编辑</el-button>
-                <el-button size="small" text class="btn-link danger" @click.stop="handleRemove(data)">删除</el-button>
-              </div>
-            </div>
-          </template>
-        </el-tree>
+            </template>
+          </el-tree>
+        </div>
       </el-card>
 
       <el-card v-if="selectedNode" class="pastel-card dictionary-detail-card">
@@ -179,7 +150,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { CollectionTag, Notebook, OfficeBuilding, Reading, Search } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 
 defineProps({
   title: {
@@ -308,28 +279,24 @@ const treeProps = {
 const typeMeta = {
   school: {
     label: '学校',
-    icon: OfficeBuilding,
     chipClass: 'bg-emerald-500',
     badgeClass: 'bg-emerald-50 text-emerald-600 border border-emerald-100',
     tagType: 'success',
   },
   grade: {
     label: '年级',
-    icon: CollectionTag,
     chipClass: 'bg-cyan-500',
     badgeClass: 'bg-cyan-50 text-cyan-600 border border-cyan-100',
     tagType: 'info',
   },
   class: {
     label: '班级',
-    icon: Notebook,
     chipClass: 'bg-blue-500',
     badgeClass: 'bg-blue-50 text-blue-600 border border-blue-100',
     tagType: '',
   },
   subject: {
     label: '科目',
-    icon: Reading,
     chipClass: 'bg-indigo-500',
     badgeClass: 'bg-indigo-50 text-indigo-600 border border-indigo-100',
     tagType: 'warning',
@@ -495,13 +462,39 @@ onMounted(() => {
 
 <style scoped>
 .dictionary-screen {
-  padding-bottom: 1rem;
+  padding-bottom: 2rem;
+  position: relative;
+  isolation: isolate;
+}
+
+.dictionary-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 12% 18%, rgba(16, 185, 129, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.18), transparent 50%),
+    linear-gradient(180deg, #ebfff7 0%, #eef7ff 60%, #f8fbff 100%);
 }
 
 .dictionary-hero {
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  background: linear-gradient(135deg, rgba(236, 253, 245, 0.95), rgba(240, 249, 255, 0.95));
-  box-shadow: 0 25px 80px rgba(14, 165, 233, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(224, 255, 244, 0.95), rgba(239, 246, 255, 0.98));
+  box-shadow: 0 30px 90px rgba(14, 165, 233, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.dictionary-hero::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  bottom: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 65%);
 }
 
 .caption-chip {
@@ -531,10 +524,17 @@ onMounted(() => {
 
 .stat-card {
   border-radius: 1.75rem;
-  border: 1px solid rgba(15, 23, 42, 0.05);
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(59, 130, 246, 0.08);
+  background: rgba(255, 255, 255, 0.94);
   padding: 1.5rem;
-  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.05);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
 }
 
 .stat-key {
@@ -562,12 +562,49 @@ onMounted(() => {
 .dictionary-tree-card,
 .dictionary-detail-card {
   border: 1px solid rgba(15, 118, 110, 0.08);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 50px rgba(15, 118, 110, 0.08);
+  backdrop-filter: blur(10px);
 }
 
 .tree-search :deep(.el-input__wrapper) {
   border-color: rgba(15, 118, 110, 0.15);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.05);
+}
+
+:deep(.dictionary-tree-card .el-card__body) {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+}
+
+.tree-wrapper {
+  flex: 1;
+  max-height: 540px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+@media (min-width: 1280px) {
+  .tree-wrapper {
+    max-height: 620px;
+  }
+}
+
+.tree-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tree-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.4);
+}
+
+:deep(.el-tree) {
+  --el-tree-node-hover-bg-color: transparent;
+  --el-tree-text-color: #0f172a;
 }
 
 :deep(.el-tree-node__content) {
@@ -576,13 +613,29 @@ onMounted(() => {
   border-radius: 18px;
 }
 
+:deep(.el-tree-node__children) {
+  border-left: 1px dashed rgba(14, 165, 233, 0.15);
+  margin-left: 1rem;
+  padding-left: 0.75rem;
+}
+
 .node-shell {
   width: 100%;
   border-radius: 18px;
   padding: 0.65rem 0.8rem;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(14, 165, 233, 0.08);
+  background: rgba(255, 255, 255, 0.92);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.type-dot {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  display: inline-flex;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
 }
 
 .node-shell:hover {
@@ -598,17 +651,17 @@ onMounted(() => {
 }
 
 .node-actions .btn-link {
-  color: #f472b6 !important;
+  color: #0ea5e9 !important;
   font-weight: 600;
   box-shadow: none !important;
 }
 
 .node-actions .btn-link:hover {
-  color: #ec4899 !important;
+  color: #0284c7 !important;
 }
 
 .node-actions .btn-link.danger {
-  color: #fb7185 !important;
+  color: #f43f5e !important;
 }
 
 .node-type-chip {
@@ -632,19 +685,26 @@ onMounted(() => {
 
 .info-card {
   min-height: 120px;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.1);
+  backdrop-filter: blur(6px);
 }
 
 .child-panel {
   box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.1);
+  backdrop-filter: blur(6px);
 }
 
 .child-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-color: rgba(148, 163, 184, 0.35);
 }
 
 .child-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 35px rgba(148, 163, 184, 0.25);
+}
+
+.child-card .node-type-chip {
+  padding: 0.2rem 0.65rem;
 }
 </style>
