@@ -24,18 +24,18 @@
         <!-- 学校表单 -->
         <template v-if="selectedNode.type === 'school'">
           <el-form-item label="学校名称">
-            <el-input v-model="formData.label" placeholder="请输入学校名称" />
+            <el-input v-model="formData.label" placeholder="请输入学校名称"/>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注信息" />
+            <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注信息"/>
           </el-form-item>
           <el-form-item label="年级列表">
             <div class="readonly-list">
               <el-tag
-                v-for="child in selectedNode.children"
-                :key="child.id"
-                class="mr-2 mb-2"
-                type="info"
+                  v-for="child in selectedNode.children"
+                  :key="child.id"
+                  class="mr-2 mb-2"
+                  type="info"
               >
                 {{ child.label }}
               </el-tag>
@@ -47,18 +47,18 @@
         <!-- 年级表单 -->
         <template v-else-if="selectedNode.type === 'grade'">
           <el-form-item label="年级名称">
-            <el-input v-model="formData.label" placeholder="请输入年级名称" />
+            <el-input v-model="formData.label" placeholder="请输入年级名称"/>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注信息" />
+            <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注信息"/>
           </el-form-item>
           <el-form-item label="班级列表">
             <div class="readonly-list">
               <el-tag
-                v-for="child in selectedNode.children"
-                :key="child.id"
-                class="mr-2 mb-2"
-                type="info"
+                  v-for="child in selectedNode.children"
+                  :key="child.id"
+                  class="mr-2 mb-2"
+                  type="info"
               >
                 {{ child.label }}
               </el-tag>
@@ -70,10 +70,10 @@
         <!-- 班级表单 -->
         <template v-else-if="selectedNode.type === 'class'">
           <el-form-item label="班级名称">
-            <el-input v-model="formData.label" placeholder="请输入班级名称" />
+            <el-input v-model="formData.label" placeholder="请输入班级名称"/>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注信息" />
+            <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注信息"/>
           </el-form-item>
           <el-form-item label="学生人数">
             <el-input v-model="formData.students" disabled>
@@ -90,7 +90,7 @@
     </div>
   </el-card>
   <el-card v-else class="pastel-card dictionary-detail-card flex items-center justify-center">
-    <el-empty description="请选择左侧字典节点" />
+    <el-empty description="请选择左侧字典节点"/>
   </el-card>
 </template>
 
@@ -99,7 +99,7 @@
  * 详情表单卡片组件
  * 用于展示和编辑节点详细信息
  */
-import { watch } from 'vue'
+import {watch} from 'vue'
 
 // 组件属性定义
 const props = defineProps({
@@ -137,6 +137,9 @@ const handleSave = () => {
 </script>
 
 <style scoped>
+/**
+ * 详情卡片容器样式
+ */
 .dictionary-detail-card {
   border: 1px solid rgba(15, 118, 110, 0.08);
   background: rgba(255, 255, 255, 0.9);
@@ -144,6 +147,9 @@ const handleSave = () => {
   backdrop-filter: blur(10px);
 }
 
+/**
+ * 节点类型标签样式
+ */
 .node-type-chip {
   display: inline-flex;
   align-items: center;
@@ -154,7 +160,9 @@ const handleSave = () => {
   font-weight: 600;
 }
 
-/* 只读列表样式 */
+/**
+ * 只读列表容器样式
+ */
 .readonly-list {
   min-height: 40px;
   display: flex;

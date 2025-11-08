@@ -66,7 +66,3 @@ const handleTabClick = (pane) => {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
