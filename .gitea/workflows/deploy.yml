@@ -12,9 +12,9 @@ on:
 # 定义工作流任务
 jobs:
   build-and-deploy:
-    # 运行环境：使用 ubuntu-22.04 Docker 容器
-    # node:20-bullseye 镜像已包含 Node.js 20 和 Git
-    runs-on: ubuntu-22.04
+    # 运行环境：使用自托管运行器（主机模式）
+    # 直接在宿主机上运行，需要预先安装 Node.js 20+ 和 Git
+    runs-on: self-hosted
 
     steps:
       # 步骤1：检出代码（使用 Gitea Actions 官方 checkout action）
