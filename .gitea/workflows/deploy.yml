@@ -20,8 +20,16 @@ jobs:
       # 步骤1：检出代码（使用原生 git 命令，不依赖 action）
       - name: 检出代码
         run: |
-          git clone --depth=1 --branch=${{ github.ref_name }} ${{ github.server_url }}/${{ github.repository }} .
+          # 配置 git 使用 token 认证
+          git config --global credential.helper store
+          echo "https://oauth2:${GITEA_TOKEN}@gitea.chatgqt.top:3000" > ~/.git-credentials
+
+          # 克隆代码
+          git clone --depth=1 --branch=${{ github.ref_name }} \
+            https://gitea.chatgqt.top:3000/${{ github.repository }} .
           echo "✅ 代码检出完成"
+        env:
+          GITEA_TOKEN: ${{ github.token }}
 
       # 步骤2：验证 Node.js 环境
       - name: 验证 Node.js 环境
