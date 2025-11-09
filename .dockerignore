@@ -1,0 +1,39 @@
+# 依赖目录（会在 Docker 构建时重新安装）
+node_modules
+
+# 构建产物目录
+dist
+
+# Git 版本控制
+.git
+.gitignore
+.gitea
+.github
+
+# IDE 配置
+.idea
+.vscode
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.swp
+*.swo
+
+# 文档和说明
+README.md
+AGENTS.md
+docs/
+_chat/

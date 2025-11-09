@@ -1,0 +1,86 @@
+name: Build and Push Docker Image
+
+# 触发条件
+on:
+  push:
+    branches:
+      - main
+      - dev
+  # 允许手动触发
+  workflow_dispatch:
+
+env:
+  # Docker 镜像名称
+  IMAGE_NAME: hosting-admin
+  # GitHub Container Registry
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    name: 构建和推送 Docker 镜像
+    runs-on: ubuntu-latest
+
+    # 设置权限（如果使用 GitHub Container Registry）
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 1. 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 2. 生成时间戳
+      - name: 生成时间戳
+        id: timestamp
+        run: echo "value=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
+      # 3. 设置 Docker Buildx（用于多平台构建）
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 4. 登录到 GitHub Container Registry
+      # 使用 GitHub 内置的 GITHUB_TOKEN，无需额外配置 Secrets
+      - name: 登录到 GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 5. 提取 Docker 镜像元数据（标签和标记）
+      - name: 提取 Docker 元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # GitHub Container Registry 镜像格式: ghcr.io/owner/image-name
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # main 分支打上 latest 标签
+            type=raw,value=latest,enable={{is_default_branch}}
+            # 所有分支使用 {分支名}-{时间戳} 格式
+            type=ref,event=branch,suffix=-${{ steps.timestamp.outputs.value }}
+
+      # 6. 构建并推送 Docker 镜像
+      - name: 构建并推送 Docker 镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          # 推送到镜像仓库
+          push: true
+          # 使用上一步生成的标签
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # 启用缓存以加速构建
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # 支持多平台构建
+          platforms: linux/amd64,linux/arm64
+
+      # 7. 输出镜像信息
+      - name: 输出镜像信息
+        run: |
+          echo "镜像已成功构建并推送！"
+          echo "镜像标签："
+          echo "${{ steps.meta.outputs.tags }}"
