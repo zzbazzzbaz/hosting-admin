@@ -12,26 +12,24 @@ on:
 # 定义工作流任务
 jobs:
   build-and-deploy:
-    # 运行环境
-    # 使用 ubuntu-22.04 容器环境
-    # 注意：首次运行需要下载 Docker 镜像，建议配置 Docker 国内镜像源
-    # 如果不想下载镜像，可改为 self-hosted 模式
+    # 运行环境：使用 ubuntu-22.04 Docker 容器
+    # node:20-bullseye 镜像已包含 Node.js 20 和 Git
     runs-on: ubuntu-22.04
 
     steps:
-      # 步骤1：检出代码
+      # 步骤1：检出代码（使用原生 git 命令，不依赖 action）
       - name: 检出代码
-        uses: https://gitea.com/actions/checkout@v4
-        with:
-          fetch-depth: 0  # 获取完整的 git 历史记录
+        run: |
+          git clone --depth=1 --branch=${{ github.ref_name }} ${{ github.server_url }}/${{ github.repository }} .
+          echo "✅ 代码检出完成"
 
-      # 步骤2：设置 Node.js 环境（使用国内镜像加速）
-      - name: 设置 Node.js 环境
-        uses: https://gitea.com/actions/setup-node@v4
-        with:
-          node-version: '20'  # 使用 Node.js 20 版本
-          # 使用淘宝 NPM 镜像加速
-          registry-url: 'https://registry.npmmirror.com'
+      # 步骤2：验证 Node.js 环境
+      - name: 验证 Node.js 环境
+        run: |
+          echo "Node.js 版本："
+          node --version
+          echo "npm 版本："
+          npm --version
 
       # 步骤3：配置 npm 使用国内镜像源
       - name: 配置 NPM 国内镜像源
