@@ -64,7 +64,7 @@ jobs:
           wget -q https://gosspublic.alicdn.com/ossutil/1.7.18/ossutil-v1.7.18-linux-amd64.zip
           unzip -q ossutil-v1.7.18-linux-amd64.zip
           chmod +x ossutil-v1.7.18-linux-amd64/ossutil
-          sudo mv ossutil-v1.7.18-linux-amd64/ossutil /usr/local/bin/ossutil
+          mv ossutil-v1.7.18-linux-amd64/ossutil /usr/local/bin/ossutil
           ossutil --version
 
       # 步骤7：配置 OSS 认证
