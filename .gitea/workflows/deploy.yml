@@ -1,0 +1,122 @@
+# Gitea Actions CI/CD 部署配置
+# 自动构建 Vue 项目并部署到阿里云 OSS
+name: Deploy to Aliyun OSS
+
+# 触发条件：推送到 dev 分支时自动执行
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+# 定义工作流任务
+jobs:
+  build-and-deploy:
+    # 运行环境
+    # 使用 ubuntu-22.04 容器环境
+    # 注意：首次运行需要下载 Docker 镜像，建议配置 Docker 国内镜像源
+    # 如果不想下载镜像，可改为 self-hosted 模式
+    runs-on: ubuntu-22.04
+
+    steps:
+      # 步骤1：检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整的 git 历史记录
+
+      # 步骤2：设置 Node.js 环境（使用国内镜像加速）
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # 使用 Node.js 20 版本
+          # 使用淘宝 NPM 镜像加速
+          registry-url: 'https://registry.npmmirror.com'
+
+      # 步骤3：配置 npm 使用国内镜像源
+      - name: 配置 NPM 国内镜像源
+        run: |
+          npm config set registry https://registry.npmmirror.com
+          npm config set disturl https://npmmirror.com/dist
+          npm config set electron_mirror https://npmmirror.com/mirrors/electron/
+          npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
+          npm config set phantomjs_cdnurl https://npmmirror.com/mirrors/phantomjs/
+          npm config set chromedriver_cdnurl https://npmmirror.com/mirrors/chromedriver/
+          npm config set operadriver_cdnurl https://npmmirror.com/mirrors/operadriver/
+          npm config set fse_binary_host_mirror https://npmmirror.com/mirrors/fsevents
+
+      # 步骤4：安装项目依赖
+      - name: 安装依赖
+        run: npm ci --prefer-offline --no-audit
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096  # 增加内存限制，避免构建时内存溢出
+
+      # 步骤5：构建项目
+      - name: 构建项目
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      # 步骤6：安装阿里云 OSS 工具（ossutil）
+      - name: 安装 OSS 工具
+        run: |
+          # 下载 ossutil（使用阿里云国内链接）
+          wget -q https://gosspublic.alicdn.com/ossutil/1.7.18/ossutil-v1.7.18-linux-amd64.zip
+          unzip -q ossutil-v1.7.18-linux-amd64.zip
+          chmod +x ossutil-v1.7.18-linux-amd64/ossutil
+          sudo mv ossutil-v1.7.18-linux-amd64/ossutil /usr/local/bin/ossutil
+          ossutil --version
+
+      # 步骤7：配置 OSS 认证
+      - name: 配置 OSS 认证
+        run: |
+          # 配置 ossutil，使用 Gitea Secrets 中的凭证
+          ossutil config -e ${{ secrets.OSS_ENDPOINT }} \
+                        -i ${{ secrets.OSS_ACCESS_KEY_ID }} \
+                        -k ${{ secrets.OSS_ACCESS_KEY_SECRET }} \
+                        -L CH \
+                        --output-dir=/tmp/ossutil_output
+        env:
+          # OSS 端点（例如：oss-cn-hangzhou.aliyuncs.com）
+          OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
+          # OSS AccessKey ID
+          OSS_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          # OSS AccessKey Secret
+          OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+
+      # 步骤8：上传到 OSS
+      - name: 部署到 OSS
+        run: |
+          # 清空 OSS 目标目录（可选，如果不需要清空可以删除这一行）
+          # ossutil rm oss://${{ secrets.OSS_BUCKET }}/${{ secrets.OSS_PATH }} -r -f || true
+
+          # 上传构建产物到 OSS
+          # -r: 递归上传目录
+          # -f: 强制覆盖
+          # -u: 只上传修改过的文件
+          # --meta: 设置文件元数据
+          ossutil cp -r -f -u \
+            ./dist/ \
+            oss://${{ secrets.OSS_BUCKET }}/${{ secrets.OSS_PATH }}/ \
+            --meta Cache-Control:public,max-age=31536000
+
+          echo "✅ 部署成功！"
+          echo "📦 构建产物已上传到: oss://${{ secrets.OSS_BUCKET }}/${{ secrets.OSS_PATH }}/"
+        env:
+          # OSS 存储桶名称
+          OSS_BUCKET: ${{ secrets.OSS_BUCKET }}
+          # OSS 上传路径（例如：web/hosting-admin）
+          OSS_PATH: ${{ secrets.OSS_PATH }}
+
+      # 步骤9：部署结果通知（可选）
+      - name: 部署结果
+        if: success()
+        run: |
+          echo "=========================================="
+          echo "🎉 部署成功！"
+          echo "📝 提交信息: ${{ github.event.head_commit.message }}"
+          echo "👤 提交者: ${{ github.event.head_commit.author.name }}"
+          echo "🌿 分支: ${{ github.ref_name }}"
+          echo "🔗 提交哈希: ${{ github.sha }}"
+          echo "=========================================="
