@@ -87,26 +87,21 @@ jobs:
       # 步骤8：上传到 OSS
       - name: 部署到 OSS
         run: |
-          # 清空 OSS 目标目录（可选，如果不需要清空可以删除这一行）
-          # ossutil rm oss://${{ secrets.OSS_BUCKET }}/${{ secrets.OSS_PATH }} -r -f || true
-
-          # 上传构建产物到 OSS
+          # 上传构建产物到 OSS（直接上传到 bucket 根目录）
           # -r: 递归上传目录
           # -f: 强制覆盖
           # -u: 只上传修改过的文件
           # --meta: 设置文件元数据
           ossutil cp -r -f -u \
             ./dist/ \
-            oss://${{ secrets.OSS_BUCKET }}/${{ secrets.OSS_PATH }}/ \
+            oss://${{ secrets.OSS_BUCKET }}/ \
             --meta Cache-Control:public,max-age=31536000
 
           echo "✅ 部署成功！"
-          echo "📦 构建产物已上传到: oss://${{ secrets.OSS_BUCKET }}/${{ secrets.OSS_PATH }}/"
+          echo "📦 构建产物已上传到: oss://${{ secrets.OSS_BUCKET }}/"
         env:
           # OSS 存储桶名称
           OSS_BUCKET: ${{ secrets.OSS_BUCKET }}
-          # OSS 上传路径（例如：web/hosting-admin）
-          OSS_PATH: ${{ secrets.OSS_PATH }}
 
       # 步骤9：部署结果通知（可选）
       - name: 部署结果
