@@ -20,13 +20,13 @@ jobs:
       # 步骤1：检出代码（使用原生 git 命令，不依赖 action）
       - name: 检出代码
         run: |
-          # 配置 git 使用 token 认证
+          # 配置 git 使用 token 认证（使用 HTTP 协议，不是 HTTPS）
           git config --global credential.helper store
-          echo "https://oauth2:${GITEA_TOKEN}@gitea.chatgqt.top:3000" > ~/.git-credentials
+          echo "http://oauth2:${GITEA_TOKEN}@gitea.chatgqt.top:3000" > ~/.git-credentials
 
-          # 克隆代码
+          # 克隆代码（使用 HTTP 协议）
           git clone --depth=1 --branch=${{ github.ref_name }} \
-            https://gitea.chatgqt.top:3000/${{ github.repository }} .
+            http://gitea.chatgqt.top:3000/${{ github.repository }} .
           echo "✅ 代码检出完成"
         env:
           GITEA_TOKEN: ${{ github.token }}
