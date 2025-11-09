@@ -14,14 +14,14 @@ jobs:
   build-and-deploy:
     # 运行环境：使用自托管运行器（主机模式）
     # 直接在宿主机上运行，需要预先安装 Node.js 20+ 和 Git
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
 
     steps:
-      # 步骤1：检出代码（使用 Gitea Actions 官方 checkout action）
+      # 步骤1：检出代码（使用原生 git 命令，不依赖 action）
       - name: 检出代码
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+        run: |
+          git clone --depth=1 --branch=${{ github.ref_name }} ${{ github.server_url }}/${{ github.repository }} .
+          echo "✅ 代码检出完成"
 
       # 步骤2：验证 Node.js 环境
       - name: 验证 Node.js 环境
