@@ -30,8 +30,8 @@
 </template>
 
 <script setup>
-import AppHeader from '@/components/layout/AppHeader.vue'
-import AppSidebar from '@/components/layout/AppSidebar.vue'
+import AppHeader from '@/layouts/components/layout/AppHeader.vue'
+import AppSidebar from '@/layouts/components/layout/AppSidebar.vue'
 import { navigationMenus } from '@/router'
 import logoUrl from '@/assets/logo.png'
 

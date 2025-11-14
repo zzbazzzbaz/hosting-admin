@@ -47,8 +47,8 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { SwitchButton } from '@element-plus/icons-vue'
 
-import { navigationMenus } from '@/router'
-import { useUserStore } from '@/stores/user'
+import { navigationMenus } from '@/router/index.js'
+import { useUserStore } from '@/stores/user.js'
 
 const route = useRoute()
 const router = useRouter()
