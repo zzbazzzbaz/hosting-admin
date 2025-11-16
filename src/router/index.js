@@ -2,6 +2,8 @@ import { Collection, House, Notebook, Timer, UserFilled } from '@element-plus/ic
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import { useAuthStore } from '@/stores/auth'
+import { checkToken } from '@/api/auth'
 
 export const navigationMenus = [
   {
@@ -109,6 +111,70 @@ const router = createRouter({
       meta: { title: '未找到页面' },
     },
   ],
+})
+
+/**
+ * 全局路由守卫 - 验证用户登录状态和 token 有效性
+ * 在每次路由跳转前执行以下检查：
+ * 1. 检查目标路由是否为登录页，如果是则直接放行
+ * 2. 检查是否存在 token，如果不存在则重定向到登录页
+ * 3. 调用 checkToken API 验证 token 是否过期
+ * 4. 如果 token 过期则清除本地 token 并重定向到登录页
+ * 5. 验证通过则放行
+ */
+router.beforeEach(async (to, from, next) => {
+  console.log('路由守卫触发 - 从:', from.path, '到:', to.path)
+  const authStore = useAuthStore()
+
+  // 如果访问的是登录页，直接放行
+  if (to.path === '/login') {
+    console.log('目标是登录页，直接放行')
+    next()
+    return
+  }
+
+  // 检查是否存在 token
+  console.log('检查 token 是否存在')
+  console.log('authStore.token:', authStore.token)
+  console.log('isAuthenticated:', authStore.isAuthenticated())
+
+  if (!authStore.isAuthenticated()) {
+    // token 不存在，重定向到登录页
+    console.log('Token 不存在，重定向到登录页')
+    next('/login')
+    return
+  }
+
+  try {
+    // 调用接口验证 token 是否过期
+    console.log('开始验证 token 有效性:', authStore.token)
+    const response = await checkToken(authStore.token)
+    console.log('Token 验证响应:', response)
+    console.log('response 类型:', typeof response)
+    console.log('response.data:', response.data)
+
+    // 判断 token 是否有效
+    // 检查 response 本身是否为 true，或者 response.data 是否为 true
+    const isValid = response === true || response.data === true
+    console.log('Token 是否有效:', isValid)
+
+    if (isValid) {
+      // token 有效，放行
+      console.log('Token 有效，放行到:', to.path)
+      next()
+    } else {
+      // token 已过期，清除本地存储并重定向到登录页
+      console.log('Token 已过期，清除并重定向到登录页')
+      authStore.clearToken()
+      next('/login')
+    }
+  } catch (error) {
+    // 接口调用失败，清除 token 并重定向到登录页
+    console.error('Token 验证失败:', error)
+    console.error('错误详情:', error.response || error.message)
+    authStore.clearToken()
+    next('/login')
+  }
 })
 
 router.afterEach((to) => {

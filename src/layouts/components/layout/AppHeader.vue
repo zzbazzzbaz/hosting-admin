@@ -44,15 +44,19 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { SwitchButton } from '@element-plus/icons-vue'
 
 import { navigationMenus } from '@/router/index.js'
 import { useUserStore } from '@/stores/user.js'
+import { useAuthStore } from '@/stores/auth.js'
+import { logOut } from '@/api/auth'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const { profile } = userStore
 
@@ -100,7 +104,47 @@ const breadcrumbs = computed(() => {
 
 const currentTitle = computed(() => breadcrumbs.value.at(-1)?.label ?? route.meta?.title ?? '主页')
 
-const handleLogout = () => {
-  router.push('/login')
+/**
+ * 处理退出登录
+ * 1. 弹出确认对话框
+ * 2. 调用退出登录接口
+ * 3. 清除本地 token 和用户信息
+ * 4. 跳转到登录页
+ */
+const handleLogout = async () => {
+  try {
+    // 弹出确认对话框
+    await ElMessageBox.confirm(
+      '确定要退出登录吗？',
+      '退出确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+
+    // 调用退出登录接口
+    await logOut()
+
+    // 清除本地 token 和用户信息
+    authStore.clearToken()
+    userStore.clearProfile()
+
+    // 显示退出成功消息
+    ElMessage.success('已退出登录')
+
+    // 跳转到登录页
+    router.push('/login')
+  } catch (error) {
+    // 用户取消或接口调用失败
+    if (error !== 'cancel') {
+      console.error('退出登录失败:', error)
+      // 即使接口失败，也清除本地数据
+      authStore.clearToken()
+      userStore.clearProfile()
+      router.push('/login')
+    }
+  }
 }
 </script>

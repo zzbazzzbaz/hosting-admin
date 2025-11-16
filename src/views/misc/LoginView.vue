@@ -38,7 +38,6 @@
           <div>
             <p class="text-sm font-semibold uppercase tracking-[0.4em] text-emerald-500">Login</p>
             <h2 class="mt-2 text-2xl font-semibold text-slate-900">欢迎来到托管后台管理</h2>
-            <p class="text-sm text-slate-500">使用机构账号登录即可实时掌控安全与资源态势</p>
           </div>
           <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 shadow-inner shadow-emerald-100">
             <img :src="logoUrl" alt="logo" class="h-10 w-10 object-contain" />
@@ -85,13 +84,6 @@
             <p v-if="showFieldError('password')" class="error-tip">{{ errors.password }}</p>
           </el-form-item>
 
-          <div class="flex items-center justify-between text-sm text-slate-500">
-            <el-checkbox v-model="form.remember">保持登录状态</el-checkbox>
-            <button type="button" class="font-medium text-emerald-500 transition hover:text-emerald-600">
-              忘记密码？
-            </button>
-          </div>
-
           <el-button
             class="brand-btn"
             :loading="isLoading"
@@ -121,8 +113,13 @@ import { ElMessage } from 'element-plus'
 import { CircleCheck, Lock, UserFilled } from '@element-plus/icons-vue'
 
 import logoUrl from '@/assets/logo.png'
+import { login } from '@/api/auth'
+import { useAuthStore } from '@/stores/auth'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+const authStore = useAuthStore()
+const userStore = useUserStore()
 
 const featureList = [
   { title: 'XXXXXX', desc: 'XXXXXXXXXXXXXXXXXXXXXXXX' },
@@ -133,7 +130,6 @@ const featureList = [
 const form = reactive({
   account: '',
   password: '',
-  remember: true,
 })
 
 const errors = reactive({
@@ -191,16 +187,69 @@ watch(
 )
 
 const handleLogin = async () => {
+  // 验证所有字段
   Object.keys(errors).forEach((key) => {
     touchField(key)
     validateField(key)
   })
-  isLoading.value = true
-  await new Promise((resolve) => setTimeout(resolve, 1200))
 
-  ElMessage.success('欢迎回来')
-  isLoading.value = false
-  router.push('/dashboard')
+  // 如果有验证错误，不提交表单
+  if (Object.values(errors).some(error => error)) {
+    return
+  }
+
+  isLoading.value = true
+
+  try {
+    // 调用登录接口
+    const response = await login({
+      phone: form.account,
+      password: form.password,
+    })
+
+    // 调试：打印完整的响应数据
+    console.log('登录响应完整数据:', response)
+    console.log('响应 code:', response.code)
+    console.log('响应 data:', response.data)
+
+    // 检查登录是否成功
+    if (response.code === 200 && response.data) {
+      const token = response.data.Authorization
+      console.log('获取到的 token:', token)
+
+      // 保存 token 到 store 和 localStorage
+      authStore.setToken(token)
+      console.log('Token 已保存到 store')
+      console.log('localStorage 中的 token:', localStorage.getItem('token'))
+
+      // 保存用户信息到 store
+      userStore.updateProfile({
+        userId: response.data.userId,
+        userName: response.data.userName,
+        phone: response.data.phone
+      })
+      console.log('用户信息已保存:', userStore.profile)
+
+      // 显示成功消息
+      ElMessage.success(response.message || '登录成功，欢迎回来！')
+
+      // 跳转到主页
+      console.log('准备跳转到 /dashboard')
+      await router.push('/dashboard')
+      console.log('跳转完成')
+    } else {
+      // 登录失败
+      console.log('登录失败，响应 code:', response.code)
+      ElMessage.error(response.message || '登录失败，请检查账号密码')
+    }
+  } catch (error) {
+    // 网络错误或其他异常
+    console.error('登录异常:', error)
+    console.error('错误详情:', error.response || error.message)
+    ElMessage.error('登录失败，请稍后重试')
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
