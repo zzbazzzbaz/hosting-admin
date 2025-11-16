@@ -104,7 +104,7 @@ export const checkToken = async (token) => {
 export const logOut = () => {
     return request({
         url: '/front/user/logOut',
-        method: 'get'
+        method: 'post'
     })
 }
 
