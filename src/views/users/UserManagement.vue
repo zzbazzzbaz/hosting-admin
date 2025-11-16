@@ -77,7 +77,7 @@
         </el-table-column>
         <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link @click="handleDetail(row)">详情</el-button>
+            <el-button type="primary" link @click="handleEdit(row)">修改</el-button>
             <el-button type="warning" link @click="handleToggle(row)">
               {{ row.status === 0 ? '禁用' : '启用' }}
             </el-button>
@@ -138,13 +138,68 @@
         </div>
       </template>
     </el-dialog>
+
+    <!-- 修改用户弹窗 -->
+    <el-dialog
+      v-model="editDialogVisible"
+      title="修改用户"
+      width="500px"
+      :close-on-click-modal="false"
+      @close="handleEditDialogClose"
+    >
+      <el-form
+        ref="editFormRef"
+        :model="editFormData"
+        :rules="editFormRules"
+        label-width="90px"
+      >
+        <el-form-item label="用户名" prop="userName">
+          <el-input
+            v-model="editFormData.userName"
+            placeholder="请输入用户名"
+            maxlength="50"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input
+            v-model="editFormData.phone"
+            placeholder="请输入手机号"
+            maxlength="11"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="editFormData.status">
+            <el-radio :label="0">启用</el-radio>
+            <el-radio :label="1">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="所在校区" prop="dicName">
+          <el-input
+            v-model="editFormData.dicName"
+            placeholder="请输入所在校区"
+            maxlength="100"
+            clearable
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <el-button @click="editDialogVisible = false">取消</el-button>
+          <el-button type="primary" :loading="editSubmitLoading" @click="handleEditSubmit">
+            确定
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { addUser, getUserPageList } from '@/api/curd/user'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { addUser, getUserPageList, updateUser, deleteUser, resetPassword } from '@/api/curd/user'
 
 // ========== 筛选条件 ==========
 const filters = reactive({
@@ -166,6 +221,27 @@ const formData = reactive({
 
 // 表单验证规则
 const formRules = {
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
+  ],
+}
+
+// ========== 修改用户弹窗 ==========
+const editDialogVisible = ref(false)
+const editSubmitLoading = ref(false)
+const editFormRef = ref(null)
+
+const editFormData = reactive({
+  id: null,
+  userName: '',
+  phone: '',
+  status: 0,
+  dicName: '',
+})
+
+// 修改表单验证规则
+const editFormRules = {
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
@@ -307,20 +383,173 @@ const handleSubmit = async () => {
   }
 }
 
-const handleDetail = (row) => {
-  ElMessage.info(`进入用户详情：${row.userName || row.phone}`)
+/**
+ * 打开修改用户弹窗
+ */
+const handleEdit = (row) => {
+  // 填充表单数据
+  Object.assign(editFormData, {
+    id: row.id,
+    userName: row.userName || '',
+    phone: row.phone || '',
+    status: row.status ?? 0,
+    dicName: row.dicName || '',
+  })
+  editDialogVisible.value = true
 }
 
-const handleToggle = (row) => {
-  ElMessage.warning(`${row.status === 0 ? '禁用' : '启用'}用户 ${row.userName || row.phone}`)
+/**
+ * 关闭修改弹窗时重置表单
+ */
+const handleEditDialogClose = () => {
+  editFormRef.value?.resetFields()
+  Object.assign(editFormData, {
+    id: null,
+    userName: '',
+    phone: '',
+    status: 0,
+    dicName: '',
+  })
 }
 
-const handleDelete = (row) => {
-  ElMessage.error(`删除用户 ${row.userName || row.phone}（软删除）`)
+/**
+ * 提交修改用户表单
+ */
+const handleEditSubmit = async () => {
+  try {
+    // 表单验证
+    await editFormRef.value?.validate()
+
+    editSubmitLoading.value = true
+
+    // 调用修改用户 API
+    const result = await updateUser({
+      id: editFormData.id,
+      userName: editFormData.userName || undefined,
+      phone: editFormData.phone,
+      status: editFormData.status,
+      dicName: editFormData.dicName || undefined,
+    })
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || '修改用户成功')
+      editDialogVisible.value = false
+      // 刷新用户列表
+      fetchUserList()
+    } else {
+      ElMessage.error(result.message || '修改用户失败')
+    }
+  } catch (error) {
+    console.error('修改用户失败:', error)
+    if (error !== false) {
+      ElMessage.error('修改用户失败，请稍后重试')
+    }
+  } finally {
+    editSubmitLoading.value = false
+  }
 }
 
-const handleResetPassword = (row) => {
-  ElMessage.success(`重置用户 ${row.userName || row.phone} 的密码`)
+/**
+ * 切换用户启用/禁用状态
+ */
+const handleToggle = async (row) => {
+  try {
+    const newStatus = row.status === 0 ? 1 : 0
+    const actionText = newStatus === 1 ? '禁用' : '启用'
+
+    await ElMessageBox.confirm(
+      `确定要${actionText}用户 ${row.userName || row.phone} 吗？`,
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+
+    const result = await updateUser({
+      id: row.id,
+      userName: row.userName,
+      phone: row.phone,
+      status: newStatus,
+      dicName: row.dicName,
+    })
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || `${actionText}成功`)
+      // 刷新列表
+      fetchUserList()
+    } else {
+      ElMessage.error(result.message || `${actionText}失败`)
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('切换用户状态失败:', error)
+      ElMessage.error('操作失败，请稍后重试')
+    }
+  }
+}
+
+/**
+ * 删除用户
+ */
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除用户 ${row.userName || row.phone} 吗？删除后数据将无法恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'error',
+      }
+    )
+
+    const result = await deleteUser(row.id)
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || '删除成功')
+      // 刷新列表
+      fetchUserList()
+    } else {
+      ElMessage.error(result.message || '删除失败')
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('删除用户失败:', error)
+      ElMessage.error('删除失败，请稍后重试')
+    }
+  }
+}
+
+/**
+ * 重置用户密码
+ */
+const handleResetPassword = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要重置用户 ${row.userName || row.phone} 的密码吗？新密码将设置为手机号后六位。`,
+      '重置密码确认',
+      {
+        confirmButtonText: '确定重置',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+
+    const result = await resetPassword(row.id)
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || '密码重置成功，新密码为手机号后六位')
+    } else {
+      ElMessage.error(result.message || '密码重置失败')
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('重置密码失败:', error)
+      ElMessage.error('重置密码失败，请稍后重试')
+    }
+  }
 }
 
 const handleExcelCommand = (command) => {
