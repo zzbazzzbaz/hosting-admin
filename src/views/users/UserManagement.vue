@@ -80,19 +80,80 @@
         />
       </div>
     </el-card>
+
+    <!-- 新增用户弹窗 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="新增用户"
+      width="500px"
+      :close-on-click-modal="false"
+      @close="handleDialogClose"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="90px"
+      >
+        <el-form-item label="手机号" prop="phone">
+          <el-input
+            v-model="formData.phone"
+            placeholder="请输入手机号"
+            maxlength="11"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="用户名" prop="userName">
+          <el-input
+            v-model="formData.userName"
+            placeholder="请输入用户名（可选）"
+            maxlength="50"
+            clearable
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
+            确定
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { addUser } from '@/api/curd/user'
 
+// ========== 筛选条件 ==========
 const filters = reactive({
   username: '',
   mobile: '',
   role: '',
   status: '',
 })
+
+// ========== 新增用户弹窗 ==========
+const dialogVisible = ref(false)
+const submitLoading = ref(false)
+const formRef = ref(null)
+
+const formData = reactive({
+  phone: '',
+  userName: '',
+})
+
+// 表单验证规则
+const formRules = {
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
+  ],
+}
 
 const pagination = reactive({
   current: 1,
@@ -158,7 +219,52 @@ const handleReset = () => {
 }
 
 const handleCreate = () => {
-  ElMessage.success('打开新增用户弹窗（待接入 API）')
+  dialogVisible.value = true
+}
+
+/**
+ * 关闭弹窗时重置表单
+ */
+const handleDialogClose = () => {
+  formRef.value?.resetFields()
+  Object.assign(formData, {
+    phone: '',
+    userName: '',
+  })
+}
+
+/**
+ * 提交新增用户表单
+ */
+const handleSubmit = async () => {
+  try {
+    // 表单验证
+    await formRef.value?.validate()
+
+    submitLoading.value = true
+
+    // 调用新增用户 API
+    const result = await addUser({
+      phone: formData.phone,
+      userName: formData.userName || undefined,
+    })
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || '新增用户成功')
+      dialogVisible.value = false
+      // 刷新用户列表（这里可以添加实际的列表刷新逻辑）
+      handleQuery()
+    } else {
+      ElMessage.error(result.message || '新增用户失败')
+    }
+  } catch (error) {
+    console.error('新增用户失败:', error)
+    if (error !== false) {
+      ElMessage.error('新增用户失败，请稍后重试')
+    }
+  } finally {
+    submitLoading.value = false
+  }
 }
 
 const handleDetail = (row) => {
