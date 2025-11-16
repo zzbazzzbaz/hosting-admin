@@ -9,14 +9,14 @@ import request from '@/utils/request'
  * @param {Object} data - 登录信息
  * @param {string} data.phone - 手机号
  * @param {string} data.password - 密码
- * @param {string} data.type - 登录类型（1：普通用户登录）
+ * @param {number} data.type - 登录类型（1：普通用户登录）
  * @returns {Promise} 返回用户信息和 token
  * @example
  * 请求示例：
  * login({
  *   phone: "15688463267",
- *   password: "123456",
- *   type: "1"
+ *   password: "463267",
+ *   type: 1
  * })
  *
  * 响应示例（成功）：
@@ -24,10 +24,9 @@ import request from '@/utils/request'
  *   code: 200,
  *   message: "登陆成功",
  *   data: {
- *     Authorization: "1_75deea35-7b20-420b-b87e-193388cc7fff",
+ *     userId: 1,
  *     phone: "15688463267",
- *     userName: "admin",
- *     userId: 1
+ *     token: "1_e27b6871-e106-435d-8a38-30823b166569"
  *   }
  * }
  *
@@ -42,7 +41,11 @@ export const login = (data) => {
     return request({
         url: '/front/user/login',
         method: 'post',
-        params: {phone: data.phone, password: data.password, type: 1},  // 后端要求 POST 使用 params
+        data: {
+            phone: data.phone,
+            password: data.password,
+            type: data.type || 1  // 使用传入的 type，默认为 1
+        }
     })
 }
 

@@ -214,7 +214,7 @@ const handleLogin = async () => {
 
     // 检查登录是否成功
     if (response.code === 200 && response.data) {
-      const token = response.data.Authorization
+      const token = response.data.token  // 从响应中获取 token
       console.log('获取到的 token:', token)
 
       // 保存 token 到 store 和 localStorage
@@ -225,7 +225,7 @@ const handleLogin = async () => {
       // 保存用户信息到 store
       userStore.updateProfile({
         userId: response.data.userId,
-        userName: response.data.userName,
+        userName: '',  // 修改：后端不再返回 userName，设置为空字符串
         phone: response.data.phone
       })
       console.log('用户信息已保存:', userStore.profile)
