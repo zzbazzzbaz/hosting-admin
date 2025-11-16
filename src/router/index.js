@@ -146,16 +146,14 @@ router.beforeEach(async (to, from, next) => {
   }
 
   try {
-    // 调用接口验证 token 是否过期
+    // 调用接口验证 token 是否过期（返回标准化后的数据）
     console.log('开始验证 token 有效性:', authStore.token)
     const response = await checkToken(authStore.token)
-    console.log('Token 验证响应:', response)
-    console.log('response 类型:', typeof response)
+    console.log('Token 验证响应（标准化后）:', response)
     console.log('response.data:', response.data)
 
-    // 判断 token 是否有效
-    // 检查 response 本身是否为 true，或者 response.data 是否为 true
-    const isValid = response === true || response.data === true
+    // 🔹 使用标准化后的字段名 isValid（不再依赖后端具体返回格式）
+    const isValid = response.data?.isValid === true
     console.log('Token 是否有效:', isValid)
 
     if (isValid) {

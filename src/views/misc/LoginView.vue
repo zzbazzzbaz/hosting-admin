@@ -201,42 +201,29 @@ const handleLogin = async () => {
   isLoading.value = true
 
   try {
-    // 调用登录接口
     const response = await login({
       phone: form.account,
       password: form.password,
     })
 
-    // 调试：打印完整的响应数据
-    console.log('登录响应完整数据:', response)
-    console.log('响应 code:', response.code)
-    console.log('响应 data:', response.data)
-
     // 检查登录是否成功
     if (response.code === 200 && response.data) {
-      const token = response.data.token  // 从响应中获取 token
-      console.log('获取到的 token:', token)
+      const token = response.data.authToken
 
       // 保存 token 到 store 和 localStorage
       authStore.setToken(token)
-      console.log('Token 已保存到 store')
-      console.log('localStorage 中的 token:', localStorage.getItem('token'))
 
       // 保存用户信息到 store
       userStore.updateProfile({
         userId: response.data.userId,
-        userName: '',  // 修改：后端不再返回 userName，设置为空字符串
         phone: response.data.phone
       })
-      console.log('用户信息已保存:', userStore.profile)
 
       // 显示成功消息
       ElMessage.success(response.message || '登录成功，欢迎回来！')
 
       // 跳转到主页
-      console.log('准备跳转到 /dashboard')
       await router.push('/dashboard')
-      console.log('跳转完成')
     } else {
       // 登录失败
       console.log('登录失败，响应 code:', response.code)

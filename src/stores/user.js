@@ -15,9 +15,7 @@ export const useUserStore = defineStore('user', () => {
    */
   const updateProfile = (userInfo) => {
     if (userInfo.userId) profile.userId = userInfo.userId
-    if (userInfo.userName) profile.name = userInfo.userName
     if (userInfo.phone) profile.mobile = userInfo.phone
-    if (userInfo.role) profile.role = userInfo.role
   }
 
   /**
