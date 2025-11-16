@@ -52,17 +52,34 @@
     </el-card>
 
     <el-card class="pastel-card">
-      <el-table :data="displayedUsers" stripe>
-        <el-table-column type="index" label="序号" width="70" />
-        <el-table-column prop="username" label="用户名" min-width="160" />
-        <el-table-column prop="mobile" label="手机号" min-width="140" />
-        <el-table-column prop="roleLabel" label="角色" min-width="120" />
-        <el-table-column prop="statusLabel" label="状态" min-width="100" />
+      <el-table :data="userList" :loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column label="用户名" min-width="140">
+          <template #default="{ row }">
+            {{ row.userName || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" label="手机号" min-width="140" />
+        <el-table-column label="状态" min-width="100">
+          <template #default="{ row }">
+            {{ getStatusLabel(row.status) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="dicName" label="所在校区" min-width="160">
+          <template #default="{ row }">
+            {{ row.dicName || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" min-width="180">
+          <template #default="{ row }">
+            {{ formatDateTime(row.createTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link @click="handleDetail(row)">详情</el-button>
             <el-button type="warning" link @click="handleToggle(row)">
-              {{ row.status === 'enabled' ? '禁用' : '启用' }}
+              {{ row.status === 0 ? '禁用' : '启用' }}
             </el-button>
             <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
             <el-button type="info" link @click="handleResetPassword(row)">重置密码</el-button>
@@ -125,9 +142,9 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addUser } from '@/api/curd/user'
+import { addUser, getUserPageList } from '@/api/curd/user'
 
 // ========== 筛选条件 ==========
 const filters = reactive({
@@ -155,56 +172,79 @@ const formRules = {
   ],
 }
 
+// ========== 用户列表数据 ==========
 const pagination = reactive({
   current: 1,
-  size: 20,
+  size: 10,
 })
 
-const roleOptions = [
-  { value: 'admin', label: '管理员' },
-  { value: 'teacher', label: '教师' },
-  { value: 'parent', label: '家长' },
-]
+const userList = ref([])
+const totalUsers = ref(0)
+const loading = ref(false)
 
-const statusOptions = [
-  { value: 'enabled', label: '启用' },
-  { value: 'disabled', label: '禁用' },
-]
+/**
+ * 状态映射：将后端状态值转换为显示文本
+ */
+const getStatusLabel = (status) => {
+  return status === 0 ? '启用' : '禁用'
+}
 
-const createMockUsers = (count = 160) => {
-  return Array.from({ length: count }, (_, index) => {
-    const id = index + 1
-    const role = roleOptions[index % roleOptions.length]
-    const status = statusOptions[index % statusOptions.length]
-    const mobileNumber = (13800000000 + index).toString()
-    const mobile = `${mobileNumber.slice(0, 3)}${mobileNumber.slice(3)}`
-    const suffix = (1000 + (index % 9000)).toString()
-
-    return {
-      id: `${id}`,
-      username: `default_${mobile.slice(-4)}_${suffix}`,
-      mobile,
-      role: role.value,
-      roleLabel: role.label,
-      status: status.value,
-      statusLabel: status.label,
-    }
+/**
+ * 格式化日期时间
+ */
+const formatDateTime = (dateStr) => {
+  if (!dateStr) return '-'
+  const date = new Date(dateStr)
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   })
 }
 
-const userList = ref(createMockUsers(160))
+/**
+ * 获取用户列表
+ */
+const fetchUserList = async () => {
+  try {
+    loading.value = true
+    const result = await getUserPageList({
+      page: pagination.current,
+      pageSize: pagination.size,
+    })
 
-const totalUsers = computed(() => userList.value.length)
+    if (result.code === 200 || result.code === 0) {
+      userList.value = result.data.list || []
+      totalUsers.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取用户列表失败')
+    }
+  } catch (error) {
+    console.error('获取用户列表失败:', error)
+    ElMessage.error('获取用户列表失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
+}
 
-const displayedUsers = computed(() => {
-  const start = (pagination.current - 1) * pagination.size
-  const end = start + pagination.size
-  return userList.value.slice(start, end)
+// ========== 分页监听 ==========
+watch([() => pagination.current, () => pagination.size], () => {
+  fetchUserList()
+}, { deep: true })
+
+// ========== 页面初始化 ==========
+onMounted(() => {
+  fetchUserList()
 })
 
+// ========== 查询和重置 ==========
 const handleQuery = () => {
   pagination.current = 1
-  ElMessage.info('已根据筛选条件刷新用户列表（示例数据）')
+  fetchUserList()
 }
 
 const handleReset = () => {
@@ -215,7 +255,7 @@ const handleReset = () => {
     status: '',
   })
   pagination.current = 1
-  handleQuery()
+  fetchUserList()
 }
 
 const handleCreate = () => {
@@ -252,8 +292,8 @@ const handleSubmit = async () => {
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || '新增用户成功')
       dialogVisible.value = false
-      // 刷新用户列表（这里可以添加实际的列表刷新逻辑）
-      handleQuery()
+      // 刷新用户列表
+      fetchUserList()
     } else {
       ElMessage.error(result.message || '新增用户失败')
     }
@@ -268,19 +308,19 @@ const handleSubmit = async () => {
 }
 
 const handleDetail = (row) => {
-  ElMessage.info(`进入用户详情：${row.username}`)
+  ElMessage.info(`进入用户详情：${row.userName || row.phone}`)
 }
 
 const handleToggle = (row) => {
-  ElMessage.warning(`${row.status === 'enabled' ? '禁用' : '启用'}用户 ${row.username}`)
+  ElMessage.warning(`${row.status === 0 ? '禁用' : '启用'}用户 ${row.userName || row.phone}`)
 }
 
 const handleDelete = (row) => {
-  ElMessage.error(`删除用户 ${row.username}（软删除）`)
+  ElMessage.error(`删除用户 ${row.userName || row.phone}（软删除）`)
 }
 
 const handleResetPassword = (row) => {
-  ElMessage.success(`重置用户 ${row.username} 的密码`)
+  ElMessage.success(`重置用户 ${row.userName || row.phone} 的密码`)
 }
 
 const handleExcelCommand = (command) => {
