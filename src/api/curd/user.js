@@ -227,9 +227,6 @@ export const getUserPageList = async (params = {}) => {
  *   campusId: 29
  * })
  *
- * 实际提交参数：
- * PUT /admin/user/update/1?userName=张三&phone=15688463267&campus.id=29
- *
  * 响应示例（成功）：
  * {
  *   code: 200,
@@ -262,10 +259,8 @@ export const updateUser = async (data) => {
  * 请求示例 1（单个 ID）：
  * deleteUser(1)
  *
- * 请求示例 2（多个 ID - 数组）：
- * deleteUser([1, 5, 8, 9, 10])
  *
- * 请求示例 3（多个 ID - 字符串）：
+ * 请求示例 2（多个 ID - 字符串）：
  * deleteUser("1,5,8,9,10")
  *
  * 响应示例（成功）：
