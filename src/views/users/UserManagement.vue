@@ -10,7 +10,7 @@
               <el-button type="success">
                 Excel 操作
                 <el-icon class="ml-1">
-                  <ArrowDown />
+                  <ArrowDown/>
                 </el-icon>
               </el-button>
               <template #dropdown>
@@ -26,16 +26,19 @@
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <el-form-item label="用户名">
-          <el-input v-model="filters.username" placeholder="支持模糊查询" clearable />
+          <el-input v-model="filters.userName" placeholder="支持模糊查询" clearable/>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="filters.mobile" placeholder="支持模糊查询" clearable />
+          <el-input v-model="filters.phone" placeholder="支持模糊查询" clearable/>
         </el-form-item>
-        <el-form-item label="角色">
-          <el-select v-model="filters.role" placeholder="全部角色" clearable>
-            <el-option label="管理员" value="admin" />
-            <el-option label="教师" value="teacher" />
-            <el-option label="家长" value="parent" />
+        <el-form-item label="所在校区">
+          <el-select v-model="filters.campusId" placeholder="全部校区" clearable filterable>
+            <el-option
+                v-for="campus in campusList"
+                :key="campus.id"
+                :label="campus.dicName"
+                :value="campus.id"
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -47,13 +50,13 @@
 
     <el-card class="pastel-card">
       <el-table :data="userList" :loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column prop="id" label="ID" width="80"/>
         <el-table-column label="用户名" min-width="140">
           <template #default="{ row }">
             {{ row.userName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="phone" label="手机号" min-width="140" />
+        <el-table-column prop="phone" label="手机号" min-width="140"/>
         <el-table-column prop="dicName" label="所在校区" min-width="160">
           <template #default="{ row }">
             {{ row.dicName || '-' }}
@@ -75,43 +78,43 @@
       <div class="mt-4 flex items-center justify-between">
         <div class="text-xs text-slate-500">共 {{ totalUsers }} 条记录</div>
         <el-pagination
-          v-model:current-page="pagination.current"
-          v-model:page-size="pagination.size"
-          :page-sizes="[10, 20, 50, 100]"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="totalUsers"
+            v-model:current-page="pagination.current"
+            v-model:page-size="pagination.size"
+            :page-sizes="[10, 20, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalUsers"
         />
       </div>
     </el-card>
 
     <!-- 新增用户弹窗 -->
     <el-dialog
-      v-model="dialogVisible"
-      title="新增用户"
-      width="500px"
-      :close-on-click-modal="false"
-      @close="handleDialogClose"
+        v-model="dialogVisible"
+        title="新增用户"
+        width="500px"
+        :close-on-click-modal="false"
+        @close="handleDialogClose"
     >
       <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="90px"
+          ref="formRef"
+          :model="formData"
+          :rules="formRules"
+          label-width="90px"
       >
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="formData.phone"
-            placeholder="请输入手机号"
-            maxlength="11"
-            clearable
+              v-model="formData.phone"
+              placeholder="请输入手机号"
+              maxlength="11"
+              clearable
           />
         </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input
-            v-model="formData.userName"
-            placeholder="请输入用户名（可选）"
-            maxlength="50"
-            clearable
+              v-model="formData.userName"
+              placeholder="请输入用户名（可选）"
+              maxlength="50"
+              clearable
           />
         </el-form-item>
       </el-form>
@@ -127,46 +130,46 @@
 
     <!-- 修改用户弹窗 -->
     <el-dialog
-      v-model="editDialogVisible"
-      title="修改用户"
-      width="500px"
-      :close-on-click-modal="false"
-      @close="handleEditDialogClose"
+        v-model="editDialogVisible"
+        title="修改用户"
+        width="500px"
+        :close-on-click-modal="false"
+        @close="handleEditDialogClose"
     >
       <el-form
-        ref="editFormRef"
-        :model="editFormData"
-        :rules="editFormRules"
-        label-width="90px"
+          ref="editFormRef"
+          :model="editFormData"
+          :rules="editFormRules"
+          label-width="90px"
       >
         <el-form-item label="用户名" prop="userName">
           <el-input
-            v-model="editFormData.userName"
-            placeholder="请输入用户名"
-            maxlength="50"
-            clearable
+              v-model="editFormData.userName"
+              placeholder="请输入用户名"
+              maxlength="50"
+              clearable
           />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="editFormData.phone"
-            placeholder="请输入手机号"
-            maxlength="11"
-            clearable
+              v-model="editFormData.phone"
+              placeholder="请输入手机号"
+              maxlength="11"
+              clearable
           />
         </el-form-item>
         <el-form-item label="所在校区" prop="campusId">
           <el-select
-            v-model="editFormData.campusId"
-            placeholder="请选择所在校区"
-            clearable
-            filterable
+              v-model="editFormData.campusId"
+              placeholder="请选择所在校区"
+              clearable
+              filterable
           >
             <el-option
-              v-for="campus in campusList"
-              :key="campus.id"
-              :label="campus.dicName"
-              :value="campus.id"
+                v-for="campus in campusList"
+                :key="campus.id"
+                :label="campus.dicName"
+                :value="campus.id"
             />
           </el-select>
         </el-form-item>
@@ -184,15 +187,16 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { addUser, getUserPageList, updateUser, deleteUser, resetPassword, getCampusList } from '@/api/curd/user'
+import {reactive, ref, watch, onMounted} from 'vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {addUser, getUserPageList, updateUser, deleteUser, resetPassword} from '@/api/curd/user'
+import {getCampusList} from '@/api/curd/dictionary.js'
 
 // ========== 筛选条件 ==========
 const filters = reactive({
-  username: '',
-  mobile: '',
-  role: '',
+  userName: '',   // 用户名（对应后端 userName）
+  phone: '',      // 手机号（对应后端 phone）
+  campusId: null, // 校区 ID（对应后端 campus.id）
 })
 
 // ========== 新增用户弹窗 ==========
@@ -208,8 +212,8 @@ const formData = reactive({
 // 表单验证规则
 const formRules = {
   phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
+    {required: true, message: '请输入手机号', trigger: 'blur'},
+    {pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur'},
   ],
 }
 
@@ -228,8 +232,8 @@ const editFormData = reactive({
 // 修改表单验证规则
 const editFormRules = {
   phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
+    {required: true, message: '请输入手机号', trigger: 'blur'},
+    {pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur'},
   ],
 }
 
@@ -293,6 +297,9 @@ const fetchUserList = async () => {
     const result = await getUserPageList({
       page: pagination.current,
       pageSize: pagination.size,
+      userName: filters.userName || undefined,   // 用户名筛选
+      phone: filters.phone || undefined,         // 手机号筛选
+      campusId: filters.campusId || undefined,   // 校区筛选
     })
 
     if (result.code === 200 || result.code === 0) {
@@ -312,7 +319,7 @@ const fetchUserList = async () => {
 // ========== 分页监听 ==========
 watch([() => pagination.current, () => pagination.size], () => {
   fetchUserList()
-}, { deep: true })
+}, {deep: true})
 
 // ========== 页面初始化 ==========
 onMounted(() => {
@@ -328,9 +335,9 @@ const handleQuery = () => {
 
 const handleReset = () => {
   Object.assign(filters, {
-    username: '',
-    mobile: '',
-    role: '',
+    userName: '',
+    phone: '',
+    campusId: null,
   })
   pagination.current = 1
   fetchUserList()
@@ -454,13 +461,13 @@ const handleEditSubmit = async () => {
 const handleDelete = async (row) => {
   try {
     await ElMessageBox.confirm(
-      `确定要删除用户 ${row.userName || row.phone} 吗？删除后数据将无法恢复！`,
-      '删除确认',
-      {
-        confirmButtonText: '确定删除',
-        cancelButtonText: '取消',
-        type: 'error',
-      }
+        `确定要删除用户 ${row.userName || row.phone} 吗？删除后数据将无法恢复！`,
+        '删除确认',
+        {
+          confirmButtonText: '确定删除',
+          cancelButtonText: '取消',
+          type: 'error',
+        }
     )
 
     const result = await deleteUser(row.id)
@@ -486,13 +493,13 @@ const handleDelete = async (row) => {
 const handleResetPassword = async (row) => {
   try {
     await ElMessageBox.confirm(
-      `确定要重置用户 ${row.userName || row.phone} 的密码吗？新密码将设置为手机号后六位。`,
-      '重置密码确认',
-      {
-        confirmButtonText: '确定重置',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
+        `确定要重置用户 ${row.userName || row.phone} 的密码吗？新密码将设置为手机号后六位。`,
+        '重置密码确认',
+        {
+          confirmButtonText: '确定重置',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
     )
 
     const result = await resetPassword(row.id)

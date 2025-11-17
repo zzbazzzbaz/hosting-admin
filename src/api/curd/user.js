@@ -97,25 +97,6 @@ function adaptResetPasswordResponse(response) {
     }
 }
 
-/**
- * 标准化校区列表响应数据
- * 扁平化处理：将 rows 转换为 list
- */
-function adaptCampusListResponse(response) {
-    if (!response || !response.data) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-        data: {
-            total: response.data.total,
-            pages: response.data.pages,
-            list: response.data.rows || []
-        }
-    }
-}
 
 // ========== API 接口 ==========
 
@@ -158,17 +139,26 @@ export const addUser = async (data) => {
 /**
  * 获取用户分页列表
  *
- * @param {Object} params - 分页参数
+ * @param {Object} params - 分页和筛选参数
  * @param {number} params.page - 当前页码（默认 1）
  * @param {number} params.pageSize - 每页条数（默认 10）
+ * @param {string} [params.userName] - 用户名（模糊查询）
+ * @param {string} [params.phone] - 手机号（模糊查询）
+ * @param {number} [params.campusId] - 校区 ID（精确查询）
  * @returns {Promise} 返回用户分页列表
  *
  * @example
  * 请求示例：
  * getUserPageList({
  *   page: 1,
- *   pageSize: 10
+ *   pageSize: 10,
+ *   userName: "张三",
+ *   phone: "156",
+ *   campusId: 29
  * })
+ *
+ * 实际请求：
+ * GET /admin/user/pageList?page=1&pageSize=10&userName=张三&phone=156&campus.id=29
  *
  * 响应示例（成功）：
  * {
@@ -192,19 +182,30 @@ export const addUser = async (data) => {
  * }
  */
 export const getUserPageList = async (params = {}) => {
+    const requestParams = {
+        page: params.page || 1,
+        pageSize: params.pageSize || 10
+    }
+
+    // 添加可选的筛选参数
+    if (params.userName) {
+        requestParams.userName = params.userName
+    }
+    if (params.phone) {
+        requestParams.phone = params.phone
+    }
+    if (params.campusId) {
+        requestParams['campus.id'] = params.campusId  // 后端期望的参数名
+    }
+
     const response = await request({
         url: '/admin/user/pageList',
         method: 'get',
-        params: {
-            page: params.page || 1,
-            pageSize: params.pageSize || 10
-        }
+        params: requestParams
     })
 
     // 🔹 使用适配器转换数据格式
-    const ans = adaptPageListResponse(response)
-    console.log("gqt++++", ans)
-    return ans
+    return adaptPageListResponse(response)
 }
 
 /**
@@ -322,52 +323,3 @@ export const resetPassword = async (userId) => {
     return adaptResetPasswordResponse(response)
 }
 
-/**
- * 获取校区列表
- *
- * @param {Object} params - 分页参数
- * @param {number} params.page - 当前页码（默认 1）
- * @param {number} params.pageSize - 每页条数（默认 100）
- * @returns {Promise} 返回校区列表
- *
- * @example
- * 请求示例：
- * getCampusList({
- *   page: 1,
- *   pageSize: 100
- * })
- *
- * 响应示例（成功）：
- * {
- *   code: 200,
- *   message: "成功获取数据",
- *   data: {
- *     total: 2,
- *     pages: 1,
- *     list: [
- *       {
- *         id: 30,
- *         type: 4,
- *         dicName: "托管校区2"
- *       },
- *       {
- *         id: 29,
- *         type: 4,
- *         dicName: "托管校区1"
- *       }
- *     ]
- *   }
- * }
- */
-export const getCampusList = async (params = {}) => {
-    const response = await request({
-        url: `/admin/dictionary/pageList/${params.page || 1}/${params.pageSize || 100}`,
-        method: 'get',
-        params: {
-            type: 4  // 校区类型固定为 4
-        }
-    })
-
-    // 🔹 使用适配器转换数据格式
-    return adaptCampusListResponse(response)
-}
