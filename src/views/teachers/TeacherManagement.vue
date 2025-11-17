@@ -50,6 +50,13 @@
             {{ formatDateTime(row.createTime) }}
           </template>
         </el-table-column>
+        <el-table-column label="操作" width="200" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" link @click="handleEdit(row)">修改</el-button>
+            <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
+            <el-button type="info" link @click="handleResetPassword(row)">重置密码</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
         <div class="text-xs text-slate-500">共 {{ totalTeachers }} 位教师</div>
@@ -65,7 +72,7 @@
 
     <el-dialog
       v-model="dialogVisible"
-      title="新增教师"
+      :title="isEdit ? '修改教师' : '新增教师'"
       width="500px"
       :close-on-click-modal="false"
       @close="handleDialogClose"
@@ -87,10 +94,25 @@
         <el-form-item label="教师姓名" prop="teacherName">
           <el-input
             v-model="formData.teacherName"
-            placeholder="请输入教师姓名（可选）"
+            placeholder="请输入教师姓名"
             maxlength="50"
             clearable
           />
+        </el-form-item>
+        <el-form-item label="所在校区" prop="campusId">
+          <el-select
+            v-model="formData.campusId"
+            placeholder="请选择所在校区"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="campus in campusList"
+              :key="campus.id"
+              :label="campus.dicName"
+              :value="campus.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -107,8 +129,8 @@
 
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getTeacherPageList, addTeacher } from '@/api/curd/teacher'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getTeacherPageList, addTeacher, deleteTeacher, resetTeacherPassword, updateTeacher } from '@/api/curd/teacher'
 import { getCampusList } from '@/api/curd/dictionary.js'
 
 const filters = reactive({
@@ -128,19 +150,26 @@ const loading = ref(false)
 const campusList = ref([])
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const isEdit = ref(false)
 const formRef = ref(null)
 const formData = reactive({
+  id: null,
   phone: '',
   teacherName: '',
+  campusId: null,
 })
 const formRules = {
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
   ],
+  campusId: [
+    { required: true, message: '请选择所在校区', trigger: 'change' },
+  ],
 }
 
 const handleCreate = () => {
+  isEdit.value = false
   dialogVisible.value = true
 }
 
@@ -228,8 +257,10 @@ const handleReset = () => {
 const handleDialogClose = () => {
   formRef.value?.resetFields()
   Object.assign(formData, {
+    id: null,
     phone: '',
     teacherName: '',
+    campusId: null,
   })
 }
 
@@ -237,25 +268,102 @@ const handleSubmit = async () => {
   try {
     await formRef.value?.validate()
     submitLoading.value = true
-    const result = await addTeacher({
-      phone: formData.phone,
-      teacherName: formData.teacherName || undefined,
-    })
+    let result
+    if (isEdit.value) {
+      result = await updateTeacher({
+        id: formData.id,
+        phone: formData.phone,
+        teacherName: formData.teacherName || undefined,
+        campusId: formData.campusId || undefined,
+      })
+    } else {
+      result = await addTeacher({
+        phone: formData.phone,
+        teacherName: formData.teacherName || undefined,
+        campusId: formData.campusId || undefined,
+      })
+    }
 
     if (result.code === 200 || result.code === 0) {
-      ElMessage.success(result.message || '新增教师成功')
+      ElMessage.success(result.message || (isEdit.value ? '修改教师成功' : '新增教师成功'))
       dialogVisible.value = false
       fetchTeacherList()
     } else {
-      ElMessage.error(result.message || '新增教师失败')
+      ElMessage.error(result.message || (isEdit.value ? '修改教师失败' : '新增教师失败'))
     }
   } catch (error) {
     if (error !== false) {
-      console.error('新增教师失败:', error)
-      ElMessage.error('新增教师失败，请稍后重试')
+      console.error(`${isEdit.value ? '修改' : '新增'}教师失败:`, error)
+      ElMessage.error(`${isEdit.value ? '修改' : '新增'}教师失败，请稍后重试`)
     }
   } finally {
     submitLoading.value = false
+  }
+}
+
+const handleEdit = (row) => {
+  Object.assign(formData, {
+    id: row.id,
+    teacherName: row.teacherName || '',
+    phone: row.phone || '',
+    campusId: row.campusId || null,
+  })
+  isEdit.value = true
+  dialogVisible.value = true
+}
+
+const handleResetPassword = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要重置教师 ${row.teacherName || row.phone} 的密码吗？新密码将设置为手机号后六位。`,
+      '重置密码确认',
+      {
+        confirmButtonText: '确定重置',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+
+    const result = await resetTeacherPassword(row.id)
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || '密码重置成功，新密码为手机号后六位')
+    } else {
+      ElMessage.error(result.message || '密码重置失败')
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('重置教师密码失败:', error)
+      ElMessage.error('密码重置失败，请稍后重试')
+    }
+  }
+}
+
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除教师 ${row.teacherName || row.phone} 吗？删除后数据将无法恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'error',
+      }
+    )
+
+    const result = await deleteTeacher(row.id)
+
+    if (result.code === 200 || result.code === 0) {
+      ElMessage.success(result.message || '删除成功')
+      fetchTeacherList()
+    } else {
+      ElMessage.error(result.message || '删除失败')
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('删除教师失败:', error)
+      ElMessage.error('删除失败，请稍后重试')
+    }
   }
 }
 </script>

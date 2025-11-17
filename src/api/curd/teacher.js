@@ -18,6 +18,20 @@ function adaptAddTeacherResponse(response) {
 }
 
 /**
+ * 标准化更新教师响应数据
+ */
+function adaptUpdateTeacherResponse(response) {
+    if (!response) {
+        return response
+    }
+
+    return {
+        code: response.code,
+        message: response.message,
+    }
+}
+
+/**
  * 标准化教师分页列表响应数据
  * 扁平化 campus 字段，方便前端直接使用
  *
@@ -49,6 +63,34 @@ function adaptTeacherPageListResponse(response) {
             pages: response.data.pages,
             list: flattenedRows
         }
+    }
+}
+
+/**
+ * 标准化删除教师响应数据
+ */
+function adaptDeleteTeacherResponse(response) {
+    if (!response) {
+        return response
+    }
+
+    return {
+        code: response.code,
+        message: response.message,
+    }
+}
+
+/**
+ * 标准化重置密码响应数据
+ */
+function adaptResetPasswordResponse(response) {
+    if (!response) {
+        return response
+    }
+
+    return {
+        code: response.code,
+        message: response.message,
     }
 }
 
@@ -114,4 +156,55 @@ export const addTeacher = async (data) => {
     })
 
     return adaptAddTeacherResponse(response)
+}
+
+/**
+ * 更新教师信息
+ */
+export const updateTeacher = async (data) => {
+    const response = await request({
+        url: `/admin/teacher/update/${data.id}`,
+        method: 'put',
+        params: {
+            teacherName: data.teacherName,
+            phone: data.phone,
+            'campus.id': data.campusId
+        }
+    })
+
+    return adaptUpdateTeacherResponse(response)
+}
+
+/**
+ * 删除教师
+ */
+export const deleteTeacher = async (ids) => {
+    let idsStr
+    if (Array.isArray(ids)) {
+        idsStr = ids.join(',')
+    } else {
+        idsStr = String(ids)
+    }
+
+    const response = await request({
+        url: `/admin/teacher/deletes/${idsStr}`,
+        method: 'delete'
+    })
+
+    return adaptDeleteTeacherResponse(response)
+}
+
+/**
+ * 重置教师密码
+ */
+export const resetTeacherPassword = async (teacherId) => {
+    const response = await request({
+        url: '/admin/teacher/resetPassword',
+        method: 'post',
+        params: {
+            teacherId
+        }
+    })
+
+    return adaptResetPasswordResponse(response)
 }
