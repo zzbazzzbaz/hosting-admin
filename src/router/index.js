@@ -19,6 +19,7 @@ export const navigationMenus = [
     children: [
       { key: 'users-manage', label: '用户管理', path: '/users/manage' },
       { key: 'users-teachers', label: '教师管理', path: '/users/teachers' },
+      { key: 'users-parents', label: '家长管理', path: '/users/parents' },
       { key: 'users-students', label: '学生管理', path: '/users/students' },
     ],
   },
@@ -62,6 +63,12 @@ const layoutChildren = [
     name: 'TeacherManagement',
     component: () => import('@/views/teachers/TeacherManagement.vue'),
     meta: { title: '教师管理', menuKey: 'users-teachers', parentKey: 'users' },
+  },
+  {
+    path: 'users/parents',
+    name: 'ParentManagement',
+    component: () => import('@/views/parents/ParentManagement.vue'),
+    meta: { title: '家长管理', menuKey: 'users-parents', parentKey: 'users' },
   },
   {
     path: 'users/students',
