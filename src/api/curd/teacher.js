@@ -3,41 +3,6 @@ import request from '@/utils/request'
 
 // ========== 数据适配器（防腐层）==========
 
-/**
- * 标准化新增教师响应数据
- */
-function adaptAddTeacherResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
-/**
- * 标准化更新教师响应数据
- */
-function adaptUpdateTeacherResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
-/**
- * 标准化教师分页列表响应数据
- * 扁平化 campus 字段，方便前端直接使用
- *
- * @param {Object} response - 接口原始响应
- * @returns {Object} 扁平化后的响应
- */
 function adaptTeacherPageListResponse(response) {
     if (!response || !response.data) {
         return response
@@ -63,34 +28,6 @@ function adaptTeacherPageListResponse(response) {
             pages: response.data.pages,
             list: flattenedRows
         }
-    }
-}
-
-/**
- * 标准化删除教师响应数据
- */
-function adaptDeleteTeacherResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
-/**
- * 标准化重置密码响应数据
- */
-function adaptResetPasswordResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
     }
 }
 
@@ -146,7 +83,7 @@ export const getTeacherPageList = async (params = {}) => {
  * 新增教师
  */
 export const addTeacher = async (data) => {
-    const response = await request({
+    return request({
         url: '/admin/teacher/add',
         method: 'post',
         params: {
@@ -154,15 +91,13 @@ export const addTeacher = async (data) => {
             phone: data.phone
         }
     })
-
-    return adaptAddTeacherResponse(response)
 }
 
 /**
  * 更新教师信息
  */
 export const updateTeacher = async (data) => {
-    const response = await request({
+    return request({
         url: `/admin/teacher/update/${data.id}`,
         method: 'put',
         params: {
@@ -171,8 +106,6 @@ export const updateTeacher = async (data) => {
             'campus.id': data.campusId
         }
     })
-
-    return adaptUpdateTeacherResponse(response)
 }
 
 /**
@@ -186,25 +119,21 @@ export const deleteTeacher = async (ids) => {
         idsStr = String(ids)
     }
 
-    const response = await request({
+    return request({
         url: `/admin/teacher/deletes/${idsStr}`,
         method: 'delete'
     })
-
-    return adaptDeleteTeacherResponse(response)
 }
 
 /**
  * 重置教师密码
  */
 export const resetTeacherPassword = async (teacherId) => {
-    const response = await request({
+    return request({
         url: '/admin/teacher/resetPassword',
         method: 'post',
         params: {
             teacherId
         }
     })
-
-    return adaptResetPasswordResponse(response)
 }

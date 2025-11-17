@@ -6,24 +6,7 @@ import request from '@/utils/request'
 
 // ========== 数据适配器（防腐层）==========
 
-/**
- * 标准化新增用户响应数据
- */
-function adaptAddUserResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
-/**
- * 标准化分页列表响应数据
- * 扁平化处理：将嵌套的 campus 对象提取到顶层
- */
+// 标准化分页列表响应数据，扁平化 campus
 function adaptPageListResponse(response) {
     if (!response || !response.data) {
         return response
@@ -54,49 +37,6 @@ function adaptPageListResponse(response) {
         }
     }
 }
-
-/**
- * 标准化更新用户响应数据
- */
-function adaptUpdateUserResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
-/**
- * 标准化删除用户响应数据
- */
-function adaptDeleteUserResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
-/**
- * 标准化重置密码响应数据
- */
-function adaptResetPasswordResponse(response) {
-    if (!response) {
-        return response
-    }
-
-    return {
-        code: response.code,
-        message: response.message,
-    }
-}
-
 
 // ========== API 接口 ==========
 
@@ -132,8 +72,7 @@ export const addUser = async (data) => {
         }
     })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptAddUserResponse(response)
+    return response
 }
 
 /**
@@ -245,8 +184,7 @@ export const updateUser = async (data) => {
         }
     })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptUpdateUserResponse(response)
+    return response
 }
 
 /**
@@ -284,8 +222,7 @@ export const deleteUser = async (ids) => {
         method: 'delete'
     })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptDeleteUserResponse(response)
+    return response
 }
 
 /**
@@ -314,7 +251,5 @@ export const resetPassword = async (userId) => {
         }
     })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptResetPasswordResponse(response)
+    return response
 }
-
