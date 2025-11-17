@@ -24,7 +24,7 @@
           </div>
         </div>
       </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <el-form-item label="用户名">
           <el-input v-model="filters.username" placeholder="支持模糊查询" clearable />
         </el-form-item>
@@ -36,12 +36,6 @@
             <el-option label="管理员" value="admin" />
             <el-option label="教师" value="teacher" />
             <el-option label="家长" value="parent" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="filters.status" placeholder="全部状态" clearable>
-            <el-option label="启用" value="enabled" />
-            <el-option label="禁用" value="disabled" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -60,11 +54,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="phone" label="手机号" min-width="140" />
-        <el-table-column label="状态" min-width="100">
-          <template #default="{ row }">
-            {{ getStatusLabel(row.status) }}
-          </template>
-        </el-table-column>
         <el-table-column prop="dicName" label="所在校区" min-width="160">
           <template #default="{ row }">
             {{ row.dicName || '-' }}
@@ -166,19 +155,20 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="editFormData.status">
-            <el-radio :label="0">启用</el-radio>
-            <el-radio :label="1">禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="所在校区" prop="dicName">
-          <el-input
-            v-model="editFormData.dicName"
-            placeholder="请输入所在校区"
-            maxlength="100"
+        <el-form-item label="所在校区" prop="campusId">
+          <el-select
+            v-model="editFormData.campusId"
+            placeholder="请选择所在校区"
             clearable
-          />
+            filterable
+          >
+            <el-option
+              v-for="campus in campusList"
+              :key="campus.id"
+              :label="campus.dicName"
+              :value="campus.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -196,14 +186,13 @@
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { addUser, getUserPageList, updateUser, deleteUser, resetPassword } from '@/api/curd/user'
+import { addUser, getUserPageList, updateUser, deleteUser, resetPassword, getCampusList } from '@/api/curd/user'
 
 // ========== 筛选条件 ==========
 const filters = reactive({
   username: '',
   mobile: '',
   role: '',
-  status: '',
 })
 
 // ========== 新增用户弹窗 ==========
@@ -233,8 +222,7 @@ const editFormData = reactive({
   id: null,
   userName: '',
   phone: '',
-  status: 0,
-  dicName: '',
+  campusId: null,  // 校区 ID（用于提交和显示）
 })
 
 // 修改表单验证规则
@@ -255,11 +243,28 @@ const userList = ref([])
 const totalUsers = ref(0)
 const loading = ref(false)
 
+// ========== 校区列表数据 ==========
+const campusList = ref([])
+
 /**
- * 状态映射：将后端状态值转换为显示文本
+ * 获取校区列表
  */
-const getStatusLabel = (status) => {
-  return status === 0 ? '启用' : '禁用'
+const fetchCampusList = async () => {
+  try {
+    const result = await getCampusList({
+      page: 1,
+      pageSize: 100  // 获取所有校区
+    })
+
+    if (result.code === 200 || result.code === 0) {
+      campusList.value = result.data.list || []
+    } else {
+      ElMessage.error(result.message || '获取校区列表失败')
+    }
+  } catch (error) {
+    console.error('获取校区列表失败:', error)
+    ElMessage.error('获取校区列表失败，请稍后重试')
+  }
 }
 
 /**
@@ -312,6 +317,7 @@ watch([() => pagination.current, () => pagination.size], () => {
 // ========== 页面初始化 ==========
 onMounted(() => {
   fetchUserList()
+  fetchCampusList()  // 获取校区列表
 })
 
 // ========== 查询和重置 ==========
@@ -325,7 +331,6 @@ const handleReset = () => {
     username: '',
     mobile: '',
     role: '',
-    status: '',
   })
   pagination.current = 1
   fetchUserList()
@@ -384,13 +389,12 @@ const handleSubmit = async () => {
  * 打开修改用户弹窗
  */
 const handleEdit = (row) => {
-  // 填充表单数据
+  // 填充表单数据（使用扁平化后的字段）
   Object.assign(editFormData, {
     id: row.id,
     userName: row.userName || '',
     phone: row.phone || '',
-    status: row.status ?? 0,
-    dicName: row.dicName || '',
+    campusId: row.campusId || null,  // 校区 ID
   })
   editDialogVisible.value = true
 }
@@ -404,8 +408,7 @@ const handleEditDialogClose = () => {
     id: null,
     userName: '',
     phone: '',
-    status: 0,
-    dicName: '',
+    campusId: null,  // 重置校区 ID
   })
 }
 
@@ -419,13 +422,12 @@ const handleEditSubmit = async () => {
 
     editSubmitLoading.value = true
 
-    // 调用修改用户 API
+    // 调用修改用户 API（提交 campusId）
     const result = await updateUser({
       id: editFormData.id,
       userName: editFormData.userName || undefined,
       phone: editFormData.phone,
-      status: editFormData.status,
-      dicName: editFormData.dicName || undefined,
+      campusId: editFormData.campusId || undefined,  // 提交校区 ID
     })
 
     if (result.code === 200 || result.code === 0) {
@@ -443,47 +445,6 @@ const handleEditSubmit = async () => {
     }
   } finally {
     editSubmitLoading.value = false
-  }
-}
-
-/**
- * 切换用户启用/禁用状态
- */
-const handleToggle = async (row) => {
-  try {
-    const newStatus = row.status === 0 ? 1 : 0
-    const actionText = newStatus === 1 ? '禁用' : '启用'
-
-    await ElMessageBox.confirm(
-      `确定要${actionText}用户 ${row.userName || row.phone} 吗？`,
-      '提示',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-    )
-
-    const result = await updateUser({
-      id: row.id,
-      userName: row.userName,
-      phone: row.phone,
-      status: newStatus,
-      dicName: row.dicName,
-    })
-
-    if (result.code === 200 || result.code === 0) {
-      ElMessage.success(result.message || `${actionText}成功`)
-      // 刷新列表
-      fetchUserList()
-    } else {
-      ElMessage.error(result.message || `${actionText}失败`)
-    }
-  } catch (error) {
-    if (error !== 'cancel') {
-      console.error('切换用户状态失败:', error)
-      ElMessage.error('操作失败，请稍后重试')
-    }
   }
 }
 

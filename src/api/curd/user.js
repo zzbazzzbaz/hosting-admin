@@ -22,11 +22,27 @@ function adaptAddUserResponse(response) {
 
 /**
  * 标准化分页列表响应数据
+ * 扁平化处理：将嵌套的 campus 对象提取到顶层
  */
 function adaptPageListResponse(response) {
     if (!response || !response.data) {
         return response
     }
+
+    // 扁平化处理每个用户对象
+    const flattenedList = (response.data.rows || []).map(user => {
+        // 提取 campus 对象的字段到顶层
+        const campusId = user.campus?.id || null
+        const dicName = user.campus?.dicName || null
+
+        // 返回扁平化后的用户对象（移除原始 campus 对象）
+        const {campus, ...restUser} = user
+        return {
+            ...restUser,
+            campusId,  // 校区 ID
+            dicName    // 校区名称
+        }
+    })
 
     return {
         code: response.code,
@@ -34,7 +50,7 @@ function adaptPageListResponse(response) {
         data: {
             total: response.data.total,
             pages: response.data.pages,
-            list: response.data.rows || []
+            list: flattenedList
         }
     }
 }
@@ -81,6 +97,26 @@ function adaptResetPasswordResponse(response) {
     }
 }
 
+/**
+ * 标准化校区列表响应数据
+ * 扁平化处理：将 rows 转换为 list
+ */
+function adaptCampusListResponse(response) {
+    if (!response || !response.data) {
+        return response
+    }
+
+    return {
+        code: response.code,
+        message: response.message,
+        data: {
+            total: response.data.total,
+            pages: response.data.pages,
+            list: response.data.rows || []
+        }
+    }
+}
+
 // ========== API 接口 ==========
 
 /**
@@ -109,7 +145,7 @@ export const addUser = async (data) => {
     const response = await request({
         url: '/admin/user/add',
         method: 'post',
-        data: {
+        params: {
             phone: data.phone,
             userName: data.userName
         }
@@ -143,12 +179,13 @@ export const addUser = async (data) => {
  *     pages: 1,
  *     list: [
  *       {
- *         id: 2,
- *         userName: "gqt",
- *         phone: "15688463267",
+ *         id: 4,
+ *         userName: "cc1111",
+ *         phone: "15688463200",
  *         status: 0,
- *         createTime: "2025-11-16T06:57:03.825+00:00",
- *         campus: null
+ *         createTime: "2025-11-17T05:28:48.299+00:00",
+ *         campusId: 29,            // 校区 ID（已扁平化）
+ *         dicName: "托管校区1"      // 校区名称（已扁平化）
  *       }
  *     ]
  *   }
@@ -165,7 +202,9 @@ export const getUserPageList = async (params = {}) => {
     })
 
     // 🔹 使用适配器转换数据格式
-    return adaptPageListResponse(response)
+    const ans = adaptPageListResponse(response)
+    console.log("gqt++++", ans)
+    return ans
 }
 
 /**
@@ -175,8 +214,7 @@ export const getUserPageList = async (params = {}) => {
  * @param {number} data.id - 用户 ID（必传）
  * @param {string} [data.userName] - 用户名（可选）
  * @param {string} [data.phone] - 用户手机号（可选）
- * @param {number} [data.status] - 用户状态（可选，0-启用，1-禁用）
- * @param {string} [data.dicName] - 所在校区名称（可选）
+ * @param {number} [data.campusId] - 所在校区 ID（可选，提交时会转换为 campus.id）
  * @returns {Promise} 返回更新用户结果
  *
  * @example
@@ -185,9 +223,11 @@ export const getUserPageList = async (params = {}) => {
  *   id: 1,
  *   userName: "张三",
  *   phone: "15688463267",
- *   status: 0,
- *   dicName: "托管校区1"
+ *   campusId: 29
  * })
+ *
+ * 实际提交参数：
+ * PUT /admin/user/update/1?userName=张三&phone=15688463267&campus.id=29
  *
  * 响应示例（成功）：
  * {
@@ -200,11 +240,10 @@ export const updateUser = async (data) => {
     const response = await request({
         url: `/admin/user/update/${data.id}`,
         method: 'put',
-        data: {
+        params: {
             userName: data.userName,
             phone: data.phone,
-            status: data.status,
-            dicName: data.dicName
+            'campus.id': data.campusId
         }
     })
 
@@ -245,7 +284,7 @@ export const deleteUser = async (ids) => {
     }
 
     const response = await request({
-        url: `/admin/user/delete/${idsStr}`,
+        url: `/admin/user/deletes/${idsStr}`,  // 修改为 deletes 匹配后端路径
         method: 'delete'
     })
 
@@ -281,4 +320,54 @@ export const resetPassword = async (userId) => {
 
     // 🔹 使用适配器转换数据格式
     return adaptResetPasswordResponse(response)
+}
+
+/**
+ * 获取校区列表
+ *
+ * @param {Object} params - 分页参数
+ * @param {number} params.page - 当前页码（默认 1）
+ * @param {number} params.pageSize - 每页条数（默认 100）
+ * @returns {Promise} 返回校区列表
+ *
+ * @example
+ * 请求示例：
+ * getCampusList({
+ *   page: 1,
+ *   pageSize: 100
+ * })
+ *
+ * 响应示例（成功）：
+ * {
+ *   code: 200,
+ *   message: "成功获取数据",
+ *   data: {
+ *     total: 2,
+ *     pages: 1,
+ *     list: [
+ *       {
+ *         id: 30,
+ *         type: 4,
+ *         dicName: "托管校区2"
+ *       },
+ *       {
+ *         id: 29,
+ *         type: 4,
+ *         dicName: "托管校区1"
+ *       }
+ *     ]
+ *   }
+ * }
+ */
+export const getCampusList = async (params = {}) => {
+    const response = await request({
+        url: `/admin/dictionary/pageList/${params.page || 1}/${params.pageSize || 100}`,
+        method: 'get',
+        params: {
+            type: 4  // 校区类型固定为 4
+        }
+    })
+
+    // 🔹 使用适配器转换数据格式
+    return adaptCampusListResponse(response)
 }

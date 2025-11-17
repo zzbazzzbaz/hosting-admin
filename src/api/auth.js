@@ -22,7 +22,7 @@ function adaptLoginResponse(response) {
         message: response.message,
         data: {
             // 标准化字段名：前端统一使用这些字段名
-            authToken: response.data.token,
+            authToken: response.data.Authorization,
             userId: response.data.userId,
             phone: response.data.phone
         }
@@ -41,7 +41,7 @@ function adaptTokenCheckResponse(response) {
         code: response.code,
         message: response.message || '',
         data: {
-            isValid: response.data.isValid === true,
+            isValid: response.data === true,
         }
     }
 }
@@ -60,7 +60,7 @@ export const login = async (data) => {
     const response = await request({
         url: '/front/user/login',
         method: 'post',
-        data: {
+        params: {
             phone: data.phone,
             password: data.password,
             type: data.type || 1
@@ -78,7 +78,7 @@ export const checkToken = async (token) => {
     const response = await request({
         url: '/front/user/checkToken',
         method: 'post',
-        data: {
+        params: {
             token: token
         }
     })
