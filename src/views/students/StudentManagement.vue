@@ -54,7 +54,7 @@
         <el-form-item label="家长">
           <el-select
             v-model="filters.parentId"
-            placeholder="全部家长"
+            placeholder="输入手机号搜索"
             clearable
             filterable
             remote
@@ -72,7 +72,7 @@
         <el-form-item label="教师">
           <el-select
             v-model="filters.teacherId"
-            placeholder="全部教师"
+            placeholder="输入手机号搜索"
             clearable
             filterable
             remote
@@ -205,7 +205,7 @@
         <el-form-item label="家长" prop="parentId">
           <el-select
             v-model="formData.parentId"
-            placeholder="请选择家长"
+            placeholder="输入手机号搜索家长"
             clearable
             filterable
             remote
@@ -223,7 +223,7 @@
         <el-form-item label="教师" prop="teacherId">
           <el-select
             v-model="formData.teacherId"
-            placeholder="请选择教师"
+            placeholder="输入手机号搜索教师"
             clearable
             filterable
             remote
@@ -396,7 +396,6 @@ const fetchParentOptions = async (keyword = '') => {
     const result = await getParentPageList({
       page: 1,
       pageSize: 50,
-      parentName: keyword || undefined,
       phone: keyword || undefined,
     })
     parentOptions.value = result.data?.list || []
@@ -414,7 +413,6 @@ const fetchTeacherOptions = async (keyword = '') => {
     const result = await getTeacherPageList({
       page: 1,
       pageSize: 50,
-      teacherName: keyword || undefined,
       phone: keyword || undefined,
     })
     teacherOptions.value = result.data?.list || []
