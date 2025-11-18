@@ -1,13 +1,9 @@
 import request from '@/utils/request'
 
 
-// ========== 数据适配器（防腐层）==========
+// ========== 数据适配器 ==========
 
-/**
- * 标准化校区列表响应数据
- * 扁平化处理：将 rows 转换为 list
- */
-function adaptCampusListResponse(response) {
+function adaptDictionaryListResponse(response) {
     if (!response || !response.data) {
         return response
     }
@@ -23,54 +19,77 @@ function adaptCampusListResponse(response) {
     }
 }
 
+
 // ========== API 接口 ==========
 
-/**
- * 获取校区列表
- *
- * @param {Object} params - 分页参数
- * @param {number} params.page - 当前页码（默认 1）
- * @param {number} params.pageSize - 每页条数（默认 100）
- * @returns {Promise} 返回校区列表
- *
- * @example
- * 请求示例：
- * getCampusList({
- *   page: 1,
- *   pageSize: 100
- * })
- *
- * 响应示例（成功）：
- * {
- *   code: 200,
- *   message: "成功获取数据",
- *   data: {
- *     total: 2,
- *     pages: 1,
- *     list: [
- *       {
- *         id: 30,
- *         type: 4,
- *         dicName: "托管校区2"
- *       },
- *       {
- *         id: 29,
- *         type: 4,
- *         dicName: "托管校区1"
- *       }
- *     ]
- *   }
- * }
- */
-export const getCampusList = async (params = {}) => {
+export const getDictionaryList = async ({page = 1, pageSize = 10, type, dicName} = {}) => {
+    if (!type) {
+        throw new Error('type 为必传参数')
+    }
+
     const response = await request({
-        url: `/admin/dictionary/pageList/${params.page || 1}/${params.pageSize || 100}`,
+        url: `/admin/dictionary/pageList/${page}/${pageSize}`,
         method: 'get',
         params: {
-            type: 4  // 校区类型固定为 4
+            type,
+            dicName
         }
     })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptCampusListResponse(response)
+    return adaptDictionaryListResponse(response)
 }
+
+export const addDictionary = async (data) => {
+    return request({
+        url: '/admin/dictionary/add',
+        method: 'post',
+        params: {
+            dicName: data.dicName,
+            type: data.type
+        }
+    })
+}
+
+export const updateDictionary = async (data) => {
+    return request({
+        url: `/admin/dictionary/update/${data.id}`,
+        method: 'put',
+        params: {
+            dicName: data.dicName,
+            type: data.type
+        }
+    })
+}
+
+export const deleteDictionary = async (ids) => {
+    let idsStr
+    if (Array.isArray(ids)) {
+        idsStr = ids.join(',')
+    } else {
+        idsStr = String(ids)
+    }
+
+    return request({
+        url: `/admin/dictionary/delete/${idsStr}`,
+        method: 'delete'
+    })
+}
+
+// ==== //  1:年级     2：科目     3:学校     4：校区    5：教师评级分类   6：班级   7：学生今日状态
+
+const fetchDictionaryByType = (params, type) => {
+    return getDictionaryList({
+        page: params.page || 1,
+        pageSize: params.pageSize || 100,
+        type,
+        dicName: params.dicName
+    })
+}
+
+export const getGradeList = async (params = {}) => fetchDictionaryByType(params, 1)
+export const getSubjectList = async (params = {}) => fetchDictionaryByType(params, 2)
+export const getSchoolList = async (params = {}) => fetchDictionaryByType(params, 3)
+export const getCampusList = async (params = {}) => fetchDictionaryByType(params, 4)
+export const getTeacherRatingList = async (params = {}) => fetchDictionaryByType(params, 5)
+export const getClassList = async (params = {}) => fetchDictionaryByType(params, 6)
+export const getStudentStatusList = async (params = {}) => fetchDictionaryByType(params, 7)
