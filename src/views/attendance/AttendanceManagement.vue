@@ -7,24 +7,13 @@
           <el-button type="primary" @click="handleQuery">刷新</el-button>
         </div>
       </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <el-form-item label="学生">
-          <el-select
-            v-model="filters.studentId"
-            placeholder="输入姓名搜索学生"
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <el-form-item label="学生姓名">
+          <el-input
+            v-model="filters.studentName"
+            placeholder="输入学生姓名"
             clearable
-            filterable
-            remote
-            :remote-method="handleStudentRemote"
-            :loading="studentLoading"
-          >
-            <el-option
-              v-for="student in studentOptions"
-              :key="student.id"
-              :label="formatStudentLabel(student)"
-              :value="student.id"
-            />
-          </el-select>
+          />
         </el-form-item>
         <el-form-item label="签到教师">
           <el-select
@@ -61,6 +50,17 @@
               :value="parent.id"
             />
           </el-select>
+        </el-form-item>
+        <el-form-item label="签到日期">
+          <el-date-picker
+            v-model="filters.createDate"
+            type="date"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+            placeholder="选择日期"
+            class="w-full"
+            clearable
+          />
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
@@ -100,9 +100,9 @@
             <div v-if="row.picList?.length" class="flex flex-wrap gap-2">
               <el-image
                 v-for="pic in row.picList"
-                :key="pic.id"
+                :key="pic.id || pic"
                 class="h-16 w-16 rounded-md border border-slate-200 object-cover"
-                :src="pic.imgpath"
+                :src="getImageSrc(pic)"
                 :preview-src-list="getPreviewList(row.picList)"
                 fit="cover"
                 preview-teleported
@@ -191,9 +191,9 @@
         <div v-if="currentRecord?.picList?.length" class="flex flex-wrap gap-3">
           <el-image
             v-for="pic in currentRecord?.picList"
-            :key="pic.id"
+            :key="pic.id || pic"
             class="h-28 w-28 rounded-md border border-slate-200 object-cover"
-            :src="pic.imgpath"
+            :src="getImageSrc(pic)"
             :preview-src-list="getPreviewList(currentRecord?.picList || [])"
             fit="cover"
             preview-teleported
@@ -209,14 +209,14 @@
 import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getSigninPageList } from '@/api/curd/signin'
-import { getStudentPageList } from '@/api/curd/student'
 import { getTeacherPageList } from '@/api/curd/teacher'
 import { getParentPageList } from '@/api/curd/parent'
 
 const filters = reactive({
-  studentId: null,
+  studentName: '',
   teacherId: null,
   parentId: null,
+  createDate: null,
 })
 
 const pagination = reactive({
@@ -228,11 +228,9 @@ const signinList = ref([])
 const totalRecords = ref(0)
 const loading = ref(false)
 
-const studentOptions = ref([])
 const teacherOptions = ref([])
 const parentOptions = ref([])
 
-const studentLoading = ref(false)
 const teacherLoading = ref(false)
 const parentLoading = ref(false)
 
@@ -272,24 +270,27 @@ const formatStatus = (status) => {
   return status
 }
 
-const formatStudentLabel = (student) => {
-  if (!student) return ''
-  return `${student.studentName || '未命名'}（ID: ${student.id}）`
-}
-
 const formatTeacherLabel = (teacher) => {
   if (!teacher) return ''
-  return `${teacher.teacherName || '未命名'}（${teacher.phone || '-'}）`
+  return `${teacher.phone || '-'}（${teacher.teacherName || '未命名'}）`
 }
 
 const formatParentLabel = (parent) => {
   if (!parent) return ''
-  return `${parent.parentName || '未命名'}（${parent.phone || '-'}）`
+  return `${parent.phone || '-'}（${parent.parentName || '未命名'}）`
+}
+
+const getImageSrc = (pic) => {
+  if (!pic) return ''
+  if (typeof pic === 'string') {
+    return pic
+  }
+  return pic.imgpath || pic.imgPath || pic.url || pic.path || ''
 }
 
 const getPreviewList = (picList = []) => {
   return picList
-    .map(pic => pic.imgpath)
+    .map(getImageSrc)
     .filter(url => !!url)
 }
 
@@ -307,9 +308,10 @@ const fetchSigninList = async () => {
     const result = await getSigninPageList({
       page: pagination.current,
       pageSize: pagination.size,
-      studentId: filters.studentId || undefined,
+      studentName: filters.studentName?.trim() || undefined,
       teacherId: filters.teacherId || undefined,
       parentId: filters.parentId || undefined,
+      createTime: filters.createDate || undefined,
     })
 
     if (result.code === 200 || result.code === 0) {
@@ -317,12 +319,6 @@ const fetchSigninList = async () => {
       totalRecords.value = result.data.total || 0
 
       signinList.value.forEach(record => {
-        if (record.studentId) {
-          ensureOptionExists(studentOptions, {
-            id: record.studentId,
-            studentName: record.studentName,
-          })
-        }
         if (record.checkinTeacherId || record.teacher?.id) {
           ensureOptionExists(teacherOptions, {
             id: record.checkinTeacherId || record.teacher?.id,
@@ -349,23 +345,6 @@ const fetchSigninList = async () => {
   }
 }
 
-const fetchStudentOptions = async (keyword = '') => {
-  try {
-    studentLoading.value = true
-    const result = await getStudentPageList({
-      page: 1,
-      pageSize: 20,
-      studentName: keyword || undefined,
-    })
-    studentOptions.value = result.data?.list || []
-  } catch (error) {
-    console.error('获取学生列表失败:', error)
-    ElMessage.error('获取学生列表失败，请稍后重试')
-  } finally {
-    studentLoading.value = false
-  }
-}
-
 const fetchTeacherOptions = async (keyword = '') => {
   try {
     teacherLoading.value = true
@@ -373,7 +352,6 @@ const fetchTeacherOptions = async (keyword = '') => {
       page: 1,
       pageSize: 50,
       phone: keyword || undefined,
-      teacherName: !keyword ? undefined : keyword,
     })
     teacherOptions.value = result.data?.list || []
   } catch (error) {
@@ -401,10 +379,6 @@ const fetchParentOptions = async (keyword = '') => {
   }
 }
 
-const handleStudentRemote = (query) => {
-  fetchStudentOptions(query)
-}
-
 const handleTeacherRemote = (query) => {
   fetchTeacherOptions(query)
 }
@@ -420,9 +394,10 @@ const handleQuery = () => {
 
 const handleReset = () => {
   Object.assign(filters, {
-    studentId: null,
+    studentName: '',
     teacherId: null,
     parentId: null,
+    createDate: null,
   })
   pagination.current = 1
   fetchSigninList()
@@ -439,7 +414,6 @@ watch([() => pagination.current, () => pagination.size], () => {
 
 onMounted(() => {
   fetchSigninList()
-  fetchStudentOptions()
   fetchTeacherOptions()
   fetchParentOptions()
 })

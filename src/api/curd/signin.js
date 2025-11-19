@@ -12,6 +12,27 @@ const resolveFileUrl = (path) => {
   return normalizedFileBase ? `${normalizedFileBase}${normalizedPath}` : normalizedPath
 }
 
+const normalizePicList = (picList = [], recordId) => {
+  if (!Array.isArray(picList)) return []
+
+  return picList
+    .map((pic, index) => {
+      const picObj = typeof pic === 'object' ? { ...pic } : {}
+      const rawPath = typeof pic === 'string'
+        ? pic
+        : picObj.imgpath || picObj.imgPath || picObj.url || picObj.path || ''
+
+      if (!rawPath) return null
+
+      return {
+        ...picObj,
+        id: picObj.id ?? `${recordId ?? 'pic'}-${index}`,
+        imgpath: resolveFileUrl(rawPath),
+      }
+    })
+    .filter(Boolean)
+}
+
 // ========== 数据适配器 ==========
 
 function adaptSigninPageListResponse(response) {
@@ -19,67 +40,43 @@ function adaptSigninPageListResponse(response) {
     return response
   }
 
-  const flattenedRows = (response.data.rows || []).map(record => {
-    const studentId = record.student?.id ?? null
-    const studentName = record.student?.studentName ?? null
-    const studentSumHours = record.student?.sumHours ?? null
-    const studentUsedHours = record.student?.usedHours ?? null
-    const studentRemainingHours = record.student?.remainingHours ?? null
+  const rows = response.data.rows || response.data.list || []
 
-    const parentId = record.student?.parent?.id ?? record.parentId ?? null
-    const parentName = record.student?.parent?.parentName ?? null
-    const parentPhone = record.student?.parent?.phone ?? null
-
-    const schoolId = record.schoolId ?? record.student?.school?.id ?? null
-    const schoolName = record.schoolName ?? record.student?.school?.dicName ?? null
-
-    const gradeId = record.gradeId ?? record.student?.grade?.id ?? null
-    const gradeName = record.gradeName ?? record.student?.grade?.dicName ?? null
-
-    const campusId = record.campusId ?? record.student?.campus?.id ?? null
-    const campusName = record.campusName ?? record.student?.campus?.dicName ?? null
-
-    const clazzId = record.clazzId ?? record.student?.clazz?.id ?? null
-    const clazzName = record.clazzName ?? record.student?.clazz?.dicName ?? null
-
-    const assignedTeacherId = record.student?.teacher?.id ?? null
-    const assignedTeacherName = record.student?.teacher?.teacherName ?? null
-    const assignedTeacherPhone = record.student?.teacher?.phone ?? null
-
-    const checkinTeacherId = record.teacher?.id ?? null
-    const checkinTeacherName = record.teacher?.teacherName ?? null
-    const checkinTeacherPhone = record.teacher?.phone ?? null
-
-    const picList = (record.picList || []).map(pic => ({
-      ...pic,
-      imgpath: resolveFileUrl(pic.imgpath),
-    }))
+  const flattenedRows = rows.map((record, index) => {
+    const student = record.student || {}
+    const parent = student.parent || {}
+    const school = student.school || {}
+    const grade = student.grade || {}
+    const campus = student.campus || {}
+    const clazz = student.clazz || {}
+    const assignedTeacher = student.teacher || {}
+    const checkinTeacher = record.teacher || {}
 
     return {
       ...record,
-      studentId,
-      studentName,
-      studentSumHours,
-      studentUsedHours,
-      studentRemainingHours,
-      parentId,
-      parentName,
-      parentPhone,
-      schoolId,
-      schoolName,
-      gradeId,
-      gradeName,
-      campusId,
-      campusName,
-      clazzId,
-      clazzName,
-      assignedTeacherId,
-      assignedTeacherName,
-      assignedTeacherPhone,
-      checkinTeacherId,
-      checkinTeacherName,
-      checkinTeacherPhone,
-      picList,
+      studentId: record.studentId ?? student.id ?? null,
+      studentName: record.studentName ?? student.studentName ?? null,
+      studentSumHours: record.studentSumHours ?? student.sumHours ?? null,
+      studentUsedHours: record.studentUsedHours ?? student.usedHours ?? null,
+      studentRemainingHours: record.studentRemainingHours ?? student.remainingHours ?? null,
+      parentId: record.parentId ?? parent.id ?? null,
+      parentName: record.parentName ?? parent.parentName ?? null,
+      parentPhone: record.parentPhone ?? parent.phone ?? null,
+      schoolId: record.schoolId ?? school.id ?? null,
+      schoolName: record.schoolName ?? school.dicName ?? school.name ?? null,
+      gradeId: record.gradeId ?? grade.id ?? null,
+      gradeName: record.gradeName ?? grade.dicName ?? null,
+      campusId: record.campusId ?? campus.id ?? null,
+      campusName: record.campusName ?? campus.dicName ?? null,
+      clazzId: record.clazzId ?? clazz.id ?? null,
+      clazzName: record.clazzName ?? clazz.dicName ?? null,
+      assignedTeacherId: record.assignedTeacherId ?? assignedTeacher.id ?? null,
+      assignedTeacherName: record.assignedTeacherName ?? assignedTeacher.teacherName ?? null,
+      assignedTeacherPhone: record.assignedTeacherPhone ?? assignedTeacher.phone ?? null,
+      checkinTeacherId: record.checkinTeacherId ?? record.teacherId ?? checkinTeacher.id ?? null,
+      checkinTeacherName: record.checkinTeacherName ?? record.teacherName ?? checkinTeacher.teacherName ?? null,
+      checkinTeacherPhone: record.checkinTeacherPhone ?? record.teacherPhone ?? checkinTeacher.phone ?? null,
+      picList: normalizePicList(record.picList, record.id ?? `row-${index}`),
     }
   })
 
@@ -87,8 +84,8 @@ function adaptSigninPageListResponse(response) {
     code: response.code,
     message: response.message,
     data: {
-      total: response.data.total,
-      pages: response.data.pages,
+      total: response.data.total ?? flattenedRows.length,
+      pages: response.data.pages ?? 1,
       list: flattenedRows,
     },
   }
@@ -102,8 +99,10 @@ function adaptSigninPageListResponse(response) {
  * @param {number} params.page - 当前页
  * @param {number} params.pageSize - 每页数量
  * @param {number} [params.studentId] - 学生 ID（精确）
+ * @param {string} [params.studentName] - 学生姓名（模糊查询）
  * @param {number} [params.teacherId] - 签到教师 ID（精确）
  * @param {number} [params.parentId] - 家长 ID（精确）
+ * @param {string} [params.createTime] - 签到日期（格式：YYYY-MM-DD）
  */
 export const getSigninPageList = async (params = {}) => {
   const requestParams = {
@@ -114,11 +113,17 @@ export const getSigninPageList = async (params = {}) => {
   if (params.studentId) {
     requestParams['student.id'] = params.studentId
   }
+  if (params.studentName) {
+    requestParams.studentName = params.studentName
+  }
   if (params.teacherId) {
     requestParams['teacher.id'] = params.teacherId
   }
   if (params.parentId) {
     requestParams.parentId = params.parentId
+  }
+  if (params.createTime) {
+    requestParams.createTime = params.createTime
   }
 
   const response = await request({
