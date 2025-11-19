@@ -24,7 +24,8 @@ function adaptLoginResponse(response) {
             // 标准化字段名：前端统一使用这些字段名
             authToken: response.data.Authorization,
             userId: response.data.userId,
-            phone: response.data.phone
+            phone: response.data.phone,
+            userName: response.data.userName
         }
     }
 }
@@ -107,4 +108,3 @@ export const logOut = () => {
         method: 'post'
     })
 }
-

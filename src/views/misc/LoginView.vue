@@ -216,7 +216,8 @@ const handleLogin = async () => {
       // 保存用户信息到 store
       userStore.updateProfile({
         userId: response.data.userId,
-        phone: response.data.phone
+        phone: response.data.phone,
+        userName: response.data.userName,
       })
 
       // 显示成功消息
