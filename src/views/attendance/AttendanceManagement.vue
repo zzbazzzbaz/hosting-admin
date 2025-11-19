@@ -7,33 +7,60 @@
           <el-button type="primary" @click="handleQuery">刷新</el-button>
         </div>
       </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <el-form-item label="学生姓名">
-          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
-        </el-form-item>
-        <el-form-item label="年级">
-          <el-select v-model="filters.grade" placeholder="选择年级" clearable>
-            <el-option label="一年级" value="一年级" />
-            <el-option label="二年级" value="二年级" />
-            <el-option label="三年级" value="三年级" />
-            <el-option label="四年级" value="四年级" />
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <el-form-item label="学生">
+          <el-select
+            v-model="filters.studentId"
+            placeholder="输入姓名搜索学生"
+            clearable
+            filterable
+            remote
+            :remote-method="handleStudentRemote"
+            :loading="studentLoading"
+          >
+            <el-option
+              v-for="student in studentOptions"
+              :key="student.id"
+              :label="formatStudentLabel(student)"
+              :value="student.id"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="代课老师">
-          <el-select v-model="filters.teacherId" placeholder="选择教师" clearable>
-            <el-option label="张老师" value="teacher-1" />
-            <el-option label="李老师" value="teacher-2" />
+        <el-form-item label="签到教师">
+          <el-select
+            v-model="filters.teacherId"
+            placeholder="输入手机号搜索教师"
+            clearable
+            filterable
+            remote
+            :remote-method="handleTeacherRemote"
+            :loading="teacherLoading"
+          >
+            <el-option
+              v-for="teacher in teacherOptions"
+              :key="teacher.id"
+              :label="formatTeacherLabel(teacher)"
+              :value="teacher.id"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="签到日期">
-          <el-date-picker
-            v-model="filters.date"
-            type="date"
-            placeholder="选择日期"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            class="w-full"
-          />
+        <el-form-item label="家长">
+          <el-select
+            v-model="filters.parentId"
+            placeholder="输入手机号搜索家长"
+            clearable
+            filterable
+            remote
+            :remote-method="handleParentRemote"
+            :loading="parentLoading"
+          >
+            <el-option
+              v-for="parent in parentOptions"
+              :key="parent.id"
+              :label="formatParentLabel(parent)"
+              :value="parent.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
@@ -43,93 +70,377 @@
     </el-card>
 
     <el-card class="pastel-card">
-      <el-table :data="records" stripe>
-        <el-table-column type="index" label="序号" width="70" />
-        <el-table-column prop="studentName" label="学生姓名" min-width="140" />
-        <el-table-column prop="grade" label="年级" min-width="100" />
-        <el-table-column prop="assignedTeacher" label="分配老师" min-width="120" />
-        <el-table-column prop="checkinTeacher" label="签到教师" min-width="120" />
-        <el-table-column prop="checkinDate" label="签到日期" min-width="180" />
-        <el-table-column label="签到照片" min-width="140">
+      <el-table :data="signinList" :loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column label="学生姓名" min-width="220">
           <template #default="{ row }">
-            <el-image
-              class="h-14 w-14 rounded-md object-cover"
-              :src="row.photo"
-              :preview-src-list="[row.photo]"
-              preview-teleported
-              fit="cover"
-            />
+            <div class="flex flex-col">
+              <span class="font-medium text-slate-800">{{ row.studentName || '-' }}</span>
+              <span class="text-xs text-slate-500">
+                家长：{{ row.parentName || '-' }}（{{ row.parentPhone || '-' }}）
+              </span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="checkinTime" label="签到时间" min-width="140" />
+        <el-table-column label="签到教师" min-width="180">
+          <template #default="{ row }">
+            <div class="flex flex-col">
+              <span>{{ row.checkinTeacherName || '-' }}</span>
+              <span class="text-xs text-slate-500">{{ row.checkinTeacherPhone || '-' }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="签到时间" min-width="180">
+          <template #default="{ row }">
+            {{ formatDateTime(row.createTime) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="签到图片" min-width="240">
+          <template #default="{ row }">
+            <div v-if="row.picList?.length" class="flex flex-wrap gap-2">
+              <el-image
+                v-for="pic in row.picList"
+                :key="pic.id"
+                class="h-16 w-16 rounded-md border border-slate-200 object-cover"
+                :src="pic.imgpath"
+                :preview-src-list="getPreviewList(row.picList)"
+                fit="cover"
+                preview-teleported
+              />
+            </div>
+            <span v-else class="text-xs text-slate-400">暂无图片</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="120" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" link @click="handleViewDetail(row)">查看详情</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">共 {{ pagination.total }} 条签到记录</div>
+        <div class="text-xs text-slate-500">共 {{ totalRecords }} 条签到记录</div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
-          :page-sizes="[10, 20, 50]"
+          :page-sizes="[10, 20, 50, 100]"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pagination.total"
+          :total="totalRecords"
         />
       </div>
     </el-card>
+
+    <el-dialog
+      v-model="detailVisible"
+      title="签到详情"
+      width="720px"
+      :close-on-click-modal="false"
+    >
+      <el-descriptions :column="2" border class="rounded-lg">
+        <el-descriptions-item label="记录 ID">
+          {{ currentRecord?.id || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="状态">
+          {{ formatStatus(currentRecord?.status) }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学生 ID">
+          {{ currentRecord?.studentId || currentRecord?.student?.id || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学生姓名">
+          {{ currentRecord?.studentName || currentRecord?.student?.studentName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="家长">
+          {{ currentRecord?.parentName || currentRecord?.student?.parent?.parentName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="家长电话">
+          {{ currentRecord?.parentPhone || currentRecord?.student?.parent?.phone || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学校">
+          {{ currentRecord?.schoolName || currentRecord?.student?.school?.dicName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="年级">
+          {{ currentRecord?.gradeName || currentRecord?.student?.grade?.dicName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="班级">
+          {{ currentRecord?.clazzName || currentRecord?.student?.clazz?.dicName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="校区">
+          {{ currentRecord?.campusName || currentRecord?.student?.campus?.dicName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学生课时">
+          {{ formatLessonHours(currentRecord) }}
+        </el-descriptions-item>
+        <el-descriptions-item label="分配教师">
+          {{ currentRecord?.assignedTeacherName || currentRecord?.student?.teacher?.teacherName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="分配教师电话">
+          {{ currentRecord?.assignedTeacherPhone || currentRecord?.student?.teacher?.phone || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="签到教师">
+          {{ currentRecord?.checkinTeacherName || currentRecord?.teacher?.teacherName || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="签到教师电话">
+          {{ currentRecord?.checkinTeacherPhone || currentRecord?.teacher?.phone || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="签到时间">
+          {{ formatDateTime(currentRecord?.createTime) }}
+        </el-descriptions-item>
+      </el-descriptions>
+
+      <div class="mt-5">
+        <div class="mb-2 font-medium text-slate-700">签到图片</div>
+        <div v-if="currentRecord?.picList?.length" class="flex flex-wrap gap-3">
+          <el-image
+            v-for="pic in currentRecord?.picList"
+            :key="pic.id"
+            class="h-28 w-28 rounded-md border border-slate-200 object-cover"
+            :src="pic.imgpath"
+            :preview-src-list="getPreviewList(currentRecord?.picList || [])"
+            fit="cover"
+            preview-teleported
+          />
+        </div>
+        <div v-else class="text-sm text-slate-400">暂无签到图片</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import dayjs from 'dayjs'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { getSigninPageList } from '@/api/curd/signin'
+import { getStudentPageList } from '@/api/curd/student'
+import { getTeacherPageList } from '@/api/curd/teacher'
+import { getParentPageList } from '@/api/curd/parent'
 
 const filters = reactive({
-  studentName: '',
-  grade: '',
-  teacherId: '',
-  date: dayjs().format('YYYY-MM-DD'),
+  studentId: null,
+  teacherId: null,
+  parentId: null,
 })
 
 const pagination = reactive({
   current: 1,
-  size: 20,
-  total: 34,
+  size: 10,
 })
 
-const records = ref([
-  {
-    id: 'c1',
-    studentName: '王小明',
-    grade: '四年级',
-    assignedTeacher: '张老师',
-    checkinTeacher: '李老师',
-    checkinDate: `${dayjs().format('YYYY-MM-DD')} 08:00`,
-    photo: 'https://via.placeholder.com/120x120.png?text=签到',
-    checkinTime: '08:00',
-  },
-  {
-    id: 'c2',
-    studentName: '李小华',
-    grade: '三年级',
-    assignedTeacher: '李老师',
-    checkinTeacher: '李老师',
-    checkinDate: `${dayjs().format('YYYY-MM-DD')} 08:10`,
-    photo: 'https://via.placeholder.com/120x120.png?text=签到',
-    checkinTime: '08:10',
-  },
-])
+const signinList = ref([])
+const totalRecords = ref(0)
+const loading = ref(false)
+
+const studentOptions = ref([])
+const teacherOptions = ref([])
+const parentOptions = ref([])
+
+const studentLoading = ref(false)
+const teacherLoading = ref(false)
+const parentLoading = ref(false)
+
+const detailVisible = ref(false)
+const currentRecord = ref(null)
+
+const formatDateTime = (dateStr) => {
+  if (!dateStr) return '-'
+  const date = new Date(dateStr)
+  if (Number.isNaN(date.getTime())) return '-'
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  })
+}
+
+const formatLessonHours = (record) => {
+  if (!record) return '-'
+  const total = record.studentSumHours ?? record.student?.sumHours
+  const used = record.studentUsedHours ?? record.student?.usedHours
+  const remaining = record.studentRemainingHours ?? record.student?.remainingHours
+  if ([total, used, remaining].every(value => value == null)) {
+    return '-'
+  }
+  return `${used ?? 0}/${total ?? 0}（剩余 ${remaining ?? 0}）`
+}
+
+const formatStatus = (status) => {
+  if (status === 0) return '正常'
+  if (status === 1) return '异常'
+  if (status === undefined || status === null) return '-'
+  return status
+}
+
+const formatStudentLabel = (student) => {
+  if (!student) return ''
+  return `${student.studentName || '未命名'}（ID: ${student.id}）`
+}
+
+const formatTeacherLabel = (teacher) => {
+  if (!teacher) return ''
+  return `${teacher.teacherName || '未命名'}（${teacher.phone || '-'}）`
+}
+
+const formatParentLabel = (parent) => {
+  if (!parent) return ''
+  return `${parent.parentName || '未命名'}（${parent.phone || '-'}）`
+}
+
+const getPreviewList = (picList = []) => {
+  return picList
+    .map(pic => pic.imgpath)
+    .filter(url => !!url)
+}
+
+const ensureOptionExists = (optionsRef, option, key = 'id') => {
+  if (!option || !option[key]) return
+  const exists = optionsRef.value.some(item => item[key] === option[key])
+  if (!exists) {
+    optionsRef.value = [...optionsRef.value, option]
+  }
+}
+
+const fetchSigninList = async () => {
+  try {
+    loading.value = true
+    const result = await getSigninPageList({
+      page: pagination.current,
+      pageSize: pagination.size,
+      studentId: filters.studentId || undefined,
+      teacherId: filters.teacherId || undefined,
+      parentId: filters.parentId || undefined,
+    })
+
+    if (result.code === 200 || result.code === 0) {
+      signinList.value = result.data.list || []
+      totalRecords.value = result.data.total || 0
+
+      signinList.value.forEach(record => {
+        if (record.studentId) {
+          ensureOptionExists(studentOptions, {
+            id: record.studentId,
+            studentName: record.studentName,
+          })
+        }
+        if (record.checkinTeacherId || record.teacher?.id) {
+          ensureOptionExists(teacherOptions, {
+            id: record.checkinTeacherId || record.teacher?.id,
+            teacherName: record.checkinTeacherName || record.teacher?.teacherName,
+            phone: record.checkinTeacherPhone || record.teacher?.phone,
+          })
+        }
+        if (record.parentId || record.student?.parent?.id) {
+          ensureOptionExists(parentOptions, {
+            id: record.parentId || record.student?.parent?.id,
+            parentName: record.parentName || record.student?.parent?.parentName,
+            phone: record.parentPhone || record.student?.parent?.phone,
+          })
+        }
+      })
+    } else {
+      ElMessage.error(result.message || '获取签到列表失败')
+    }
+  } catch (error) {
+    console.error('获取签到列表失败:', error)
+    ElMessage.error('获取签到列表失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
+}
+
+const fetchStudentOptions = async (keyword = '') => {
+  try {
+    studentLoading.value = true
+    const result = await getStudentPageList({
+      page: 1,
+      pageSize: 20,
+      studentName: keyword || undefined,
+    })
+    studentOptions.value = result.data?.list || []
+  } catch (error) {
+    console.error('获取学生列表失败:', error)
+    ElMessage.error('获取学生列表失败，请稍后重试')
+  } finally {
+    studentLoading.value = false
+  }
+}
+
+const fetchTeacherOptions = async (keyword = '') => {
+  try {
+    teacherLoading.value = true
+    const result = await getTeacherPageList({
+      page: 1,
+      pageSize: 50,
+      phone: keyword || undefined,
+      teacherName: !keyword ? undefined : keyword,
+    })
+    teacherOptions.value = result.data?.list || []
+  } catch (error) {
+    console.error('获取教师列表失败:', error)
+    ElMessage.error('获取教师列表失败，请稍后重试')
+  } finally {
+    teacherLoading.value = false
+  }
+}
+
+const fetchParentOptions = async (keyword = '') => {
+  try {
+    parentLoading.value = true
+    const result = await getParentPageList({
+      page: 1,
+      pageSize: 50,
+      phone: keyword || undefined,
+    })
+    parentOptions.value = result.data?.list || []
+  } catch (error) {
+    console.error('获取家长列表失败:', error)
+    ElMessage.error('获取家长列表失败，请稍后重试')
+  } finally {
+    parentLoading.value = false
+  }
+}
+
+const handleStudentRemote = (query) => {
+  fetchStudentOptions(query)
+}
+
+const handleTeacherRemote = (query) => {
+  fetchTeacherOptions(query)
+}
+
+const handleParentRemote = (query) => {
+  fetchParentOptions(query)
+}
 
 const handleQuery = () => {
-  ElMessage.info(`查询 ${filters.date} 的签到记录（示例数据）`)
+  pagination.current = 1
+  fetchSigninList()
 }
 
 const handleReset = () => {
   Object.assign(filters, {
-    studentName: '',
-    grade: '',
-    teacherId: '',
-    date: dayjs().format('YYYY-MM-DD'),
+    studentId: null,
+    teacherId: null,
+    parentId: null,
   })
   pagination.current = 1
-  handleQuery()
+  fetchSigninList()
 }
+
+const handleViewDetail = (record) => {
+  currentRecord.value = { ...record }
+  detailVisible.value = true
+}
+
+watch([() => pagination.current, () => pagination.size], () => {
+  fetchSigninList()
+})
+
+onMounted(() => {
+  fetchSigninList()
+  fetchStudentOptions()
+  fetchTeacherOptions()
+  fetchParentOptions()
+})
 </script>

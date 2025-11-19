@@ -6,7 +6,7 @@ import {ElMessage} from 'element-plus'
  * 创建 axios 实例
  */
 const request = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: import.meta.env?.VITE_BASE_URL,
     timeout: 15000, // 请求超时时间（15秒）
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
