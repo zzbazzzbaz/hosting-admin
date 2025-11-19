@@ -1,4 +1,4 @@
-import { Collection, House, Notebook, Timer, UserFilled } from '@element-plus/icons-vue'
+import { Collection, House, Medal, Notebook, Timer, UserFilled } from '@element-plus/icons-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
@@ -37,6 +37,12 @@ export const navigationMenus = [
     label: '作业',
     icon: Notebook,
     children: [{ key: 'homework-manage', label: '作业管理', path: '/homework/manage' }],
+  },
+  {
+    key: 'teacher-level',
+    label: '教师月度评级',
+    icon: Medal,
+    children: [{ key: 'teacher-level-manage', label: '教师评级管理', path: '/teacher-level/manage' }],
   },
   {
     key: 'dictionary',
@@ -102,6 +108,12 @@ const layoutChildren = [
     name: 'DictionaryManagement',
     component: () => import('@/views/dictionary/DictionaryManagement.vue'),
     meta: { title: '字典管理', menuKey: 'dictionary-manage', parentKey: 'dictionary' },
+  },
+  {
+    path: 'teacher-level/manage',
+    name: 'TeacherLevelManagement',
+    component: () => import('@/views/teacher-level/TeacherLevelManagement.vue'),
+    meta: { title: '教师评级管理', menuKey: 'teacher-level-manage', parentKey: 'teacher-level' },
   },
 ]
 
