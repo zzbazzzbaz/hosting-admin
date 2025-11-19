@@ -91,6 +91,56 @@ function adaptSigninPageListResponse(response) {
   }
 }
 
+function adaptStudentSigninSummaryResponse(response) {
+  if (!response || !response.data) {
+    return response
+  }
+
+  const rows = response.data.rows || response.data.list || []
+
+  const normalizedRows = rows.map((record, index) => {
+    const student = record.student || {}
+    const school = record.school || student.school || {}
+    const grade = record.grade || student.grade || {}
+    const clazz = record.clazz || student.clazz || {}
+    const campus = record.campus || student.campus || {}
+    const parent = record.parent || student.parent || {}
+    const teacher = record.teacher || student.teacher || {}
+
+    return {
+      ...record,
+      id: record.id ?? student.id ?? `signin-stat-${index}`,
+      studentId: record.studentId ?? student.id ?? null,
+      studentName: record.studentName ?? student.studentName ?? null,
+      schoolId: record.schoolId ?? school.id ?? null,
+      schoolName: record.schoolName ?? school.dicName ?? school.name ?? null,
+      gradeId: record.gradeId ?? grade.id ?? null,
+      gradeName: record.gradeName ?? grade.dicName ?? null,
+      clazzId: record.clazzId ?? clazz.id ?? null,
+      clazzName: record.clazzName ?? clazz.dicName ?? null,
+      campusId: record.campusId ?? campus.id ?? null,
+      campusName: record.campusName ?? campus.dicName ?? null,
+      parentId: record.parentId ?? parent.id ?? null,
+      parentName: record.parentName ?? parent.parentName ?? null,
+      parentPhone: record.parentPhone ?? parent.phone ?? null,
+      teacherId: record.teacherId ?? teacher.id ?? null,
+      teacherName: record.teacherName ?? teacher.teacherName ?? null,
+      teacherPhone: record.teacherPhone ?? teacher.phone ?? null,
+      signinCount: Number(record.signinCount ?? record.count ?? 0),
+    }
+  })
+
+  return {
+    code: response.code,
+    message: response.message,
+    data: {
+      total: response.data.total ?? normalizedRows.length,
+      pages: response.data.pages ?? 1,
+      list: normalizedRows,
+    },
+  }
+}
+
 // ========== API 接口 ==========
 
 /**
@@ -133,4 +183,54 @@ export const getSigninPageList = async (params = {}) => {
   })
 
   return adaptSigninPageListResponse(response)
+}
+
+/**
+ * 获取学生签到次数统计分页列表
+ * @param {Object} params - 查询参数
+ * @param {number} params.page - 当前页
+ * @param {number} params.pageSize - 每页数量
+ * @param {string} [params.studentName] - 学生姓名（模糊）
+ * @param {number} [params.schoolId] - 学校 ID
+ * @param {number} [params.gradeId] - 年级 ID
+ * @param {number} [params.clazzId] - 班级 ID
+ * @param {number} [params.campusId] - 校区 ID
+ * @param {number} [params.parentId] - 家长 ID
+ * @param {number} [params.teacherId] - 教师 ID
+ */
+export const getStudentSigninStatsPageList = async (params = {}) => {
+  const requestParams = {
+    page: params.page || 1,
+    pageSize: params.pageSize || 10,
+  }
+
+  if (params.studentName) {
+    requestParams.studentName = params.studentName
+  }
+  if (params.schoolId) {
+    requestParams['school.id'] = params.schoolId
+  }
+  if (params.gradeId) {
+    requestParams['grade.id'] = params.gradeId
+  }
+  if (params.clazzId) {
+    requestParams['clazz.id'] = params.clazzId
+  }
+  if (params.campusId) {
+    requestParams['campus.id'] = params.campusId
+  }
+  if (params.parentId) {
+    requestParams['parent.id'] = params.parentId
+  }
+  if (params.teacherId) {
+    requestParams['teacher.id'] = params.teacherId
+  }
+
+  const response = await request({
+    url: '/admin/signin/pageStudentList',
+    method: 'get',
+    params: requestParams,
+  })
+
+  return adaptStudentSigninSummaryResponse(response)
 }

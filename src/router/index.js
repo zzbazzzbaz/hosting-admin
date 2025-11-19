@@ -27,7 +27,10 @@ export const navigationMenus = [
     key: 'attendance',
     label: '签到',
     icon: Timer,
-    children: [{ key: 'attendance-manage', label: '签到管理', path: '/attendance/manage' }],
+    children: [
+      { key: 'attendance-dashboard', label: '数据看板', path: '/attendance/dashboard' },
+      { key: 'attendance-manage', label: '签到管理', path: '/attendance/manage' },
+    ],
   },
   {
     key: 'homework',
@@ -75,6 +78,12 @@ const layoutChildren = [
     name: 'StudentManagement',
     component: () => import('@/views/students/StudentManagement.vue'),
     meta: { title: '学生管理', menuKey: 'users-students', parentKey: 'users' },
+  },
+  {
+    path: 'attendance/dashboard',
+    name: 'AttendanceDashboard',
+    component: () => import('@/views/attendance/AttendanceDashboard.vue'),
+    meta: { title: '签到数据看板', menuKey: 'attendance-dashboard', parentKey: 'attendance' },
   },
   {
     path: 'attendance/manage',
