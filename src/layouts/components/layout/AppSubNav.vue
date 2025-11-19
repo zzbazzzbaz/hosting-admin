@@ -32,14 +32,21 @@ const router = useRouter()
 
 const activeTab = ref(route.path)
 
+const findMenuByKey = (menus, key) => {
+  for (const menu of menus) {
+    if (menu.key === key) return menu
+    if (menu.children?.length) {
+      const found = findMenuByKey(menu.children, key)
+      if (found) return found
+    }
+  }
+  return null
+}
+
 const parentMenu = computed(() => {
   const parentKey = route.meta?.parentKey
-
-  if (!parentKey) {
-    return null
-  }
-
-  return navigationMenus.find((menu) => menu.key === parentKey) || null
+  if (!parentKey) return null
+  return findMenuByKey(navigationMenus, parentKey)
 })
 
 const tabs = computed(() => {
@@ -47,10 +54,19 @@ const tabs = computed(() => {
     return []
   }
 
-  return parentMenu.value.children.map((child) => ({
-    label: child.label,
-    path: child.path,
-  }))
+  const flattenChildren = (items) => {
+    const result = []
+    items.forEach((item) => {
+      if (item.children?.length) {
+        result.push(...flattenChildren(item.children))
+      } else if (item.path) {
+        result.push({ label: item.label, path: item.path })
+      }
+    })
+    return result
+  }
+
+  return flattenChildren(parentMenu.value.children)
 })
 
 watch(

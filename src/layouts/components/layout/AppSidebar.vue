@@ -25,14 +25,28 @@
             </el-icon>
             <span class="text-sm font-medium">{{ menu.label }}</span>
           </template>
-          <el-menu-item
-            v-for="child in menu.children"
-            :key="child.key"
-            :index="child.path"
-            class="rounded-md"
-          >
-            <span class="text-sm">{{ child.label }}</span>
-          </el-menu-item>
+          <template v-for="child in menu.children" :key="child.key">
+            <el-menu-item
+              v-if="!child.children?.length"
+              :index="child.path"
+              class="rounded-md"
+            >
+              <span class="text-sm">{{ child.label }}</span>
+            </el-menu-item>
+            <el-sub-menu v-else :index="child.key" class="ml-2">
+              <template #title>
+                <span class="text-sm font-medium">{{ child.label }}</span>
+              </template>
+              <el-menu-item
+                v-for="grand in child.children"
+                :key="grand.key"
+                :index="grand.path"
+                class="rounded-md pl-6"
+              >
+                <span class="text-sm">{{ grand.label }}</span>
+              </el-menu-item>
+            </el-sub-menu>
+          </template>
         </el-sub-menu>
       </template>
     </el-menu>
@@ -57,17 +71,23 @@ const menuIconSize = 18
 const activeMenu = computed(() => route.path)
 
 const openMenus = computed(() => {
-  if (route.meta?.parentKey) {
-    return [route.meta.parentKey]
+  const keys = []
+  if (route.meta?.grandParentKey) {
+    keys.push(route.meta.grandParentKey)
   }
-  return []
+  if (route.meta?.parentKey) {
+    keys.push(route.meta.parentKey)
+  }
+  return keys
 })
 
 const ensureOpen = () => {
   if (!menuRef.value) return
-  if (route.meta?.parentKey) {
-    menuRef.value.open(route.meta.parentKey)
-  }
+  openMenus.value.forEach((key) => {
+    if (key) {
+      menuRef.value.open(key)
+    }
+  })
 }
 
 onMounted(() => {

@@ -62,17 +62,24 @@ const { profile } = userStore
 
 const menuLookup = new Map()
 
-navigationMenus.forEach((entry) => {
+const registerMenu = (entry) => {
   menuLookup.set(entry.key, { label: entry.label, path: entry.path ?? null })
   if (entry.children?.length) {
-    entry.children.forEach((child) => {
-      menuLookup.set(child.key, { label: child.label, path: child.path ?? null })
-    })
+    entry.children.forEach(registerMenu)
   }
-})
+}
+
+navigationMenus.forEach(registerMenu)
 
 const breadcrumbs = computed(() => {
   const trail = []
+
+  if (route.meta?.grandParentKey) {
+    const grand = menuLookup.get(route.meta.grandParentKey)
+    if (grand) {
+      trail.push(grand)
+    }
+  }
 
   if (route.meta?.parentKey) {
     const parent = menuLookup.get(route.meta.parentKey)

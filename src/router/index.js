@@ -1,4 +1,4 @@
-import { Collection, House, Medal, Notebook, Timer, UserFilled } from '@element-plus/icons-vue'
+import { Collection, House, Notebook, Timer, User, UserFilled } from '@element-plus/icons-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
@@ -18,7 +18,15 @@ export const navigationMenus = [
     icon: UserFilled,
     children: [
       { key: 'users-manage', label: '管理员管理', path: '/users/manage' },
-      { key: 'users-teachers', label: '教师管理', path: '/users/teachers' },
+      {
+        key: 'users-teacher-directory',
+        label: '教师目录',
+        icon: User,
+        children: [
+          { key: 'teachers-manage', label: '教师管理', path: '/teachers/manage' },
+          { key: 'teachers-level', label: '教师评级管理', path: '/teachers/levels' },
+        ],
+      },
       { key: 'users-parents', label: '家长管理', path: '/users/parents' },
       { key: 'users-students', label: '学生管理', path: '/users/students' },
     ],
@@ -37,12 +45,6 @@ export const navigationMenus = [
     label: '作业',
     icon: Notebook,
     children: [{ key: 'homework-manage', label: '作业管理', path: '/homework/manage' }],
-  },
-  {
-    key: 'teacher-level',
-    label: '教师月度评级',
-    icon: Medal,
-    children: [{ key: 'teacher-level-manage', label: '教师评级管理', path: '/teacher-level/manage' }],
   },
   {
     key: 'dictionary',
@@ -68,12 +70,6 @@ const layoutChildren = [
     meta: { title: '用户管理', menuKey: 'users-manage', parentKey: 'users' },
   },
   {
-    path: 'users/teachers',
-    name: 'TeacherManagement',
-    component: () => import('@/views/teachers/TeacherManagement.vue'),
-    meta: { title: '教师管理', menuKey: 'users-teachers', parentKey: 'users' },
-  },
-  {
     path: 'users/parents',
     name: 'ParentManagement',
     component: () => import('@/views/parents/ParentManagement.vue'),
@@ -84,6 +80,18 @@ const layoutChildren = [
     name: 'StudentManagement',
     component: () => import('@/views/students/StudentManagement.vue'),
     meta: { title: '学生管理', menuKey: 'users-students', parentKey: 'users' },
+  },
+  {
+    path: 'teachers/manage',
+    name: 'TeacherManagement',
+    component: () => import('@/views/teachers/TeacherManagement.vue'),
+    meta: { title: '教师管理', menuKey: 'teachers-manage', parentKey: 'users-teacher-directory', grandParentKey: 'users' },
+  },
+  {
+    path: 'teachers/levels',
+    name: 'TeacherLevelManagement',
+    component: () => import('@/views/teachers/TeacherLevelManagement.vue'),
+    meta: { title: '教师评级管理', menuKey: 'teachers-level', parentKey: 'users-teacher-directory', grandParentKey: 'users' },
   },
   {
     path: 'attendance/dashboard',
@@ -108,12 +116,6 @@ const layoutChildren = [
     name: 'DictionaryManagement',
     component: () => import('@/views/dictionary/DictionaryManagement.vue'),
     meta: { title: '字典管理', menuKey: 'dictionary-manage', parentKey: 'dictionary' },
-  },
-  {
-    path: 'teacher-level/manage',
-    name: 'TeacherLevelManagement',
-    component: () => import('@/views/teacher-level/TeacherLevelManagement.vue'),
-    meta: { title: '教师评级管理', menuKey: 'teacher-level-manage', parentKey: 'teacher-level' },
   },
 ]
 
