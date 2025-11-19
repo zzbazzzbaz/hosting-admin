@@ -82,6 +82,33 @@ export const updateTeacherLevel = async (data) => {
 }
 
 /**
+ * 新增教师评级
+ */
+export const addTeacherLevel = async (data = {}) => {
+  if (!data.teacherId) {
+    throw new Error('新增评级需要选择教师')
+  }
+  if (!data.levelId) {
+    throw new Error('新增评级需要选择等级')
+  }
+  if (!data.yearmonth) {
+    throw new Error('新增评级需要选择月份')
+  }
+
+  return request({
+    url: '/admin/level/add',
+    method: 'post',
+    params: {
+      yearmonth: data.yearmonth,
+      descption: data.descption,
+      'level.id': data.levelId,
+      'teacher.id': data.teacherId,
+      'user.id': data.userId,
+    },
+  })
+}
+
+/**
  * 批量删除教师评级
  */
 export const deleteTeacherLevels = async (ids) => {

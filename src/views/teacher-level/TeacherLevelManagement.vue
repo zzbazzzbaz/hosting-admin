@@ -4,7 +4,12 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">筛选条件</span>
-          <el-button type="primary" @click="handleQuery">刷新</el-button>
+          <div class="space-x-3">
+            <el-button type="primary" @click="handleQuery">
+              刷新
+            </el-button>
+            <el-button type="primary" @click="handleCreate">新增评级</el-button>
+          </div>
         </div>
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -97,15 +102,30 @@
 
     <el-dialog
       v-model="dialogVisible"
-      title="编辑教师评级"
+      :title="dialogTitle"
       width="520px"
       :close-on-click-modal="false"
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px">
-        <el-form-item label="教师">
-          <div class="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600">
-            {{ formData.teacherName || '未提供教师信息' }}
-          </div>
+        <el-form-item label="教师" prop="teacherId">
+          <el-select
+            v-model="formData.teacherId"
+            placeholder="选择教师"
+            class="w-full"
+            clearable
+            filterable
+            remote
+            :remote-method="handleTeacherRemote"
+            :loading="teacherLoading"
+            :disabled="isEdit"
+          >
+            <el-option
+              v-for="teacher in teacherOptions"
+              :key="teacher.id"
+              :label="formatTeacherLabel(teacher)"
+              :value="teacher.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="月份" prop="yearmonth">
           <el-date-picker
@@ -150,9 +170,9 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, onMounted, computed } from 'vue'
+import { reactive, ref, watch, onMounted, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getTeacherLevelPageList, updateTeacherLevel, deleteTeacherLevels } from '@/api/curd/teacherLevel'
+import { getTeacherLevelPageList, updateTeacherLevel, deleteTeacherLevels, addTeacherLevel } from '@/api/curd/teacherLevel'
 import { getTeacherRatingList } from '@/api/curd/dictionary'
 import { getTeacherPageList } from '@/api/curd/teacher'
 import { useUserStore } from '@/stores/user'
@@ -160,7 +180,6 @@ import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const currentUserId = computed(() => {
   const id = userStore.profile.userId
-  console.log("*****---------"+id)
   if (id === undefined || id === null || id === '') return null
   const parsed = Number(id)
   return Number.isNaN(parsed) ? id : parsed
@@ -186,18 +205,22 @@ const teacherOptions = ref([])
 const teacherLoading = ref(false)
 
 const dialogVisible = ref(false)
+const isEdit = ref(false)
 const submitLoading = ref(false)
 const formRef = ref(null)
 const formData = reactive({
   id: null,
+  teacherId: null,
   teacherName: '',
   yearmonth: '',
   levelId: null,
   descption: '',
   userId: null,
 })
+const dialogTitle = computed(() => (isEdit.value ? '编辑教师评级' : '新增教师评级'))
 
 const formRules = {
+  teacherId: [{ required: true, message: '请选择教师', trigger: 'change' }],
   yearmonth: [{ required: true, message: '请选择月份', trigger: 'change' }],
   levelId: [{ required: true, message: '请选择评级', trigger: 'change' }],
   descption: [{ required: true, message: '请填写描述', trigger: 'blur' }],
@@ -297,16 +320,47 @@ const handleReset = () => {
   fetchLevelList()
 }
 
+const resetFormData = () => {
+  Object.assign(formData, {
+    id: null,
+    teacherId: null,
+    teacherName: '',
+    yearmonth: '',
+    levelId: null,
+    descption: '',
+    userId: currentUserId.value || null,
+  })
+}
+
+const handleCreate = () => {
+  isEdit.value = false
+  resetFormData()
+  dialogVisible.value = true
+  nextTick(() => {
+    formRef.value?.clearValidate?.()
+  })
+}
+
 const handleEdit = (row) => {
+  isEdit.value = true
   Object.assign(formData, {
     id: row.id,
+    teacherId: row.teacherId || null,
     teacherName: row.teacherName,
     yearmonth: row.yearmonth,
     levelId: row.levelId,
     descption: row.descption,
     userId: row.userId || null,
   })
+  ensureOptionExists(teacherOptions, {
+    id: row.teacherId,
+    teacherName: row.teacherName,
+    phone: row.teacherPhone,
+  })
   dialogVisible.value = true
+  nextTick(() => {
+    formRef.value?.clearValidate?.()
+  })
 }
 
 const handleSubmit = () => {
@@ -319,19 +373,29 @@ const handleSubmit = () => {
         ElMessage.error('当前用户信息缺失，请重新登录后再试')
         return
       }
-      await updateTeacherLevel({
-        id: formData.id,
-        yearmonth: formData.yearmonth,
-        levelId: formData.levelId,
-        descption: formData.descption,
-        userId: operatorId,
-      })
-      ElMessage.success('更新成功')
+      if (isEdit.value) {
+        await updateTeacherLevel({
+          id: formData.id,
+          yearmonth: formData.yearmonth,
+          levelId: formData.levelId,
+          descption: formData.descption,
+          userId: operatorId,
+        })
+      } else {
+        await addTeacherLevel({
+          teacherId: formData.teacherId,
+          yearmonth: formData.yearmonth,
+          levelId: formData.levelId,
+          descption: formData.descption,
+          userId: operatorId,
+        })
+      }
+      ElMessage.success(isEdit.value ? '更新成功' : '新增成功')
       dialogVisible.value = false
       fetchLevelList()
     } catch (error) {
-      console.error('更新评级失败:', error)
-      ElMessage.error(error.message || '更新评级失败，请稍后重试')
+      console.error('提交评级失败:', error)
+      ElMessage.error(error.message || '操作失败，请稍后重试')
     } finally {
       submitLoading.value = false
     }
