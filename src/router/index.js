@@ -14,10 +14,10 @@ export const navigationMenus = [
   },
   {
     key: 'users',
-    label: '用户',
+    label: '账户',
     icon: UserFilled,
     children: [
-      { key: 'users-manage', label: '用户管理', path: '/users/manage' },
+      { key: 'users-manage', label: '管理员管理', path: '/users/manage' },
       { key: 'users-teachers', label: '教师管理', path: '/users/teachers' },
       { key: 'users-parents', label: '家长管理', path: '/users/parents' },
       { key: 'users-students', label: '学生管理', path: '/users/students' },
