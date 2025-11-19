@@ -72,22 +72,14 @@
     <el-card class="pastel-card">
       <el-table :data="signinList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column label="学生姓名" min-width="220">
+        <el-table-column label="学生姓名" min-width="180">
           <template #default="{ row }">
-            <div class="flex flex-col">
-              <span class="font-medium text-slate-800">{{ row.studentName || '-' }}</span>
-              <span class="text-xs text-slate-500">
-                家长：{{ row.parentName || '-' }}（{{ row.parentPhone || '-' }}）
-              </span>
-            </div>
+            <span class="font-medium text-slate-800">{{ row.studentName || '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="签到教师" min-width="180">
+        <el-table-column label="签到教师" min-width="160">
           <template #default="{ row }">
-            <div class="flex flex-col">
-              <span>{{ row.checkinTeacherName || '-' }}</span>
-              <span class="text-xs text-slate-500">{{ row.checkinTeacherPhone || '-' }}</span>
-            </div>
+            <span>{{ row.checkinTeacherName || '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="签到时间" min-width="180">
@@ -139,47 +131,26 @@
         <el-descriptions-item label="记录 ID">
           {{ currentRecord?.id || '-' }}
         </el-descriptions-item>
-        <el-descriptions-item label="状态">
-          {{ formatStatus(currentRecord?.status) }}
-        </el-descriptions-item>
-        <el-descriptions-item label="学生 ID">
-          {{ currentRecord?.studentId || currentRecord?.student?.id || '-' }}
-        </el-descriptions-item>
         <el-descriptions-item label="学生姓名">
           {{ currentRecord?.studentName || currentRecord?.student?.studentName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="家长">
-          {{ currentRecord?.parentName || currentRecord?.student?.parent?.parentName || '-' }}
-        </el-descriptions-item>
-        <el-descriptions-item label="家长电话">
-          {{ currentRecord?.parentPhone || currentRecord?.student?.parent?.phone || '-' }}
+          {{ currentRecord?.parentName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="学校">
-          {{ currentRecord?.schoolName || currentRecord?.student?.school?.dicName || '-' }}
+          {{ currentRecord?.schoolName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="年级">
-          {{ currentRecord?.gradeName || currentRecord?.student?.grade?.dicName || '-' }}
+          {{ currentRecord?.gradeName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="班级">
-          {{ currentRecord?.clazzName || currentRecord?.student?.clazz?.dicName || '-' }}
+          {{ currentRecord?.clazzName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="校区">
-          {{ currentRecord?.campusName || currentRecord?.student?.campus?.dicName || '-' }}
-        </el-descriptions-item>
-        <el-descriptions-item label="学生课时">
-          {{ formatLessonHours(currentRecord) }}
-        </el-descriptions-item>
-        <el-descriptions-item label="分配教师">
-          {{ currentRecord?.assignedTeacherName || currentRecord?.student?.teacher?.teacherName || '-' }}
-        </el-descriptions-item>
-        <el-descriptions-item label="分配教师电话">
-          {{ currentRecord?.assignedTeacherPhone || currentRecord?.student?.teacher?.phone || '-' }}
+          {{ currentRecord?.campusName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="签到教师">
-          {{ currentRecord?.checkinTeacherName || currentRecord?.teacher?.teacherName || '-' }}
-        </el-descriptions-item>
-        <el-descriptions-item label="签到教师电话">
-          {{ currentRecord?.checkinTeacherPhone || currentRecord?.teacher?.phone || '-' }}
+          {{ currentRecord?.checkinTeacherName || currentRecord?.teacherName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="签到时间">
           {{ formatDateTime(currentRecord?.createTime) }}
@@ -252,32 +223,14 @@ const formatDateTime = (dateStr) => {
   })
 }
 
-const formatLessonHours = (record) => {
-  if (!record) return '-'
-  const total = record.studentSumHours ?? record.student?.sumHours
-  const used = record.studentUsedHours ?? record.student?.usedHours
-  const remaining = record.studentRemainingHours ?? record.student?.remainingHours
-  if ([total, used, remaining].every(value => value == null)) {
-    return '-'
-  }
-  return `${used ?? 0}/${total ?? 0}（剩余 ${remaining ?? 0}）`
-}
-
-const formatStatus = (status) => {
-  if (status === 0) return '正常'
-  if (status === 1) return '异常'
-  if (status === undefined || status === null) return '-'
-  return status
-}
-
 const formatTeacherLabel = (teacher) => {
   if (!teacher) return ''
-  return `${teacher.phone || '-'}（${teacher.teacherName || '未命名'}）`
+  return `${teacher.teacherName || '未命名'} / ${teacher.phone || '-'}`
 }
 
 const formatParentLabel = (parent) => {
   if (!parent) return ''
-  return `${parent.phone || '-'}（${parent.parentName || '未命名'}）`
+  return `${parent.parentName || '未命名'} / ${parent.phone || '-'}`
 }
 
 const getImageSrc = (pic) => {
