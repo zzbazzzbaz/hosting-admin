@@ -158,7 +158,13 @@ import { getTeacherPageList } from '@/api/curd/teacher'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const currentUserId = computed(() => userStore.profile.userId)
+const currentUserId = computed(() => {
+  const id = userStore.profile.userId
+  console.log("*****---------"+id)
+  if (id === undefined || id === null || id === '') return null
+  const parsed = Number(id)
+  return Number.isNaN(parsed) ? id : parsed
+})
 
 const filters = reactive({
   yearmonth: '',
@@ -188,6 +194,7 @@ const formData = reactive({
   yearmonth: '',
   levelId: null,
   descption: '',
+  userId: null,
 })
 
 const formRules = {
@@ -297,6 +304,7 @@ const handleEdit = (row) => {
     yearmonth: row.yearmonth,
     levelId: row.levelId,
     descption: row.descption,
+    userId: row.userId || null,
   })
   dialogVisible.value = true
 }
@@ -306,12 +314,17 @@ const handleSubmit = () => {
     if (!valid) return
     try {
       submitLoading.value = true
+      const operatorId = currentUserId.value ?? formData.userId
+      if (!operatorId) {
+        ElMessage.error('当前用户信息缺失，请重新登录后再试')
+        return
+      }
       await updateTeacherLevel({
         id: formData.id,
         yearmonth: formData.yearmonth,
         levelId: formData.levelId,
         descption: formData.descption,
-        userId: currentUserId.value,
+        userId: operatorId,
       })
       ElMessage.success('更新成功')
       dialogVisible.value = false
