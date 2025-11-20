@@ -6,7 +6,6 @@
           <span class="font-semibold text-slate-50">筛选条件</span>
           <div class="space-x-3">
             <el-button type="primary" @click="handleQuery">刷新</el-button>
-            <el-button @click="handleReset">重置</el-button>
           </div>
         </div>
       </template>
@@ -71,6 +70,10 @@
           </el-select>
         </el-form-item>
       </el-form>
+      <div class="mt-4 flex justify-end gap-3">
+        <el-button @click="handleReset">重置</el-button>
+        <el-button type="primary" @click="handleQuery">查询</el-button>
+      </div>
     </el-card>
 
     <el-card class="pastel-card">

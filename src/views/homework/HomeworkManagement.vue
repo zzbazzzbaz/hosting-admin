@@ -6,7 +6,6 @@
           <span class="font-semibold text-slate-50">筛选条件</span>
           <div class="space-x-3">
             <el-button type="primary" @click="handleQuery">刷新</el-button>
-            <el-button @click="handleReset">重置</el-button>
           </div>
         </div>
       </template>
