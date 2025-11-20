@@ -15,10 +15,10 @@
 
       <!-- 右侧：详情表单卡片 -->
       <DetailFormCard
+        v-model:form-data="formData"
         :selected-node="selectedNode"
         :selected-path="selectedPath"
         :type-meta="typeMeta"
-        :form-data="formData"
         @save="handleSave"
       />
     </div>

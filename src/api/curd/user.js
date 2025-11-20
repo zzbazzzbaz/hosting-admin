@@ -15,11 +15,11 @@ function adaptPageListResponse(response) {
   // 扁平化处理每个用户对象
   const flattenedList = (response.data.rows || []).map((user) => {
     // 提取 campus 对象的字段到顶层
-    const campusId = user.campus?.id || null
-    const dicName = user.campus?.dicName || null
+    const { campus, ...restUser } = user
+    const campusId = campus?.id || null
+    const dicName = campus?.dicName || null
 
     // 返回扁平化后的用户对象（移除原始 campus 对象）
-    const { campus, ...restUser } = user
     return {
       ...restUser,
       campusId, // 校区 ID

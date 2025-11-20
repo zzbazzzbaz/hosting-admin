@@ -193,7 +193,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, watch, onMounted } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getHomeworkStudentStatsPageList } from '@/api/curd/homework'
 import { getTeacherPageList } from '@/api/curd/teacher'
@@ -228,20 +228,6 @@ const schoolOptions = ref([])
 const gradeOptions = ref([])
 const classOptions = ref([])
 const campusOptions = ref([])
-
-const totalFinished = computed(() =>
-  statsList.value.reduce((sum, item) => sum + (item.finishCount || 0), 0)
-)
-const totalUnfinished = computed(() =>
-  statsList.value.reduce((sum, item) => sum + (item.nofinishCount || 0), 0)
-)
-const totalHomework = computed(() =>
-  statsList.value.reduce((sum, item) => sum + (item.sumCount || 0), 0)
-)
-const finishRate = computed(() => {
-  if (!totalHomework.value) return 0
-  return ((totalFinished.value / totalHomework.value) * 100).toFixed(1)
-})
 
 const formatTeacherLabel = (teacher) => {
   if (!teacher) return ''

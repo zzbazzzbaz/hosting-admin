@@ -126,7 +126,12 @@ import { ref, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 
 // 组件属性定义
-const props = defineProps({
+const {
+  dictionaryTree,
+  treeProps,
+  typeMeta,
+  nextTypeMap,
+} = defineProps({
   /** 树形数据源 */
   dictionaryTree: {
     type: Array,

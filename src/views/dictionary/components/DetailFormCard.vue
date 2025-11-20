@@ -38,7 +38,7 @@
 
       <!-- 表单区域 -->
       <el-form
-        :model="formData"
+        :model="localForm"
         label-width="100px"
         class="detail-form"
       >
@@ -46,13 +46,13 @@
         <template v-if="selectedNode.type === 'school'">
           <el-form-item label="学校名称">
             <el-input
-              v-model="formData.label"
+              v-model="localForm.label"
               placeholder="请输入学校名称"
             />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
-              v-model="formData.remark"
+              v-model="localForm.remark"
               type="textarea"
               :rows="3"
               placeholder="请输入备注信息"
@@ -80,13 +80,13 @@
         <template v-else-if="selectedNode.type === 'grade'">
           <el-form-item label="年级名称">
             <el-input
-              v-model="formData.label"
+              v-model="localForm.label"
               placeholder="请输入年级名称"
             />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
-              v-model="formData.remark"
+              v-model="localForm.remark"
               type="textarea"
               :rows="3"
               placeholder="请输入备注信息"
@@ -114,13 +114,13 @@
         <template v-else-if="selectedNode.type === 'class'">
           <el-form-item label="班级名称">
             <el-input
-              v-model="formData.label"
+              v-model="localForm.label"
               placeholder="请输入班级名称"
             />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
-              v-model="formData.remark"
+              v-model="localForm.remark"
               type="textarea"
               :rows="3"
               placeholder="请输入备注信息"
@@ -128,7 +128,7 @@
           </el-form-item>
           <el-form-item label="学生人数">
             <el-input
-              v-model="formData.students"
+              v-model="localForm.students"
               disabled
             >
               <template #suffix>
@@ -163,7 +163,7 @@
  * 详情表单卡片组件
  * 用于展示和编辑节点详细信息
  */
-import { watch } from 'vue'
+import { reactive, watch } from 'vue'
 
 // 组件属性定义
 const props = defineProps({
@@ -190,13 +190,41 @@ const props = defineProps({
 })
 
 // 组件事件定义
-const emit = defineEmits(['save'])
+const emit = defineEmits(['save', 'update:formData'])
+
+// 本地可编辑表单，避免直接修改 props
+const localForm = reactive({
+  label: '',
+  remark: '',
+  students: 0,
+})
+
+// 监听外部 formData 变化，同步到本地表单
+watch(
+  () => props.formData,
+  (val) => {
+    if (!val) return
+    localForm.label = val.label ?? ''
+    localForm.remark = val.remark ?? ''
+    localForm.students = val.students ?? 0
+  },
+  { immediate: true, deep: true }
+)
+
+// 将本地表单变更同步回父组件
+watch(
+  localForm,
+  (val) => {
+    emit('update:formData', { ...val })
+  },
+  { deep: true }
+)
 
 /**
  * 保存节点信息
  */
 const handleSave = () => {
-  emit('save')
+  emit('save', { ...localForm })
 }
 </script>
 

@@ -8,9 +8,9 @@ function adaptTeacherPageListResponse(response) {
   }
 
   const flattenedRows = (response.data.rows || []).map((teacher) => {
-    const campusId = teacher.campus?.id ?? null
-    const dicName = teacher.campus?.dicName ?? null
     const { campus, ...restTeacher } = teacher
+    const campusId = campus?.id ?? null
+    const dicName = campus?.dicName ?? null
 
     return {
       ...restTeacher,

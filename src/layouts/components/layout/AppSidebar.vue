@@ -81,7 +81,7 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-const props = defineProps({
+const { menus } = defineProps({
   menus: {
     type: Array,
     default: () => [],
