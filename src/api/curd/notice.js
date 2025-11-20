@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { useUserStore } from '@/stores/user'
-import {getUserId} from "@/utils/util.js";
+import { getUserId } from '@/utils/util.js'
 
 const adaptNoticePageListResponse = (response) => {
   if (!response || !response.data) {

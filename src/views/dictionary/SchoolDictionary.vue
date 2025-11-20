@@ -67,8 +67,22 @@ const dictionaryTree = ref([
             room: 'A101',
             scheduleSummary: '上午 + 下午',
             children: [
-              { id: 'subject-001', label: '语文', type: 'subject', teacher: '王语', schedule: '周一 / 周三', resource: '部编版' },
-              { id: 'subject-002', label: '数学', type: 'subject', teacher: '陈晨', schedule: '周二 / 周四', resource: '苏教版' },
+              {
+                id: 'subject-001',
+                label: '语文',
+                type: 'subject',
+                teacher: '王语',
+                schedule: '周一 / 周三',
+                resource: '部编版',
+              },
+              {
+                id: 'subject-002',
+                label: '数学',
+                type: 'subject',
+                teacher: '陈晨',
+                schedule: '周二 / 周四',
+                resource: '苏教版',
+              },
             ],
           },
           {
@@ -80,8 +94,22 @@ const dictionaryTree = ref([
             room: 'A102',
             scheduleSummary: '上午',
             children: [
-              { id: 'subject-003', label: '语文', type: 'subject', teacher: '王语', schedule: '周一 / 周四', resource: '部编版' },
-              { id: 'subject-004', label: '数学', type: 'subject', teacher: '刘方', schedule: '周二 / 周五', resource: '苏教版' },
+              {
+                id: 'subject-003',
+                label: '语文',
+                type: 'subject',
+                teacher: '王语',
+                schedule: '周一 / 周四',
+                resource: '部编版',
+              },
+              {
+                id: 'subject-004',
+                label: '数学',
+                type: 'subject',
+                teacher: '刘方',
+                schedule: '周二 / 周五',
+                resource: '苏教版',
+              },
             ],
           },
         ],
@@ -102,8 +130,22 @@ const dictionaryTree = ref([
             room: 'B201',
             scheduleSummary: '上午 + 晚自习',
             children: [
-              { id: 'subject-005', label: '英语', type: 'subject', teacher: 'Grace', schedule: '周三 / 周五', resource: '朗文版' },
-              { id: 'subject-006', label: '科学', type: 'subject', teacher: '秦远', schedule: '周二', resource: '自编资料' },
+              {
+                id: 'subject-005',
+                label: '英语',
+                type: 'subject',
+                teacher: 'Grace',
+                schedule: '周三 / 周五',
+                resource: '朗文版',
+              },
+              {
+                id: 'subject-006',
+                label: '科学',
+                type: 'subject',
+                teacher: '秦远',
+                schedule: '周二',
+                resource: '自编资料',
+              },
             ],
           },
         ],
@@ -135,8 +177,22 @@ const dictionaryTree = ref([
             room: 'C303',
             scheduleSummary: '全天制',
             children: [
-              { id: 'subject-007', label: '物理', type: 'subject', teacher: '高博', schedule: '周一 / 周四', resource: '浙科版' },
-              { id: 'subject-008', label: '信息科技', type: 'subject', teacher: '杨一', schedule: '周五', resource: '自研微课' },
+              {
+                id: 'subject-007',
+                label: '物理',
+                type: 'subject',
+                teacher: '高博',
+                schedule: '周一 / 周四',
+                resource: '浙科版',
+              },
+              {
+                id: 'subject-008',
+                label: '信息科技',
+                type: 'subject',
+                teacher: '杨一',
+                schedule: '周五',
+                resource: '自研微课',
+              },
             ],
           },
         ],
@@ -332,7 +388,8 @@ onMounted(() => {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(circle at 12% 18%, rgba(16, 185, 129, 0.18), transparent 45%),
+  background:
+    radial-gradient(circle at 12% 18%, rgba(16, 185, 129, 0.18), transparent 45%),
     radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.18), transparent 50%),
     linear-gradient(180deg, #ebfff7 0%, #eef7ff 60%, #f8fbff 100%);
 }

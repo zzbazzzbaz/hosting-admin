@@ -160,7 +160,12 @@
         class="grid gap-4 md:grid-cols-2"
       >
         <el-form-item label="学生姓名" prop="studentName">
-          <el-input v-model="formData.studentName" placeholder="请输入学生姓名" maxlength="50" clearable />
+          <el-input
+            v-model="formData.studentName"
+            placeholder="请输入学生姓名"
+            maxlength="50"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="学校" prop="schoolId">
           <el-select v-model="formData.schoolId" placeholder="请选择学校" clearable filterable>
@@ -314,33 +319,15 @@ const formData = reactive({
 })
 
 const formRules = {
-  studentName: [
-    { required: true, message: '请输入学生姓名', trigger: 'blur' },
-  ],
-  sumHours: [
-    { required: true, message: '请输入总课时', trigger: 'blur' },
-  ],
-  usedHours: [
-    { required: true, message: '请输入已用课时', trigger: 'blur' },
-  ],
-  parentId: [
-    { required: true, message: '请选择家长', trigger: 'change' },
-  ],
-  schoolId: [
-    { required: true, message: '请选择学校', trigger: 'change' },
-  ],
-  gradeId: [
-    { required: true, message: '请选择年级', trigger: 'change' },
-  ],
-  clazzId: [
-    { required: true, message: '请选择班级', trigger: 'change' },
-  ],
-  campusId: [
-    { required: true, message: '请选择校区', trigger: 'change' },
-  ],
-  teacherId: [
-    { required: true, message: '请选择教师', trigger: 'change' },
-  ],
+  studentName: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
+  sumHours: [{ required: true, message: '请输入总课时', trigger: 'blur' }],
+  usedHours: [{ required: true, message: '请输入已用课时', trigger: 'blur' }],
+  parentId: [{ required: true, message: '请选择家长', trigger: 'change' }],
+  schoolId: [{ required: true, message: '请选择学校', trigger: 'change' }],
+  gradeId: [{ required: true, message: '请选择年级', trigger: 'change' }],
+  clazzId: [{ required: true, message: '请选择班级', trigger: 'change' }],
+  campusId: [{ required: true, message: '请选择校区', trigger: 'change' }],
+  teacherId: [{ required: true, message: '请选择教师', trigger: 'change' }],
 }
 
 const formatDateTime = (dateStr) => {
@@ -434,7 +421,7 @@ const handleTeacherRemote = (query) => {
 
 const ensureOptionExists = (optionsRef, option, key = 'id') => {
   if (!option || !option[key]) return
-  const exists = optionsRef.value.some(item => item[key] === option[key])
+  const exists = optionsRef.value.some((item) => item[key] === option[key])
   if (!exists) {
     optionsRef.value = [...optionsRef.value, option]
   }
@@ -459,7 +446,7 @@ const fetchStudentList = async () => {
       studentList.value = result.data.list || []
       totalStudents.value = result.data.total || 0
 
-      studentList.value.forEach(student => {
+      studentList.value.forEach((student) => {
         if (student.parentId) {
           ensureOptionExists(parentOptions, {
             id: student.parentId,

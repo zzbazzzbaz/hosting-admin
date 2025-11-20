@@ -20,7 +20,9 @@
       </h1>
     </div>
     <div class="flex items-center gap-4">
-      <div class="flex items-center gap-4 rounded-full bg-white/80 px-6 py-3 shadow-inner shadow-emerald-100/60 backdrop-blur">
+      <div
+        class="flex items-center gap-4 rounded-full bg-white/80 px-6 py-3 shadow-inner shadow-emerald-100/60 backdrop-blur"
+      >
         <div class="text-left">
           <p class="text-xs uppercase tracking-wide text-slate-400">当前用户</p>
           <p class="text-base font-semibold text-slate-800">{{ profile.name }}</p>
@@ -121,15 +123,11 @@ const currentTitle = computed(() => breadcrumbs.value.at(-1)?.label ?? route.met
 const handleLogout = async () => {
   try {
     // 弹出确认对话框
-    await ElMessageBox.confirm(
-      '确定要退出登录吗？',
-      '退出确认',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-    )
+    await ElMessageBox.confirm('确定要退出登录吗？', '退出确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
 
     // 调用退出登录接口
     await logOut()

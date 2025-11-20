@@ -51,22 +51,42 @@
         </el-form-item>
         <el-form-item label="学校">
           <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
-            <el-option v-for="item in schoolOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in schoolOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
           <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
-            <el-option v-for="item in gradeOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in gradeOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
           <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
-            <el-option v-for="item in classOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in classOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="校区">
           <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
-            <el-option v-for="item in campusOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in campusOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -139,9 +159,15 @@ const gradeOptions = ref([])
 const classOptions = ref([])
 const campusOptions = ref([])
 
-const totalFinished = computed(() => statsList.value.reduce((sum, item) => sum + (item.finishCount || 0), 0))
-const totalUnfinished = computed(() => statsList.value.reduce((sum, item) => sum + (item.nofinishCount || 0), 0))
-const totalHomework = computed(() => statsList.value.reduce((sum, item) => sum + (item.sumCount || 0), 0))
+const totalFinished = computed(() =>
+  statsList.value.reduce((sum, item) => sum + (item.finishCount || 0), 0)
+)
+const totalUnfinished = computed(() =>
+  statsList.value.reduce((sum, item) => sum + (item.nofinishCount || 0), 0)
+)
+const totalHomework = computed(() =>
+  statsList.value.reduce((sum, item) => sum + (item.sumCount || 0), 0)
+)
 const finishRate = computed(() => {
   if (!totalHomework.value) return 0
   return ((totalFinished.value / totalHomework.value) * 100).toFixed(1)
@@ -159,7 +185,7 @@ const formatParentLabel = (parent) => {
 
 const ensureOptionExists = (optionsRef, option, key = 'id') => {
   if (!option || !option[key]) return
-  const exists = optionsRef.value.some(item => item[key] === option[key])
+  const exists = optionsRef.value.some((item) => item[key] === option[key])
   if (!exists) {
     optionsRef.value = [...optionsRef.value, option]
   }

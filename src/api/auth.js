@@ -13,21 +13,21 @@ import request from '@/utils/request'
  * @description 将后端数据格式转换为前端统一格式，当后端字段变化时只需修改此处
  */
 function adaptLoginResponse(response) {
-    if (!response || !response.data) {
-        return response
-    }
+  if (!response || !response.data) {
+    return response
+  }
 
-    return {
-        code: response.code,
-        message: response.message,
-        data: {
-            // 标准化字段名：前端统一使用这些字段名
-            authToken: response.data.Authorization,
-            userId: response.data.userId,
-            phone: response.data.phone,
-            userName: response.data.userName
-        }
-    }
+  return {
+    code: response.code,
+    message: response.message,
+    data: {
+      // 标准化字段名：前端统一使用这些字段名
+      authToken: response.data.Authorization,
+      userId: response.data.userId,
+      phone: response.data.phone,
+      userName: response.data.userName,
+    },
+  }
 }
 
 /**
@@ -36,15 +36,15 @@ function adaptLoginResponse(response) {
  * @returns {Object} 标准化后的数据
  */
 function adaptTokenCheckResponse(response) {
-    console.log(response)
+  console.log(response)
 
-    return {
-        code: response.code,
-        message: response.message || '',
-        data: {
-            isValid: response.data === true,
-        }
-    }
+  return {
+    code: response.code,
+    message: response.message || '',
+    data: {
+      isValid: response.data === true,
+    },
+  }
 }
 
 /**
@@ -58,34 +58,34 @@ function adaptTokenCheckResponse(response) {
  * })
  */
 export const login = async (data) => {
-    const response = await request({
-        url: '/front/user/login',
-        method: 'post',
-        params: {
-            phone: data.phone,
-            password: data.password,
-            type: data.type || 1
-        }
-    })
+  const response = await request({
+    url: '/front/user/login',
+    method: 'post',
+    params: {
+      phone: data.phone,
+      password: data.password,
+      type: data.type || 1,
+    },
+  })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptLoginResponse(response)
+  // 🔹 使用适配器转换数据格式
+  return adaptLoginResponse(response)
 }
 
 /**
  * 验证 token 是否过期
  */
 export const checkToken = async (token) => {
-    const response = await request({
-        url: '/front/user/checkToken',
-        method: 'post',
-        params: {
-            token: token
-        }
-    })
+  const response = await request({
+    url: '/front/user/checkToken',
+    method: 'post',
+    params: {
+      token: token,
+    },
+  })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptTokenCheckResponse(response)
+  // 🔹 使用适配器转换数据格式
+  return adaptTokenCheckResponse(response)
 }
 
 /**
@@ -103,8 +103,8 @@ export const checkToken = async (token) => {
  * }
  */
 export const logOut = () => {
-    return request({
-        url: '/front/user/logOut',
-        method: 'post'
-    })
+  return request({
+    url: '/front/user/logOut',
+    method: 'post',
+  })
 }

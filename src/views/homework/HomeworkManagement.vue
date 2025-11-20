@@ -11,11 +11,7 @@
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <el-form-item label="学生姓名">
-          <el-input
-            v-model="filters.studentName"
-            placeholder="输入学生姓名"
-            clearable
-          />
+          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
         </el-form-item>
         <el-form-item label="教师">
           <el-select
@@ -55,27 +51,52 @@
         </el-form-item>
         <el-form-item label="学校">
           <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
-            <el-option v-for="item in schoolOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in schoolOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
           <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
-            <el-option v-for="item in gradeOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in gradeOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
           <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
-            <el-option v-for="item in classOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in classOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="校区">
           <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
-            <el-option v-for="item in campusOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in campusOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="学科">
           <el-select v-model="filters.subjectId" placeholder="选择学科" clearable filterable>
-            <el-option v-for="item in subjectOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in subjectOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="完成状态">
@@ -109,7 +130,9 @@
         <el-table-column prop="finishTime" label="完成时间" min-width="160" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button size="small" type="primary" @click="handleViewDetail(row)">查看详情</el-button>
+            <el-button size="small" type="primary" @click="handleViewDetail(row)"
+              >查看详情</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -125,19 +148,24 @@
       </div>
     </el-card>
 
-    <el-dialog
-      v-model="detailVisible"
-      title="作业详情"
-      width="720px"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="detailVisible" title="作业详情" width="720px" :close-on-click-modal="false">
       <el-descriptions :column="2" border class="rounded-2xl">
         <el-descriptions-item label="ID">{{ currentRecord?.id || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="学生姓名">{{ currentRecord?.studentName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="教师">{{ currentRecord?.teacherName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="家长">{{ currentRecord?.parentName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="布置时间">{{ currentRecord?.createTime || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="完成时间">{{ currentRecord?.finishTime || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="学生姓名">{{
+          currentRecord?.studentName || '-'
+        }}</el-descriptions-item>
+        <el-descriptions-item label="教师">{{
+          currentRecord?.teacherName || '-'
+        }}</el-descriptions-item>
+        <el-descriptions-item label="家长">{{
+          currentRecord?.parentName || '-'
+        }}</el-descriptions-item>
+        <el-descriptions-item label="布置时间">{{
+          currentRecord?.createTime || '-'
+        }}</el-descriptions-item>
+        <el-descriptions-item label="完成时间">{{
+          currentRecord?.finishTime || '-'
+        }}</el-descriptions-item>
         <el-descriptions-item label="完成状态">
           <el-tag :type="currentRecord?.state === 1 ? 'success' : 'info'" effect="dark">
             {{ currentRecord?.state === 1 ? '已完成' : '未完成' }}
@@ -146,9 +174,12 @@
         <el-descriptions-item label="教师评语">
           {{ currentRecord?.evaluation || '—' }}
         </el-descriptions-item>
-        <el-descriptions-item label="托管校区">{{ currentRecord?.campusName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="托管校区">{{
+          currentRecord?.campusName || '-'
+        }}</el-descriptions-item>
         <el-descriptions-item label="所在班级">
-          {{ currentRecord?.schoolName || '-' }} · {{ currentRecord?.gradeName || '-' }} · {{ currentRecord?.clazzName || '-' }}
+          {{ currentRecord?.schoolName || '-' }} · {{ currentRecord?.gradeName || '-' }} ·
+          {{ currentRecord?.clazzName || '-' }}
         </el-descriptions-item>
       </el-descriptions>
 
@@ -165,7 +196,7 @@
               :src="pic.url"
               fit="cover"
               class="h-24 w-24 rounded-xl border border-white/10 object-cover"
-              :preview-src-list="currentRecord.workPicList.map(item => item.url)"
+              :preview-src-list="currentRecord.workPicList.map((item) => item.url)"
               preview-teleported
             />
           </div>
@@ -179,7 +210,7 @@
               :src="pic.url"
               fit="cover"
               class="h-24 w-24 rounded-xl border border-white/10 object-cover"
-              :preview-src-list="currentRecord.finishPicList.map(item => item.url)"
+              :preview-src-list="currentRecord.finishPicList.map((item) => item.url)"
               preview-teleported
             />
           </div>
@@ -194,7 +225,13 @@
 import { reactive, ref, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getHomeworkPageList } from '@/api/curd/homework'
-import { getSchoolList, getGradeList, getClassList, getCampusList, getSubjectList } from '@/api/curd/dictionary'
+import {
+  getSchoolList,
+  getGradeList,
+  getClassList,
+  getCampusList,
+  getSubjectList,
+} from '@/api/curd/dictionary'
 import { getTeacherPageList } from '@/api/curd/teacher'
 import { getParentPageList } from '@/api/curd/parent'
 
@@ -245,7 +282,7 @@ const formatParentLabel = (parent) => {
 
 const ensureOptionExists = (listRef, option, key = 'id') => {
   if (!option || !option[key]) return
-  const exists = listRef.value.some(item => item[key] === option[key])
+  const exists = listRef.value.some((item) => item[key] === option[key])
   if (!exists) {
     listRef.value = [...listRef.value, option]
   }

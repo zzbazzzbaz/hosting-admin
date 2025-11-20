@@ -26,11 +26,7 @@
             <span class="text-sm font-medium">{{ menu.label }}</span>
           </template>
           <template v-for="child in menu.children" :key="child.key">
-            <el-menu-item
-              v-if="!child.children?.length"
-              :index="child.path"
-              class="rounded-md"
-            >
+            <el-menu-item v-if="!child.children?.length" :index="child.path" class="rounded-md">
               <span class="text-sm">{{ child.label }}</span>
             </el-menu-item>
             <el-sub-menu v-else :index="child.key" class="ml-2">

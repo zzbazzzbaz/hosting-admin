@@ -19,9 +19,10 @@ const normalizeImageList = (list, recordId, prefix) => {
     .map((item, index) => {
       if (!item) return null
       const imgObj = typeof item === 'object' ? { ...item } : {}
-      const rawPath = typeof item === 'string'
-        ? item
-        : imgObj.imgpath || imgObj.imgPath || imgObj.url || imgObj.path || ''
+      const rawPath =
+        typeof item === 'string'
+          ? item
+          : imgObj.imgpath || imgObj.imgPath || imgObj.url || imgObj.path || ''
 
       if (!rawPath) return null
 

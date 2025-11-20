@@ -81,7 +81,9 @@
                 新增
               </el-button>
               <!-- 删除按钮 -->
-              <el-button size="small" text class="btn-link danger" @click.stop="handleRemove(data)">删除</el-button>
+              <el-button size="small" text class="btn-link danger" @click.stop="handleRemove(data)"
+                >删除</el-button
+              >
             </div>
           </div>
         </template>
@@ -281,7 +283,10 @@ defineExpose({
   margin: 12px 0;
   border: 1px solid rgba(14, 165, 233, 0.08);
   background: rgba(255, 255, 255, 0.92);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
   backdrop-filter: blur(4px);
   position: relative;
   z-index: 1;

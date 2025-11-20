@@ -77,19 +77,9 @@
       :close-on-click-modal="false"
       @close="handleDialogClose"
     >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="90px"
-      >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
         <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="formData.phone"
-            placeholder="请输入手机号"
-            maxlength="11"
-            clearable
-          />
+          <el-input v-model="formData.phone" placeholder="请输入手机号" maxlength="11" clearable />
         </el-form-item>
         <el-form-item label="教师姓名" prop="teacherName">
           <el-input
@@ -100,12 +90,7 @@
           />
         </el-form-item>
         <el-form-item label="所在校区" prop="campusId">
-          <el-select
-            v-model="formData.campusId"
-            placeholder="请选择所在校区"
-            clearable
-            filterable
-          >
+          <el-select v-model="formData.campusId" placeholder="请选择所在校区" clearable filterable>
             <el-option
               v-for="campus in campusList"
               :key="campus.id"
@@ -130,7 +115,13 @@
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getTeacherPageList, addTeacher, deleteTeacher, resetTeacherPassword, updateTeacher } from '@/api/curd/teacher'
+import {
+  getTeacherPageList,
+  addTeacher,
+  deleteTeacher,
+  resetTeacherPassword,
+  updateTeacher,
+} from '@/api/curd/teacher'
 import { getCampusList } from '@/api/curd/dictionary.js'
 
 const filters = reactive({
@@ -163,9 +154,7 @@ const formRules = {
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },
   ],
-  campusId: [
-    { required: true, message: '请选择所在校区', trigger: 'change' },
-  ],
+  campusId: [{ required: true, message: '请选择所在校区', trigger: 'change' }],
 }
 
 const handleCreate = () => {

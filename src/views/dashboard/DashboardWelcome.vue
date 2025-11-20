@@ -2,9 +2,7 @@
   <div class="space-y-6">
     <el-card shadow="hover" class="pastel-card">
       <div class="flex flex-col gap-2">
-        <h2 class="text-2xl font-semibold text-pink-500">
-          欢迎回来，{{ profile.name }}！
-        </h2>
+        <h2 class="text-2xl font-semibold text-pink-500">欢迎回来，{{ profile.name }}！</h2>
         <p class="text-slate-500">
           您可以通过左侧导航快捷进入用户、签到、作业等模块，管理托管机构的基础数据。
         </p>
@@ -34,7 +32,10 @@
           :key="action.label"
           class="flex items-start gap-4 rounded-3xl border border-pink-100/60 bg-white/80 p-4 shadow-sm shadow-pink-100/60 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-pink-200/70"
         >
-          <el-icon :size="actionIconSize" class="rounded-2xl bg-pink-100/80 p-2 text-pink-500 shadow-inner shadow-pink-100/80">
+          <el-icon
+            :size="actionIconSize"
+            class="rounded-2xl bg-pink-100/80 p-2 text-pink-500 shadow-inner shadow-pink-100/80"
+          >
             <component :is="action.icon" />
           </el-icon>
           <div class="space-y-1">

@@ -3,16 +3,24 @@
     <div class="login-gradient login-gradient--top" />
     <div class="login-gradient login-gradient--bottom" />
     <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
-      <div class="login-card grid w-full max-w-5xl gap-6 rounded-[32px] border border-white/15 bg-white/90 p-6 shadow-[0_35px_120px_rgba(15,23,42,0.35)] backdrop-blur-[28px] lg:grid-cols-[1.05fr_1fr] lg:p-10">
-        <section class="brand-panel relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-sky-600 to-indigo-600 p-8 text-white">
+      <div
+        class="login-card grid w-full max-w-5xl gap-6 rounded-[32px] border border-white/15 bg-white/90 p-6 shadow-[0_35px_120px_rgba(15,23,42,0.35)] backdrop-blur-[28px] lg:grid-cols-[1.05fr_1fr] lg:p-10"
+      >
+        <section
+          class="brand-panel relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-sky-600 to-indigo-600 p-8 text-white"
+        >
           <div class="brand-panel__glow brand-panel__glow--one" />
           <div class="brand-panel__glow brand-panel__glow--two" />
           <div class="relative z-10 flex h-full flex-col">
-            <div class="inline-flex w-fit items-center gap-3 rounded-full bg-white/15 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.3em]">
+            <div
+              class="inline-flex w-fit items-center gap-3 rounded-full bg-white/15 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.3em]"
+            >
               <span class="h-1 w-12 rounded-full bg-white/70" />
               hosting admin
             </div>
-            <h1 class="mt-6 text-3xl font-semibold leading-tight text-white lg:text-4xl">托管平台智能控制台</h1>
+            <h1 class="mt-6 text-3xl font-semibold leading-tight text-white lg:text-4xl">
+              托管平台智能控制台
+            </h1>
             <p class="mt-4 max-w-md text-sm text-white/80">
               统一的课堂排程、考勤打卡、家校沟通与统计分析工具，为托管机构提供开箱即用的数字化能力。
             </p>
@@ -33,7 +41,9 @@
                 </div>
               </div>
             </div>
-            <div class="mt-auto grid gap-4 pt-10 text-left text-xs uppercase tracking-[0.2em] text-white/70 sm:grid-cols-2">
+            <div
+              class="mt-auto grid gap-4 pt-10 text-left text-xs uppercase tracking-[0.2em] text-white/70 sm:grid-cols-2"
+            >
               <div>
                 <p class="text-[10px] text-white/50">Service Uptime</p>
                 <p class="text-2xl font-semibold text-white">99.95%</p>
@@ -45,14 +55,22 @@
             </div>
           </div>
         </section>
-        <section class="form-panel flex flex-col justify-center rounded-3xl bg-white/90 p-8 text-slate-800 shadow-[0_25px_50px_rgba(15,23,42,0.12)]">
+        <section
+          class="form-panel flex flex-col justify-center rounded-3xl bg-white/90 p-8 text-slate-800 shadow-[0_25px_50px_rgba(15,23,42,0.12)]"
+        >
           <div class="mb-8 flex items-start justify-between gap-4">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">Account Center</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">
+                Account Center
+              </p>
               <h2 class="mt-3 text-2xl font-semibold text-slate-900">欢迎登录托管后台</h2>
-              <p class="mt-2 text-sm text-slate-500">输入账号信息以继续。我们会保障您的数据安全。</p>
+              <p class="mt-2 text-sm text-slate-500">
+                输入账号信息以继续。我们会保障您的数据安全。
+              </p>
             </div>
-            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+            <div
+              class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600"
+            >
               <img :src="logoUrl" alt="logo" class="h-8 w-8 object-contain" />
             </div>
           </div>
@@ -111,7 +129,9 @@
           </el-form>
           <div class="mt-6 text-center text-xs text-slate-400">
             登录即表示您同意
-            <a class="font-medium text-emerald-500 hover:text-emerald-600" href="javascript:void(0)">《安全与隐私政策》</a>
+            <a class="font-medium text-emerald-500 hover:text-emerald-600" href="javascript:void(0)"
+              >《安全与隐私政策》</a
+            >
           </div>
         </section>
       </div>
@@ -208,7 +228,7 @@ const handleLogin = async () => {
   })
 
   // 如果有验证错误，不提交表单
-  if (Object.values(errors).some(error => error)) {
+  if (Object.values(errors).some((error) => error)) {
     return
   }
 
@@ -258,7 +278,8 @@ const handleLogin = async () => {
 <style scoped>
 .login-page {
   font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.25), transparent 55%),
+  background:
+    radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.25), transparent 55%),
     radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.2), transparent 45%),
     linear-gradient(135deg, #0f172a 0%, #1d2b4b 45%, #273a57 100%);
 }
@@ -318,7 +339,9 @@ const handleLogin = async () => {
   border-radius: 1rem;
   padding: 2px;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(99, 102, 241, 0.2));
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .field-shell:focus-within {
@@ -347,7 +370,10 @@ const handleLogin = async () => {
   color: #fff;
   background-image: linear-gradient(120deg, #34d399, #3b82f6, #8b5cf6);
   box-shadow: 0 20px 35px rgba(79, 70, 229, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 }
 
 .brand-btn:hover {

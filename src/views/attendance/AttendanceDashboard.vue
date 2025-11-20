@@ -9,11 +9,7 @@
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <el-form-item label="学生姓名">
-          <el-input
-            v-model="filters.studentName"
-            placeholder="输入学生姓名"
-            clearable
-          />
+          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
         </el-form-item>
         <el-form-item label="学校">
           <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
@@ -253,7 +249,7 @@ const formatTeacherLabel = (teacher) => {
 
 const ensureOptionExists = (optionsRef, option, key = 'id') => {
   if (!option || !option[key]) return
-  const exists = optionsRef.value.some(item => item[key] === option[key])
+  const exists = optionsRef.value.some((item) => item[key] === option[key])
   if (!exists) {
     optionsRef.value = [...optionsRef.value, option]
   }

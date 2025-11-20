@@ -62,12 +62,7 @@
       :close-on-click-modal="false"
       @close="handleDialogClose"
     >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="90px"
-      >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
         <el-form-item label="家长姓名" prop="parentName">
           <el-input
             v-model="formData.parentName"
@@ -77,12 +72,7 @@
           />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="formData.phone"
-            placeholder="请输入手机号"
-            maxlength="11"
-            clearable
-          />
+          <el-input v-model="formData.phone" placeholder="请输入手机号" maxlength="11" clearable />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -105,7 +95,7 @@ import {
   addParent,
   updateParent,
   deleteParent,
-  resetParentPassword
+  resetParentPassword,
 } from '@/api/curd/parent'
 
 const filters = reactive({
@@ -133,9 +123,7 @@ const formData = reactive({
 })
 
 const formRules = {
-  parentName: [
-    { required: true, message: '请输入家长姓名', trigger: 'blur' },
-  ],
+  parentName: [{ required: true, message: '请输入家长姓名', trigger: 'blur' }],
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' },

@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import {getUserId} from "@/utils/util.js";
+import { getUserId } from '@/utils/util.js'
 
 // ========== 数据适配器 ==========
 

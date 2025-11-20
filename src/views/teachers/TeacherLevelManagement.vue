@@ -5,9 +5,7 @@
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">筛选条件</span>
           <div class="space-x-3">
-            <el-button type="primary" @click="handleQuery">
-              刷新
-            </el-button>
+            <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
             <el-button type="primary" @click="handleCreate">新增评级</el-button>
           </div>
         </div>
@@ -83,7 +81,9 @@
           <template #default="{ row }">
             <div class="flex gap-2">
               <el-button size="small" @click="handleEdit(row)">编辑</el-button>
-              <el-button size="small" type="danger" plain @click="handleDelete(row)">删除</el-button>
+              <el-button size="small" type="danger" plain @click="handleDelete(row)"
+                >删除</el-button
+              >
             </div>
           </template>
         </el-table-column>
@@ -172,7 +172,12 @@
 <script setup>
 import { reactive, ref, watch, onMounted, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getTeacherLevelPageList, updateTeacherLevel, deleteTeacherLevels, addTeacherLevel } from '@/api/curd/teacherLevel'
+import {
+  getTeacherLevelPageList,
+  updateTeacherLevel,
+  deleteTeacherLevels,
+  addTeacherLevel,
+} from '@/api/curd/teacherLevel'
 import { getTeacherRatingList } from '@/api/curd/dictionary'
 import { getTeacherPageList } from '@/api/curd/teacher'
 
@@ -223,7 +228,7 @@ const formatTeacherLabel = (teacher) => {
 
 const ensureOptionExists = (optionsRef, option, key = 'id') => {
   if (!option || !option[key]) return
-  const exists = optionsRef.value.some(item => item[key] === option[key])
+  const exists = optionsRef.value.some((item) => item[key] === option[key])
   if (!exists) {
     optionsRef.value = [...optionsRef.value, option]
   }
@@ -384,11 +389,15 @@ const handleSubmit = () => {
 }
 
 const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认删除教师 ${row.teacherName || ''} 在 ${row.yearmonth || '-'} 的评级记录吗？`, '提示', {
-    type: 'warning',
-    confirmButtonText: '删除',
-    cancelButtonText: '取消',
-  })
+  ElMessageBox.confirm(
+    `确认删除教师 ${row.teacherName || ''} 在 ${row.yearmonth || '-'} 的评级记录吗？`,
+    '提示',
+    {
+      type: 'warning',
+      confirmButtonText: '删除',
+      cancelButtonText: '取消',
+    }
+  )
     .then(async () => {
       await deleteTeacherLevels(row.id)
       ElMessage.success('删除成功')

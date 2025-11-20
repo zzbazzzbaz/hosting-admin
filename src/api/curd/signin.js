@@ -18,9 +18,10 @@ const normalizePicList = (picList = [], recordId) => {
   return picList
     .map((pic, index) => {
       const picObj = typeof pic === 'object' ? { ...pic } : {}
-      const rawPath = typeof pic === 'string'
-        ? pic
-        : picObj.imgpath || picObj.imgPath || picObj.url || picObj.path || ''
+      const rawPath =
+        typeof pic === 'string'
+          ? pic
+          : picObj.imgpath || picObj.imgPath || picObj.url || picObj.path || ''
 
       if (!rawPath) return null
 
@@ -74,8 +75,10 @@ function adaptSigninPageListResponse(response) {
       assignedTeacherName: record.assignedTeacherName ?? assignedTeacher.teacherName ?? null,
       assignedTeacherPhone: record.assignedTeacherPhone ?? assignedTeacher.phone ?? null,
       checkinTeacherId: record.checkinTeacherId ?? record.teacherId ?? checkinTeacher.id ?? null,
-      checkinTeacherName: record.checkinTeacherName ?? record.teacherName ?? checkinTeacher.teacherName ?? null,
-      checkinTeacherPhone: record.checkinTeacherPhone ?? record.teacherPhone ?? checkinTeacher.phone ?? null,
+      checkinTeacherName:
+        record.checkinTeacherName ?? record.teacherName ?? checkinTeacher.teacherName ?? null,
+      checkinTeacherPhone:
+        record.checkinTeacherPhone ?? record.teacherPhone ?? checkinTeacher.phone ?? null,
       picList: normalizePicList(record.picList, record.id ?? `row-${index}`),
     }
   })

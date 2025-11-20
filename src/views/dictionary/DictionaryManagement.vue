@@ -9,7 +9,7 @@
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <el-form-item label="字典名称">
-          <el-input v-model="filters.dicName" placeholder="支持模糊查询" clearable/>
+          <el-input v-model="filters.dicName" placeholder="支持模糊查询" clearable />
         </el-form-item>
         <el-form-item label="字典类型">
           <el-select v-model="filters.type" placeholder="请选择类型" clearable>
@@ -30,8 +30,8 @@
 
     <el-card class="pastel-card">
       <el-table :data="dictionaryList" :loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80"/>
-        <el-table-column prop="dicName" label="字典名称" min-width="160"/>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column prop="dicName" label="字典名称" min-width="160" />
         <el-table-column label="字典类型" min-width="160">
           <template #default="{ row }">
             {{ getTypeLabel(row.type) }}
@@ -63,12 +63,7 @@
       :close-on-click-modal="false"
       @close="handleDialogClose"
     >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="90px"
-      >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
         <el-form-item label="字典名称" prop="dicName">
           <el-input
             v-model="formData.dicName"
@@ -107,7 +102,7 @@ import {
   getDictionaryList,
   addDictionary,
   updateDictionary,
-  deleteDictionary
+  deleteDictionary,
 } from '@/api/curd/dictionary'
 
 const dictionaryTypeOptions = [
@@ -121,7 +116,7 @@ const dictionaryTypeOptions = [
 ]
 
 const getTypeLabel = (type) => {
-  const match = dictionaryTypeOptions.find(item => item.value === type)
+  const match = dictionaryTypeOptions.find((item) => item.value === type)
   return match ? match.label : '-'
 }
 
@@ -150,12 +145,8 @@ const formData = reactive({
 })
 
 const formRules = {
-  dicName: [
-    { required: true, message: '请输入字典名称', trigger: 'blur' },
-  ],
-  type: [
-    { required: true, message: '请选择字典类型', trigger: 'change' },
-  ],
+  dicName: [{ required: true, message: '请输入字典名称', trigger: 'blur' }],
+  type: [{ required: true, message: '请选择字典类型', trigger: 'change' }],
 }
 
 const fetchDictionaryList = async () => {

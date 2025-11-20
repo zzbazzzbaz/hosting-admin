@@ -6,7 +6,12 @@
   :root {
     color: theme('colors.slate.700');
     background-color: theme('colors.green.50');
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family:
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
 
     --el-color-primary: theme('colors.pink.300');
     --el-color-primary-light-3: theme('colors.pink.200');

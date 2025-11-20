@@ -5,7 +5,9 @@
       class="sticky top-0 flex h-screen flex-col overflow-hidden border-r border-sky-200 bg-sky-100/95 shadow-xl shadow-sky-200/70 backdrop-blur"
     >
       <div class="flex items-center gap-3 border-b border-sky-200/80 px-6 py-6">
-        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-md shadow-pink-200/70 ring-1 ring-inset ring-sky-200/60">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-md shadow-pink-200/70 ring-1 ring-inset ring-sky-200/60"
+        >
           <img :src="logoUrl" alt="hosting-admin Logo" class="h-10 w-10 object-contain" />
         </div>
         <div>

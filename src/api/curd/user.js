@@ -8,34 +8,34 @@ import request from '@/utils/request'
 
 // 标准化分页列表响应数据，扁平化 campus
 function adaptPageListResponse(response) {
-    if (!response || !response.data) {
-        return response
-    }
+  if (!response || !response.data) {
+    return response
+  }
 
-    // 扁平化处理每个用户对象
-    const flattenedList = (response.data.rows || []).map(user => {
-        // 提取 campus 对象的字段到顶层
-        const campusId = user.campus?.id || null
-        const dicName = user.campus?.dicName || null
+  // 扁平化处理每个用户对象
+  const flattenedList = (response.data.rows || []).map((user) => {
+    // 提取 campus 对象的字段到顶层
+    const campusId = user.campus?.id || null
+    const dicName = user.campus?.dicName || null
 
-        // 返回扁平化后的用户对象（移除原始 campus 对象）
-        const {campus, ...restUser} = user
-        return {
-            ...restUser,
-            campusId,  // 校区 ID
-            dicName    // 校区名称
-        }
-    })
-
+    // 返回扁平化后的用户对象（移除原始 campus 对象）
+    const { campus, ...restUser } = user
     return {
-        code: response.code,
-        message: response.message,
-        data: {
-            total: response.data.total,
-            pages: response.data.pages,
-            list: flattenedList
-        }
+      ...restUser,
+      campusId, // 校区 ID
+      dicName, // 校区名称
     }
+  })
+
+  return {
+    code: response.code,
+    message: response.message,
+    data: {
+      total: response.data.total,
+      pages: response.data.pages,
+      list: flattenedList,
+    },
+  }
 }
 
 // ========== API 接口 ==========
@@ -63,16 +63,16 @@ function adaptPageListResponse(response) {
  * }
  */
 export const addUser = async (data) => {
-    const response = await request({
-        url: '/admin/user/add',
-        method: 'post',
-        params: {
-            phone: data.phone,
-            userName: data.userName
-        }
-    })
+  const response = await request({
+    url: '/admin/user/add',
+    method: 'post',
+    params: {
+      phone: data.phone,
+      userName: data.userName,
+    },
+  })
 
-    return response
+  return response
 }
 
 /**
@@ -121,30 +121,30 @@ export const addUser = async (data) => {
  * }
  */
 export const getUserPageList = async (params = {}) => {
-    const requestParams = {
-        page: params.page || 1,
-        pageSize: params.pageSize || 10
-    }
+  const requestParams = {
+    page: params.page || 1,
+    pageSize: params.pageSize || 10,
+  }
 
-    // 添加可选的筛选参数
-    if (params.userName) {
-        requestParams.userName = params.userName
-    }
-    if (params.phone) {
-        requestParams.phone = params.phone
-    }
-    if (params.campusId) {
-        requestParams['campus.id'] = params.campusId  // 后端期望的参数名
-    }
+  // 添加可选的筛选参数
+  if (params.userName) {
+    requestParams.userName = params.userName
+  }
+  if (params.phone) {
+    requestParams.phone = params.phone
+  }
+  if (params.campusId) {
+    requestParams['campus.id'] = params.campusId // 后端期望的参数名
+  }
 
-    const response = await request({
-        url: '/admin/user/pageList',
-        method: 'get',
-        params: requestParams
-    })
+  const response = await request({
+    url: '/admin/user/pageList',
+    method: 'get',
+    params: requestParams,
+  })
 
-    // 🔹 使用适配器转换数据格式
-    return adaptPageListResponse(response)
+  // 🔹 使用适配器转换数据格式
+  return adaptPageListResponse(response)
 }
 
 /**
@@ -174,17 +174,17 @@ export const getUserPageList = async (params = {}) => {
  * }
  */
 export const updateUser = async (data) => {
-    const response = await request({
-        url: `/admin/user/update/${data.id}`,
-        method: 'put',
-        params: {
-            userName: data.userName,
-            phone: data.phone,
-            'campus.id': data.campusId
-        }
-    })
+  const response = await request({
+    url: `/admin/user/update/${data.id}`,
+    method: 'put',
+    params: {
+      userName: data.userName,
+      phone: data.phone,
+      'campus.id': data.campusId,
+    },
+  })
 
-    return response
+  return response
 }
 
 /**
@@ -209,20 +209,20 @@ export const updateUser = async (data) => {
  * }
  */
 export const deleteUser = async (ids) => {
-    // 处理 ids 参数：支持数组、单个 ID、字符串格式
-    let idsStr
-    if (Array.isArray(ids)) {
-        idsStr = ids.join(',')
-    } else {
-        idsStr = String(ids)
-    }
+  // 处理 ids 参数：支持数组、单个 ID、字符串格式
+  let idsStr
+  if (Array.isArray(ids)) {
+    idsStr = ids.join(',')
+  } else {
+    idsStr = String(ids)
+  }
 
-    const response = await request({
-        url: `/admin/user/deletes/${idsStr}`,  // 修改为 deletes 匹配后端路径
-        method: 'delete'
-    })
+  const response = await request({
+    url: `/admin/user/deletes/${idsStr}`, // 修改为 deletes 匹配后端路径
+    method: 'delete',
+  })
 
-    return response
+  return response
 }
 
 /**
@@ -243,13 +243,13 @@ export const deleteUser = async (ids) => {
  * }
  */
 export const resetPassword = async (userId) => {
-    const response = await request({
-        url: '/admin/user/resetPassword',
-        method: 'post',
-        params: {
-            userId: userId
-        }
-    })
+  const response = await request({
+    url: '/admin/user/resetPassword',
+    method: 'post',
+    params: {
+      userId: userId,
+    },
+  })
 
-    return response
+  return response
 }

@@ -53,17 +53,13 @@ export const navigationMenus = [
     key: 'notice',
     label: '通知',
     icon: Bell,
-    children: [
-      { key: 'notice-manage', label: '通知管理', path: '/notice/manage' },
-    ],
+    children: [{ key: 'notice-manage', label: '通知管理', path: '/notice/manage' }],
   },
   {
     key: 'dictionary',
     label: '字典',
     icon: Collection,
-    children: [
-      { key: 'dictionary-manage', label: '字典管理', path: '/dictionary/manage' },
-    ],
+    children: [{ key: 'dictionary-manage', label: '字典管理', path: '/dictionary/manage' }],
   },
 ]
 
@@ -96,13 +92,23 @@ const layoutChildren = [
     path: 'teachers/manage',
     name: 'TeacherManagement',
     component: () => import('@/views/teachers/TeacherManagement.vue'),
-    meta: { title: '教师管理', menuKey: 'teachers-manage', parentKey: 'users-teacher-directory', grandParentKey: 'users' },
+    meta: {
+      title: '教师管理',
+      menuKey: 'teachers-manage',
+      parentKey: 'users-teacher-directory',
+      grandParentKey: 'users',
+    },
   },
   {
     path: 'teachers/levels',
     name: 'TeacherLevelManagement',
     component: () => import('@/views/teachers/TeacherLevelManagement.vue'),
-    meta: { title: '教师评级管理', menuKey: 'teachers-level', parentKey: 'users-teacher-directory', grandParentKey: 'users' },
+    meta: {
+      title: '教师评级管理',
+      menuKey: 'teachers-level',
+      parentKey: 'users-teacher-directory',
+      grandParentKey: 'users',
+    },
   },
   {
     path: 'attendance/dashboard',

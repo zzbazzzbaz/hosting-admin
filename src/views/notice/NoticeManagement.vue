@@ -9,11 +9,7 @@
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <el-form-item label="通知标题">
-          <el-input
-            v-model="filters.title"
-            placeholder="输入标题关键字"
-            clearable
-          />
+          <el-input v-model="filters.title" placeholder="输入标题关键字" clearable />
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
@@ -26,11 +22,7 @@
       <template #header>
         <span class="font-semibold text-slate-50">通知列表</span>
       </template>
-      <el-table
-        :data="noticeList"
-        :loading="loading"
-        stripe
-      >
+      <el-table :data="noticeList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="title" label="标题" min-width="180" show-overflow-tooltip />
         <el-table-column prop="content" label="内容" min-width="240" show-overflow-tooltip />
@@ -73,12 +65,7 @@
       :close-on-click-modal="false"
       @close="handleDialogClose"
     >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="90px"
-      >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
         <el-form-item label="标题" prop="title">
           <el-input
             v-model="formData.title"

@@ -9,11 +9,7 @@
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <el-form-item label="学生姓名">
-          <el-input
-            v-model="filters.studentName"
-            placeholder="输入学生姓名"
-            clearable
-          />
+          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
         </el-form-item>
         <el-form-item label="签到教师">
           <el-select
@@ -121,12 +117,7 @@
       </div>
     </el-card>
 
-    <el-dialog
-      v-model="detailVisible"
-      title="签到详情"
-      width="720px"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="detailVisible" title="签到详情" width="720px" :close-on-click-modal="false">
       <el-descriptions :column="2" border class="rounded-lg">
         <el-descriptions-item label="记录 ID">
           {{ currentRecord?.id || '-' }}
@@ -242,14 +233,12 @@ const getImageSrc = (pic) => {
 }
 
 const getPreviewList = (picList = []) => {
-  return picList
-    .map(getImageSrc)
-    .filter(url => !!url)
+  return picList.map(getImageSrc).filter((url) => !!url)
 }
 
 const ensureOptionExists = (optionsRef, option, key = 'id') => {
   if (!option || !option[key]) return
-  const exists = optionsRef.value.some(item => item[key] === option[key])
+  const exists = optionsRef.value.some((item) => item[key] === option[key])
   if (!exists) {
     optionsRef.value = [...optionsRef.value, option]
   }
@@ -271,7 +260,7 @@ const fetchSigninList = async () => {
       signinList.value = result.data.list || []
       totalRecords.value = result.data.total || 0
 
-      signinList.value.forEach(record => {
+      signinList.value.forEach((record) => {
         if (record.checkinTeacherId || record.teacher?.id) {
           ensureOptionExists(teacherOptions, {
             id: record.checkinTeacherId || record.teacher?.id,
