@@ -96,28 +96,28 @@ export const getHomeworkPageList = async (params = {}) => {
   }
 
   if (params.teacherId) {
-    requestParams['teacher.id'] = params.teacherId
+    requestParams['teacherId'] = params.teacherId
   }
   if (params.parentId) {
-    requestParams['parent.id'] = params.parentId
+    requestParams['parentId'] = params.parentId
   }
   if (params.studentName) {
     requestParams.studentName = params.studentName
   }
   if (params.schoolId) {
-    requestParams['school.id'] = params.schoolId
+    requestParams['schoolId'] = params.schoolId
   }
   if (params.subjectId) {
-    requestParams['subject.id'] = params.subjectId
+    requestParams['subjectId'] = params.subjectId
   }
   if (params.gradeId) {
-    requestParams['grade.id'] = params.gradeId
+    requestParams['gradeId'] = params.gradeId
   }
   if (params.campusId) {
-    requestParams['campus.id'] = params.campusId
+    requestParams['campusId'] = params.campusId
   }
   if (params.clazzId) {
-    requestParams['clazz.id'] = params.clazzId
+    requestParams['clazzId'] = params.clazzId
   }
   if (params.state !== undefined && params.state !== null && params.state !== '') {
     requestParams.state = params.state
