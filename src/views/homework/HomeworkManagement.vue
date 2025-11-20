@@ -98,30 +98,16 @@
       </template>
       <el-table :data="homeworkList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column label="学生信息" min-width="180">
+        <el-table-column prop="studentName" label="学生姓名" min-width="160" />
+        <el-table-column prop="state" label="完成状态" width="120">
           <template #default="{ row }">
-            <div class="font-semibold text-slate-50">{{ row.studentName || '-' }}</div>
-            <div class="text-xs text-slate-400">{{ row.schoolName || '-' }} · {{ row.gradeName || '-' }} · {{ row.clazzName || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="教师/家长" min-width="200">
-          <template #default="{ row }">
-            <div>教师：{{ row.teacherName || '-' }}</div>
-            <div class="text-xs text-slate-400">家长：{{ row.parentName || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="homeworkTime" label="布置日期" min-width="140" />
-        <el-table-column prop="state" label="状态" width="120">
-          <template #default="{ row }">
-            <el-tag
-              :type="row.state === 1 ? 'success' : 'info'"
-              effect="dark"
-            >
+            <el-tag :type="row.state === 1 ? 'success' : 'info'" effect="dark">
               {{ row.state === 1 ? '已完成' : '未完成' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" min-width="160" />
+        <el-table-column prop="createTime" label="布置时间" min-width="160" />
+        <el-table-column prop="finishTime" label="完成时间" min-width="160" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
             <el-button size="small" type="primary" @click="handleViewDetail(row)">查看详情</el-button>
@@ -147,23 +133,29 @@
       :close-on-click-modal="false"
     >
       <el-descriptions :column="2" border class="rounded-2xl">
-        <el-descriptions-item label="学生">{{ currentRecord?.studentName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="班级">{{ currentRecord?.schoolName || '-' }} · {{ currentRecord?.gradeName || '-' }} · {{ currentRecord?.clazzName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="ID">{{ currentRecord?.id || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="学生姓名">{{ currentRecord?.studentName || '-' }}</el-descriptions-item>
         <el-descriptions-item label="教师">{{ currentRecord?.teacherName || '-' }}</el-descriptions-item>
         <el-descriptions-item label="家长">{{ currentRecord?.parentName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="布置日期">{{ currentRecord?.homeworkTime || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="布置时间">{{ currentRecord?.createTime || '-' }}</el-descriptions-item>
         <el-descriptions-item label="完成时间">{{ currentRecord?.finishTime || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="学生状态">
-          {{ currentRecord?.studentState || '—' }}
+        <el-descriptions-item label="完成状态">
+          <el-tag :type="currentRecord?.state === 1 ? 'success' : 'info'" effect="dark">
+            {{ currentRecord?.state === 1 ? '已完成' : '未完成' }}
+          </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="教师评语">
           {{ currentRecord?.evaluation || '—' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="托管校区">{{ currentRecord?.campusName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="所在班级">
+          {{ currentRecord?.schoolName || '-' }} · {{ currentRecord?.gradeName || '-' }} · {{ currentRecord?.clazzName || '-' }}
         </el-descriptions-item>
       </el-descriptions>
 
       <div class="mt-6 space-y-4">
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-slate-200">作业内容</h4>
+          <h4 class="mb-2 text-sm font-semibold text-slate-900">作业内容</h4>
           <p class="rounded-2xl bg-white p-4 text-sm text-slate-900 whitespace-pre-line">
             {{ currentRecord?.content || '暂无内容' }}
           </p>
@@ -180,7 +172,7 @@
           </div>
         </section>
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-slate-200">完成情况</h4>
+          <h4 class="mb-2 text-sm font-semibold text-slate-900">完成情况</h4>
           <div v-if="currentRecord?.finishPicList?.length" class="flex flex-wrap gap-3">
             <el-image
               v-for="pic in currentRecord?.finishPicList"
