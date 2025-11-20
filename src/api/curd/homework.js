@@ -96,28 +96,28 @@ export const getHomeworkPageList = async (params = {}) => {
   }
 
   if (params.teacherId) {
-    requestParams['teacherId'] = params.teacherId
+    requestParams['teacher.id'] = params.teacherId
   }
   if (params.parentId) {
-    requestParams['parentId'] = params.parentId
+    requestParams['parent.id'] = params.parentId
   }
   if (params.studentName) {
     requestParams.studentName = params.studentName
   }
   if (params.schoolId) {
-    requestParams['schoolId'] = params.schoolId
+    requestParams['school.id'] = params.schoolId
   }
   if (params.subjectId) {
-    requestParams['subjectId'] = params.subjectId
+    requestParams['subject.id'] = params.subjectId
   }
   if (params.gradeId) {
-    requestParams['gradeId'] = params.gradeId
+    requestParams['grade.id'] = params.gradeId
   }
   if (params.campusId) {
-    requestParams['campusId'] = params.campusId
+    requestParams['campus.id'] = params.campusId
   }
   if (params.clazzId) {
-    requestParams['clazzId'] = params.clazzId
+    requestParams['clazz.id'] = params.clazzId
   }
   if (params.state !== undefined && params.state !== null && params.state !== '') {
     requestParams.state = params.state
@@ -130,4 +130,74 @@ export const getHomeworkPageList = async (params = {}) => {
   })
 
   return adaptHomeworkPageListResponse(response)
+}
+
+const adaptHomeworkStudentStatsResponse = (response) => {
+  if (!response || !response.data) {
+    return response
+  }
+
+  const rows = response.data.rows || response.data.list || []
+
+  const normalizedRows = rows.map((record, index) => ({
+    ...record,
+    id: record.id ?? `homework-stat-${index}`,
+    studentName: record.studentName ?? record.student?.studentName ?? null,
+    teacherName: record.teacherName ?? record.teacher?.teacherName ?? null,
+    parentName: record.parentName ?? record.parent?.parentName ?? null,
+    schoolName: record.schoolName ?? record.school?.dicName ?? null,
+    gradeName: record.gradeName ?? record.grade?.dicName ?? null,
+    clazzName: record.clazzName ?? record.clazz?.dicName ?? null,
+    campusName: record.campusName ?? record.campus?.dicName ?? null,
+    finishCount: Number(record.finishCount ?? 0),
+    nofinishCount: Number(record.nofinishCount ?? 0),
+    sumCount: Number(record.sumCount ?? 0),
+  }))
+
+  return {
+    code: response.code,
+    message: response.message,
+    data: {
+      total: response.data.total ?? normalizedRows.length,
+      pages: response.data.pages ?? 1,
+      list: normalizedRows,
+    },
+  }
+}
+
+export const getHomeworkStudentStatsPageList = async (params = {}) => {
+  const requestParams = {
+    page: params.page || 1,
+    pageSize: params.pageSize || 10,
+  }
+
+  if (params.studentName) {
+    requestParams.studentName = params.studentName
+  }
+  if (params.schoolId) {
+    requestParams['school.id'] = params.schoolId
+  }
+  if (params.parentId) {
+    requestParams['parent.id'] = params.parentId
+  }
+  if (params.gradeId) {
+    requestParams['grade.id'] = params.gradeId
+  }
+  if (params.clazzId) {
+    requestParams['clazz.id'] = params.clazzId
+  }
+  if (params.campusId) {
+    requestParams['campus.id'] = params.campusId
+  }
+  if (params.teacherId) {
+    requestParams['teacher.id'] = params.teacherId
+  }
+
+  const response = await request({
+    url: '/admin/homework/pageStudentList',
+    method: 'get',
+    params: requestParams,
+  })
+
+  return adaptHomeworkStudentStatsResponse(response)
 }

@@ -44,7 +44,10 @@ export const navigationMenus = [
     key: 'homework',
     label: '作业',
     icon: Notebook,
-    children: [{ key: 'homework-manage', label: '作业管理', path: '/homework/manage' }],
+    children: [
+      { key: 'homework-dashboard', label: '数据看板', path: '/homework/dashboard' },
+      { key: 'homework-manage', label: '作业管理', path: '/homework/manage' },
+    ],
   },
   {
     key: 'dictionary',
@@ -110,6 +113,12 @@ const layoutChildren = [
     name: 'HomeworkManagement',
     component: () => import('@/views/homework/HomeworkManagement.vue'),
     meta: { title: '作业管理', menuKey: 'homework-manage', parentKey: 'homework' },
+  },
+  {
+    path: 'homework/dashboard',
+    name: 'HomeworkDashboard',
+    component: () => import('@/views/homework/HomeworkDashboard.vue'),
+    meta: { title: '作业数据看板', menuKey: 'homework-dashboard', parentKey: 'homework' },
   },
   {
     path: 'dictionary/manage',
