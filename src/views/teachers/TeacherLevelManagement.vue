@@ -5,12 +5,26 @@
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">筛选条件</span>
           <div class="space-x-3">
-            <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
-            <el-button type="primary" @click="handleCreate">新增评级</el-button>
+            <el-button
+              type="primary"
+              @click="handleQuery"
+            >
+              刷新
+            </el-button>
+            <el-button
+              type="primary"
+              @click="handleCreate"
+            >
+              新增评级
+            </el-button>
           </div>
         </div>
       </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <el-form
+        :model="filters"
+        label-width="90"
+        class="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+      >
         <el-form-item label="所属月份">
           <el-date-picker
             v-model="filters.yearmonth"
@@ -22,7 +36,12 @@
           />
         </el-form-item>
         <el-form-item label="评级等级">
-          <el-select v-model="filters.levelId" placeholder="选择评级" clearable filterable>
+          <el-select
+            v-model="filters.levelId"
+            placeholder="选择评级"
+            clearable
+            filterable
+          >
             <el-option
               v-for="level in levelOptions"
               :key="level.id"
@@ -51,8 +70,15 @@
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">重置</el-button>
-        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button @click="handleReset">
+          重置
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleQuery"
+        >
+          查询
+        </el-button>
       </div>
     </el-card>
 
@@ -60,36 +86,84 @@
       <template #header>
         <span class="font-semibold text-slate-800">教师评级列表</span>
       </template>
-      <el-table :data="levelList" :loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column label="教师信息" min-width="200">
+      <el-table
+        :data="levelList"
+        :loading="loading"
+        stripe
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="80"
+        />
+        <el-table-column
+          label="教师信息"
+          min-width="200"
+        >
           <template #default="{ row }">
-            <div class="font-medium text-slate-800">{{ row.teacherName || '-' }}</div>
-            <div class="text-xs text-slate-400">{{ row.teacherPhone || '未提供手机号' }}</div>
+            <div class="font-medium text-slate-800">
+              {{ row.teacherName || '-' }}
+            </div>
+            <div class="text-xs text-slate-400">
+              {{ row.teacherPhone || '未提供手机号' }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="level" label="评级等级" min-width="120" />
-        <el-table-column prop="yearmonth" label="月份" min-width="120" />
-        <el-table-column prop="descption" label="评级描述" min-width="180" />
-        <el-table-column label="操作人" min-width="140">
+        <el-table-column
+          prop="level"
+          label="评级等级"
+          min-width="120"
+        />
+        <el-table-column
+          prop="yearmonth"
+          label="月份"
+          min-width="120"
+        />
+        <el-table-column
+          prop="descption"
+          label="评级描述"
+          min-width="180"
+        />
+        <el-table-column
+          label="操作人"
+          min-width="140"
+        >
           <template #default="{ row }">
             <div>{{ row.userName || '-' }}</div>
-            <div class="text-xs text-slate-400">ID: {{ row.userId || '-' }}</div>
+            <div class="text-xs text-slate-400">
+              ID: {{ row.userId || '-' }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" fixed="right">
+        <el-table-column
+          label="操作"
+          width="160"
+          fixed="right"
+        >
           <template #default="{ row }">
             <div class="flex gap-2">
-              <el-button size="small" @click="handleEdit(row)">编辑</el-button>
-              <el-button size="small" type="danger" plain @click="handleDelete(row)"
-                >删除</el-button
+              <el-button
+                size="small"
+                @click="handleEdit(row)"
               >
+                编辑
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                plain
+                @click="handleDelete(row)"
+              >
+                删除
+              </el-button>
             </div>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">共 {{ totalRecords }} 条记录</div>
+        <div class="text-xs text-slate-500">
+          共 {{ totalRecords }} 条记录
+        </div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
@@ -106,8 +180,16 @@
       width="520px"
       :close-on-click-modal="false"
     >
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px">
-        <el-form-item label="教师" prop="teacherId">
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="80px"
+      >
+        <el-form-item
+          label="教师"
+          prop="teacherId"
+        >
           <el-select
             v-model="formData.teacherId"
             placeholder="选择教师"
@@ -127,7 +209,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="月份" prop="yearmonth">
+        <el-form-item
+          label="月份"
+          prop="yearmonth"
+        >
           <el-date-picker
             v-model="formData.yearmonth"
             type="month"
@@ -136,8 +221,15 @@
             class="w-full"
           />
         </el-form-item>
-        <el-form-item label="评级" prop="levelId">
-          <el-select v-model="formData.levelId" placeholder="选择评级" class="w-full">
+        <el-form-item
+          label="评级"
+          prop="levelId"
+        >
+          <el-select
+            v-model="formData.levelId"
+            placeholder="选择评级"
+            class="w-full"
+          >
             <el-option
               v-for="level in levelOptions"
               :key="level.id"
@@ -146,7 +238,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="描述" prop="descption">
+        <el-form-item
+          label="描述"
+          prop="descption"
+        >
           <el-input
             v-model="formData.descption"
             type="textarea"
@@ -159,8 +254,14 @@
       </el-form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
+          <el-button @click="dialogVisible = false">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            :loading="submitLoading"
+            @click="handleSubmit"
+          >
             保存
           </el-button>
         </div>

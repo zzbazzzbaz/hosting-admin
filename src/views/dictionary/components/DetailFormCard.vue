@@ -1,13 +1,26 @@
 <template>
   <!-- 右侧：详情表单卡片 -->
-  <el-card v-if="selectedNode" class="pastel-card dictionary-detail-card">
+  <el-card
+    v-if="selectedNode"
+    class="pastel-card dictionary-detail-card"
+  >
     <template #header>
       <div class="flex flex-col gap-2">
-        <p class="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">节点详情</p>
-        <el-breadcrumb separator="›" class="text-xs text-slate-400">
-          <el-breadcrumb-item v-for="node in selectedPath" :key="node.id">{{
-            node.label
-          }}</el-breadcrumb-item>
+        <p class="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">
+          节点详情
+        </p>
+        <el-breadcrumb
+          separator="›"
+          class="text-xs text-slate-400"
+        >
+          <el-breadcrumb-item
+            v-for="node in selectedPath"
+            :key="node.id"
+          >
+            {{
+              node.label
+            }}
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
     </template>
@@ -24,11 +37,18 @@
       </div>
 
       <!-- 表单区域 -->
-      <el-form :model="formData" label-width="100px" class="detail-form">
+      <el-form
+        :model="formData"
+        label-width="100px"
+        class="detail-form"
+      >
         <!-- 学校表单 -->
         <template v-if="selectedNode.type === 'school'">
           <el-form-item label="学校名称">
-            <el-input v-model="formData.label" placeholder="请输入学校名称" />
+            <el-input
+              v-model="formData.label"
+              placeholder="请输入学校名称"
+            />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
@@ -48,7 +68,10 @@
               >
                 {{ child.label }}
               </el-tag>
-              <span v-if="!selectedNode.children?.length" class="text-slate-400">暂无年级</span>
+              <span
+                v-if="!selectedNode.children?.length"
+                class="text-slate-400"
+              >暂无年级</span>
             </div>
           </el-form-item>
         </template>
@@ -56,7 +79,10 @@
         <!-- 年级表单 -->
         <template v-else-if="selectedNode.type === 'grade'">
           <el-form-item label="年级名称">
-            <el-input v-model="formData.label" placeholder="请输入年级名称" />
+            <el-input
+              v-model="formData.label"
+              placeholder="请输入年级名称"
+            />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
@@ -76,7 +102,10 @@
               >
                 {{ child.label }}
               </el-tag>
-              <span v-if="!selectedNode.children?.length" class="text-slate-400">暂无班级</span>
+              <span
+                v-if="!selectedNode.children?.length"
+                class="text-slate-400"
+              >暂无班级</span>
             </div>
           </el-form-item>
         </template>
@@ -84,7 +113,10 @@
         <!-- 班级表单 -->
         <template v-else-if="selectedNode.type === 'class'">
           <el-form-item label="班级名称">
-            <el-input v-model="formData.label" placeholder="请输入班级名称" />
+            <el-input
+              v-model="formData.label"
+              placeholder="请输入班级名称"
+            />
           </el-form-item>
           <el-form-item label="备注">
             <el-input
@@ -95,20 +127,33 @@
             />
           </el-form-item>
           <el-form-item label="学生人数">
-            <el-input v-model="formData.students" disabled>
-              <template #suffix>人</template>
+            <el-input
+              v-model="formData.students"
+              disabled
+            >
+              <template #suffix>
+                人
+              </template>
             </el-input>
           </el-form-item>
         </template>
 
         <!-- 保存按钮 -->
         <el-form-item>
-          <el-button type="primary" @click="handleSave">保存</el-button>
+          <el-button
+            type="primary"
+            @click="handleSave"
+          >
+            保存
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
   </el-card>
-  <el-card v-else class="pastel-card dictionary-detail-card flex items-center justify-center">
+  <el-card
+    v-else
+    class="pastel-card dictionary-detail-card flex items-center justify-center"
+  >
     <el-empty description="请选择左侧字典节点" />
   </el-card>
 </template>

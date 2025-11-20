@@ -4,13 +4,29 @@
     <template #header>
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p class="text-sm font-semibold text-slate-900">树形结构总览</p>
-          <p class="text-xs text-slate-500">学校 → 年级 → 班级 → 科目</p>
+          <p class="text-sm font-semibold text-slate-900">
+            树形结构总览
+          </p>
+          <p class="text-xs text-slate-500">
+            学校 → 年级 → 班级 → 科目
+          </p>
         </div>
         <!-- 展开/收起按钮组 -->
         <div class="flex gap-2">
-          <el-button size="small" class="btn-soft" @click="expandAll">展开全部</el-button>
-          <el-button size="small" class="btn-soft" @click="collapseAll">收起全部</el-button>
+          <el-button
+            size="small"
+            class="btn-soft"
+            @click="expandAll"
+          >
+            展开全部
+          </el-button>
+          <el-button
+            size="small"
+            class="btn-soft"
+            @click="collapseAll"
+          >
+            收起全部
+          </el-button>
         </div>
       </div>
     </template>
@@ -63,9 +79,13 @@
               <span :class="['type-dot', typeMeta[data.type].chipClass]" />
               <div class="node-text">
                 <!-- 节点名称 -->
-                <p class="text-sm font-medium text-slate-900">{{ data.label }}</p>
+                <p class="text-sm font-medium text-slate-900">
+                  {{ data.label }}
+                </p>
                 <!-- 节点类型标签 -->
-                <p class="text-xs text-slate-400">{{ typeMeta[data.type].label }}</p>
+                <p class="text-xs text-slate-400">
+                  {{ typeMeta[data.type].label }}
+                </p>
               </div>
             </div>
             <!-- 右侧：操作按钮组 -->
@@ -81,9 +101,14 @@
                 新增
               </el-button>
               <!-- 删除按钮 -->
-              <el-button size="small" text class="btn-link danger" @click.stop="handleRemove(data)"
-                >删除</el-button
+              <el-button
+                size="small"
+                text
+                class="btn-link danger"
+                @click.stop="handleRemove(data)"
               >
+                删除
+              </el-button>
             </div>
           </div>
         </template>

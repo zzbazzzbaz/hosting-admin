@@ -5,7 +5,12 @@
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">查询筛选</span>
           <div class="flex items-center gap-3">
-            <el-button type="primary" @click="handleCreate">新增用户</el-button>
+            <el-button
+              type="primary"
+              @click="handleCreate"
+            >
+              新增用户
+            </el-button>
             <el-dropdown @command="handleExcelCommand">
               <el-button type="success">
                 Excel 操作
@@ -15,24 +20,47 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="import">Excel 导入用户</el-dropdown-item>
-                  <el-dropdown-item command="export">Excel 导出用户</el-dropdown-item>
-                  <el-dropdown-item command="template">Excel 模板下载</el-dropdown-item>
+                  <el-dropdown-item command="import">
+                    Excel 导入用户
+                  </el-dropdown-item>
+                  <el-dropdown-item command="export">
+                    Excel 导出用户
+                  </el-dropdown-item>
+                  <el-dropdown-item command="template">
+                    Excel 模板下载
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
           </div>
         </div>
       </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <el-form
+        :model="filters"
+        label-width="90"
+        class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+      >
         <el-form-item label="用户名">
-          <el-input v-model="filters.userName" placeholder="支持模糊查询" clearable />
+          <el-input
+            v-model="filters.userName"
+            placeholder="支持模糊查询"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="filters.phone" placeholder="支持模糊查询" clearable />
+          <el-input
+            v-model="filters.phone"
+            placeholder="支持模糊查询"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="所在校区">
-          <el-select v-model="filters.campusId" placeholder="全部校区" clearable filterable>
+          <el-select
+            v-model="filters.campusId"
+            placeholder="全部校区"
+            clearable
+            filterable
+          >
             <el-option
               v-for="campus in campusList"
               :key="campus.id"
@@ -43,40 +71,93 @@
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">重置</el-button>
-        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button @click="handleReset">
+          重置
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleQuery"
+        >
+          查询
+        </el-button>
       </div>
     </el-card>
 
     <el-card class="pastel-card">
-      <el-table :data="userList" :loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column label="用户名" min-width="140">
+      <el-table
+        :data="userList"
+        :loading="loading"
+        stripe
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="80"
+        />
+        <el-table-column
+          label="用户名"
+          min-width="140"
+        >
           <template #default="{ row }">
             {{ row.userName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="phone" label="手机号" min-width="140" />
-        <el-table-column prop="dicName" label="所在校区" min-width="160">
+        <el-table-column
+          prop="phone"
+          label="手机号"
+          min-width="140"
+        />
+        <el-table-column
+          prop="dicName"
+          label="所在校区"
+          min-width="160"
+        >
           <template #default="{ row }">
             {{ row.dicName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="180">
+        <el-table-column
+          label="创建时间"
+          min-width="180"
+        >
           <template #default="{ row }">
             {{ formatDateTime(row.createTime) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column
+          label="操作"
+          width="180"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-button type="primary" link @click="handleEdit(row)">修改</el-button>
-            <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
-            <el-button type="info" link @click="handleResetPassword(row)">重置密码</el-button>
+            <el-button
+              type="primary"
+              link
+              @click="handleEdit(row)"
+            >
+              修改
+            </el-button>
+            <el-button
+              type="danger"
+              link
+              @click="handleDelete(row)"
+            >
+              删除
+            </el-button>
+            <el-button
+              type="info"
+              link
+              @click="handleResetPassword(row)"
+            >
+              重置密码
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">共 {{ totalUsers }} 条记录</div>
+        <div class="text-xs text-slate-500">
+          共 {{ totalUsers }} 条记录
+        </div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
@@ -95,11 +176,27 @@
       :close-on-click-modal="false"
       @close="handleDialogClose"
     >
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="formData.phone" placeholder="请输入手机号" maxlength="11" clearable />
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="90px"
+      >
+        <el-form-item
+          label="手机号"
+          prop="phone"
+        >
+          <el-input
+            v-model="formData.phone"
+            placeholder="请输入手机号"
+            maxlength="11"
+            clearable
+          />
         </el-form-item>
-        <el-form-item label="用户名" prop="userName">
+        <el-form-item
+          label="用户名"
+          prop="userName"
+        >
           <el-input
             v-model="formData.userName"
             placeholder="请输入用户名（可选）"
@@ -110,8 +207,14 @@
       </el-form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
+          <el-button @click="dialogVisible = false">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            :loading="submitLoading"
+            @click="handleSubmit"
+          >
             确定
           </el-button>
         </div>
@@ -126,8 +229,16 @@
       :close-on-click-modal="false"
       @close="handleEditDialogClose"
     >
-      <el-form ref="editFormRef" :model="editFormData" :rules="editFormRules" label-width="90px">
-        <el-form-item label="用户名" prop="userName">
+      <el-form
+        ref="editFormRef"
+        :model="editFormData"
+        :rules="editFormRules"
+        label-width="90px"
+      >
+        <el-form-item
+          label="用户名"
+          prop="userName"
+        >
           <el-input
             v-model="editFormData.userName"
             placeholder="请输入用户名"
@@ -135,7 +246,10 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item
+          label="手机号"
+          prop="phone"
+        >
           <el-input
             v-model="editFormData.phone"
             placeholder="请输入手机号"
@@ -143,7 +257,10 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="所在校区" prop="campusId">
+        <el-form-item
+          label="所在校区"
+          prop="campusId"
+        >
           <el-select
             v-model="editFormData.campusId"
             placeholder="请选择所在校区"
@@ -161,8 +278,14 @@
       </el-form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <el-button @click="editDialogVisible = false">取消</el-button>
-          <el-button type="primary" :loading="editSubmitLoading" @click="handleEditSubmit">
+          <el-button @click="editDialogVisible = false">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            :loading="editSubmitLoading"
+            @click="handleEditSubmit"
+          >
             确定
           </el-button>
         </div>

@@ -5,13 +5,26 @@
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-50">筛选条件</span>
           <div class="space-x-3">
-            <el-button type="primary" @click="handleQuery">刷新</el-button>
+            <el-button
+              type="primary"
+              @click="handleQuery"
+            >
+              刷新
+            </el-button>
           </div>
         </div>
       </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <el-form
+        :model="filters"
+        label-width="90"
+        class="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+      >
         <el-form-item label="学生姓名">
-          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
+          <el-input
+            v-model="filters.studentName"
+            placeholder="输入学生姓名"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="教师">
           <el-select
@@ -50,7 +63,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="学校">
-          <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
+          <el-select
+            v-model="filters.schoolId"
+            placeholder="选择学校"
+            clearable
+            filterable
+          >
             <el-option
               v-for="item in schoolOptions"
               :key="item.id"
@@ -60,7 +78,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
-          <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
+          <el-select
+            v-model="filters.gradeId"
+            placeholder="选择年级"
+            clearable
+            filterable
+          >
             <el-option
               v-for="item in gradeOptions"
               :key="item.id"
@@ -70,7 +93,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
-          <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
+          <el-select
+            v-model="filters.clazzId"
+            placeholder="选择班级"
+            clearable
+            filterable
+          >
             <el-option
               v-for="item in classOptions"
               :key="item.id"
@@ -80,7 +108,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="校区">
-          <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
+          <el-select
+            v-model="filters.campusId"
+            placeholder="选择校区"
+            clearable
+            filterable
+          >
             <el-option
               v-for="item in campusOptions"
               :key="item.id"
@@ -90,7 +123,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="学科">
-          <el-select v-model="filters.subjectId" placeholder="选择学科" clearable filterable>
+          <el-select
+            v-model="filters.subjectId"
+            placeholder="选择学科"
+            clearable
+            filterable
+          >
             <el-option
               v-for="item in subjectOptions"
               :key="item.id"
@@ -100,15 +138,32 @@
           </el-select>
         </el-form-item>
         <el-form-item label="完成状态">
-          <el-select v-model="filters.state" placeholder="选择状态" clearable>
-            <el-option label="未完成" :value="0" />
-            <el-option label="已完成" :value="1" />
+          <el-select
+            v-model="filters.state"
+            placeholder="选择状态"
+            clearable
+          >
+            <el-option
+              label="未完成"
+              :value="0"
+            />
+            <el-option
+              label="已完成"
+              :value="1"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">重置</el-button>
-        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button @click="handleReset">
+          重置
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleQuery"
+        >
+          查询
+        </el-button>
       </div>
     </el-card>
 
@@ -116,28 +171,65 @@
       <template #header>
         <span class="font-semibold text-slate-50">作业列表</span>
       </template>
-      <el-table :data="homeworkList" :loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="studentName" label="学生姓名" min-width="160" />
-        <el-table-column prop="state" label="完成状态" width="120">
+      <el-table
+        :data="homeworkList"
+        :loading="loading"
+        stripe
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="80"
+        />
+        <el-table-column
+          prop="studentName"
+          label="学生姓名"
+          min-width="160"
+        />
+        <el-table-column
+          prop="state"
+          label="完成状态"
+          width="120"
+        >
           <template #default="{ row }">
-            <el-tag :type="row.state === 1 ? 'success' : 'info'" effect="dark">
+            <el-tag
+              :type="row.state === 1 ? 'success' : 'info'"
+              effect="dark"
+            >
               {{ row.state === 1 ? '已完成' : '未完成' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="布置时间" min-width="160" />
-        <el-table-column prop="finishTime" label="完成时间" min-width="160" />
-        <el-table-column label="操作" width="160" fixed="right">
+        <el-table-column
+          prop="createTime"
+          label="布置时间"
+          min-width="160"
+        />
+        <el-table-column
+          prop="finishTime"
+          label="完成时间"
+          min-width="160"
+        />
+        <el-table-column
+          label="操作"
+          width="160"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-button size="small" type="primary" @click="handleViewDetail(row)"
-              >查看详情</el-button
+            <el-button
+              size="small"
+              type="primary"
+              @click="handleViewDetail(row)"
             >
+              查看详情
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-sm text-slate-300">共 {{ totalRecords }} 条作业记录</div>
+        <div class="text-sm text-slate-300">
+          共 {{ totalRecords }} 条作业记录
+        </div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
@@ -148,35 +240,61 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="detailVisible" title="作业详情" width="720px" :close-on-click-modal="false">
-      <el-descriptions :column="2" border class="rounded-2xl">
-        <el-descriptions-item label="ID">{{ currentRecord?.id || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="学生姓名">{{
-          currentRecord?.studentName || '-'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="教师">{{
-          currentRecord?.teacherName || '-'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="家长">{{
-          currentRecord?.parentName || '-'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="布置时间">{{
-          currentRecord?.createTime || '-'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="完成时间">{{
-          currentRecord?.finishTime || '-'
-        }}</el-descriptions-item>
+    <el-dialog
+      v-model="detailVisible"
+      title="作业详情"
+      width="720px"
+      :close-on-click-modal="false"
+    >
+      <el-descriptions
+        :column="2"
+        border
+        class="rounded-2xl"
+      >
+        <el-descriptions-item label="ID">
+          {{ currentRecord?.id || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学生姓名">
+          {{
+            currentRecord?.studentName || '-'
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item label="教师">
+          {{
+            currentRecord?.teacherName || '-'
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item label="家长">
+          {{
+            currentRecord?.parentName || '-'
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item label="布置时间">
+          {{
+            currentRecord?.createTime || '-'
+          }}
+        </el-descriptions-item>
+        <el-descriptions-item label="完成时间">
+          {{
+            currentRecord?.finishTime || '-'
+          }}
+        </el-descriptions-item>
         <el-descriptions-item label="完成状态">
-          <el-tag :type="currentRecord?.state === 1 ? 'success' : 'info'" effect="dark">
+          <el-tag
+            :type="currentRecord?.state === 1 ? 'success' : 'info'"
+            effect="dark"
+          >
             {{ currentRecord?.state === 1 ? '已完成' : '未完成' }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="教师评语">
           {{ currentRecord?.evaluation || '—' }}
         </el-descriptions-item>
-        <el-descriptions-item label="托管校区">{{
-          currentRecord?.campusName || '-'
-        }}</el-descriptions-item>
+        <el-descriptions-item label="托管校区">
+          {{
+            currentRecord?.campusName || '-'
+          }}
+        </el-descriptions-item>
         <el-descriptions-item label="所在班级">
           {{ currentRecord?.schoolName || '-' }} · {{ currentRecord?.gradeName || '-' }} ·
           {{ currentRecord?.clazzName || '-' }}
@@ -185,11 +303,16 @@
 
       <div class="mt-6 space-y-4">
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-slate-900">作业内容</h4>
+          <h4 class="mb-2 text-sm font-semibold text-slate-900">
+            作业内容
+          </h4>
           <p class="rounded-2xl bg-white p-4 text-sm text-slate-900 whitespace-pre-line">
             {{ currentRecord?.content || '暂无内容' }}
           </p>
-          <div v-if="currentRecord?.workPicList?.length" class="mt-3 flex flex-wrap gap-3">
+          <div
+            v-if="currentRecord?.workPicList?.length"
+            class="mt-3 flex flex-wrap gap-3"
+          >
             <el-image
               v-for="pic in currentRecord?.workPicList"
               :key="pic.id"
@@ -202,8 +325,13 @@
           </div>
         </section>
         <section>
-          <h4 class="mb-2 text-sm font-semibold text-slate-900">完成情况</h4>
-          <div v-if="currentRecord?.finishPicList?.length" class="flex flex-wrap gap-3">
+          <h4 class="mb-2 text-sm font-semibold text-slate-900">
+            完成情况
+          </h4>
+          <div
+            v-if="currentRecord?.finishPicList?.length"
+            class="flex flex-wrap gap-3"
+          >
             <el-image
               v-for="pic in currentRecord?.finishPicList"
               :key="pic.id"
@@ -214,7 +342,12 @@
               preview-teleported
             />
           </div>
-          <p v-else class="text-sm text-slate-900">暂无完成照片</p>
+          <p
+            v-else
+            class="text-sm text-slate-900"
+          >
+            暂无完成照片
+          </p>
         </section>
       </div>
     </el-dialog>

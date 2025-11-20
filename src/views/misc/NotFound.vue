@@ -6,7 +6,12 @@
           <Warning />
         </el-icon>
       </template>
-      <el-button type="primary" @click="goHome">返回主页</el-button>
+      <el-button
+        type="primary"
+        @click="goHome"
+      >
+        返回主页
+      </el-button>
     </el-empty>
   </div>
 </template>
