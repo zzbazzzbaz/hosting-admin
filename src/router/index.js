@@ -1,4 +1,4 @@
-import { Collection, House, Notebook, Timer, User, UserFilled } from '@element-plus/icons-vue'
+import { Bell, Collection, House, Notebook, Timer, User, UserFilled } from '@element-plus/icons-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
@@ -47,6 +47,14 @@ export const navigationMenus = [
     children: [
       { key: 'homework-dashboard', label: '数据看板', path: '/homework/dashboard' },
       { key: 'homework-manage', label: '作业管理', path: '/homework/manage' },
+    ],
+  },
+  {
+    key: 'notice',
+    label: '通知',
+    icon: Bell,
+    children: [
+      { key: 'notice-manage', label: '通知管理', path: '/notice/manage' },
     ],
   },
   {
@@ -119,6 +127,12 @@ const layoutChildren = [
     name: 'HomeworkDashboard',
     component: () => import('@/views/homework/HomeworkDashboard.vue'),
     meta: { title: '作业数据看板', menuKey: 'homework-dashboard', parentKey: 'homework' },
+  },
+  {
+    path: 'notice/manage',
+    name: 'NoticeManagement',
+    component: () => import('@/views/notice/NoticeManagement.vue'),
+    meta: { title: '通知管理', menuKey: 'notice-manage', parentKey: 'notice' },
   },
   {
     path: 'dictionary/manage',
