@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import {getUserId} from "@/utils/util.js";
 
 // ========== 数据适配器 ==========
 
@@ -76,7 +77,7 @@ export const updateTeacherLevel = async (data) => {
       yearmonth: data.yearmonth,
       descption: data.descption,
       'level.id': data.levelId,
-      'user.id': data.userId,
+      'user.id': getUserId(),
     },
   })
 }
@@ -103,7 +104,7 @@ export const addTeacherLevel = async (data = {}) => {
       descption: data.descption,
       'level.id': data.levelId,
       'teacher.id': data.teacherId,
-      'user.id': data.userId,
+      'user.id': getUserId(),
     },
   })
 }

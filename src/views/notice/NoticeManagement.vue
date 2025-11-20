@@ -111,10 +111,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { addNotice, deleteNotice, getNoticePageList, updateNotice } from '@/api/curd/notice'
-import { useUserStore } from '@/stores/user'
 
 const filters = reactive({
   title: '',
@@ -143,9 +142,6 @@ const formRules = {
   title: [{ required: true, message: '请输入通知标题', trigger: 'blur' }],
   content: [{ required: true, message: '请输入通知内容', trigger: 'blur' }],
 }
-
-const userStore = useUserStore()
-const currentUserId = computed(() => userStore.profile.userId)
 
 const normalizeStatusValue = (value) => {
   if (value === null || value === undefined || value === '') return null
@@ -252,14 +248,9 @@ const handleSubmit = async () => {
         })
         ElMessage.success('通知已更新')
       } else {
-        if (!currentUserId.value) {
-          ElMessage.error('缺少当前用户ID，请重新登录后重试')
-          return
-        }
         await addNotice({
           title: formData.title,
           content: formData.content,
-          userId: currentUserId.value,
         })
         ElMessage.success('通知已创建')
       }
@@ -267,7 +258,7 @@ const handleSubmit = async () => {
       fetchNoticeList()
     } catch (error) {
       console.error('提交通知失败:', error)
-      ElMessage.error('提交失败，请稍后重试')
+      ElMessage.error(error?.message || '提交失败，请稍后重试')
     } finally {
       submitLoading.value = false
     }

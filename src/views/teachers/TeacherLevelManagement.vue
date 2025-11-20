@@ -175,15 +175,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getTeacherLevelPageList, updateTeacherLevel, deleteTeacherLevels, addTeacherLevel } from '@/api/curd/teacherLevel'
 import { getTeacherRatingList } from '@/api/curd/dictionary'
 import { getTeacherPageList } from '@/api/curd/teacher'
-import { useUserStore } from '@/stores/user'
-
-const userStore = useUserStore()
-const currentUserId = computed(() => {
-  const id = userStore.profile.userId
-  if (id === undefined || id === null || id === '') return null
-  const parsed = Number(id)
-  return Number.isNaN(parsed) ? id : parsed
-})
 
 const filters = reactive({
   yearmonth: '',
@@ -215,7 +206,6 @@ const formData = reactive({
   yearmonth: '',
   levelId: null,
   descption: '',
-  userId: null,
 })
 const dialogTitle = computed(() => (isEdit.value ? '编辑教师评级' : '新增教师评级'))
 
@@ -328,7 +318,6 @@ const resetFormData = () => {
     yearmonth: '',
     levelId: null,
     descption: '',
-    userId: currentUserId.value || null,
   })
 }
 
@@ -350,7 +339,6 @@ const handleEdit = (row) => {
     yearmonth: row.yearmonth,
     levelId: row.levelId,
     descption: row.descption,
-    userId: row.userId || null,
   })
   ensureOptionExists(teacherOptions, {
     id: row.teacherId,
@@ -368,18 +356,12 @@ const handleSubmit = () => {
     if (!valid) return
     try {
       submitLoading.value = true
-      const operatorId = currentUserId.value ?? formData.userId
-      if (!operatorId) {
-        ElMessage.error('当前用户信息缺失，请重新登录后再试')
-        return
-      }
       if (isEdit.value) {
         await updateTeacherLevel({
           id: formData.id,
           yearmonth: formData.yearmonth,
           levelId: formData.levelId,
           descption: formData.descption,
-          userId: operatorId,
         })
       } else {
         await addTeacherLevel({
@@ -387,7 +369,6 @@ const handleSubmit = () => {
           yearmonth: formData.yearmonth,
           levelId: formData.levelId,
           descption: formData.descption,
-          userId: operatorId,
         })
       }
       ElMessage.success(isEdit.value ? '更新成功' : '新增成功')

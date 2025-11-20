@@ -1,4 +1,6 @@
 import request from '@/utils/request'
+import { useUserStore } from '@/stores/user'
+import {getUserId} from "@/utils/util.js";
 
 const adaptNoticePageListResponse = (response) => {
   if (!response || !response.data) {
@@ -54,7 +56,7 @@ export const addNotice = async (data) => {
     params: {
       title: data.title,
       content: data.content,
-      userId: data.userId,
+      userId: getUserId(),
     },
   })
 }
@@ -66,6 +68,7 @@ export const updateNotice = async (data) => {
     params: {
       title: data.title,
       content: data.content,
+      userId: getUserId(),
     },
   })
 }
