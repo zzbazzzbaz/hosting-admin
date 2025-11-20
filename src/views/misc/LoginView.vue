@@ -394,10 +394,6 @@ const handleLogin = async () => {
   transform: translateY(-1px);
 }
 
-.field-shell--error {
-  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.5);
-}
-
 .error-tip {
   margin-top: 0.35rem;
   font-size: 0.75rem;

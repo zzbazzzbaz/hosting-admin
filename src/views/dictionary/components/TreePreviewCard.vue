@@ -383,59 +383,6 @@ defineExpose({
   transform: scale(1.02);
 }
 
-/* 不同节点类型的高度样式 */
-.node-school {
-  min-height: 60px;
-  padding: 0.8rem 1.2rem;
-}
-
-.node-grade {
-  min-height: 52px;
-  padding: 0.6rem 1.2rem;
-}
-
-.node-class {
-  min-height: 48px;
-  padding: 0.5rem 1.2rem;
-}
-
-.node-subject {
-  min-height: 44px;
-  padding: 0.4rem 1.2rem;
-}
-
-/* 树节点子元素 */
-:deep(.el-tree-node__children) {
-  padding-left: 20px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
-/* 树节点内容样式 */
-:deep(.el-tree-node__content) {
-  min-height: 0;
-  padding: 0;
-  height: 75px;
-}
-
-/* 树节点样式 */
-:deep(.el-tree-node) {
-  line-height: 1.5;
-}
-
-/* 树节点展开图标样式 */
-:deep(.el-tree-node__expand-icon) {
-  margin-right: 12px;
-  font-size: 16px;
-  width: 20px;
-  height: 20px;
-}
-
-/* 树节点缩进样式 */
-:deep(.el-tree-node__indent) {
-  width: 16px;
-}
-
 .node-actions .btn-link {
   color: #0ea5e9 !important;
   font-weight: 600;

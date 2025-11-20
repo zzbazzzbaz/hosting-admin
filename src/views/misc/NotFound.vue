@@ -3,7 +3,7 @@
     <el-empty description="页面未找到">
       <template #image>
         <el-icon class="text-5xl text-slate-300">
-          <Warning />
+<!--          <Warning />-->
         </el-icon>
       </template>
       <el-button

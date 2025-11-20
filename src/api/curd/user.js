@@ -63,7 +63,7 @@ function adaptPageListResponse(response) {
  * }
  */
 export const addUser = async (data) => {
-  const response = await request({
+  return await request({
     url: '/admin/user/add',
     method: 'post',
     params: {
@@ -71,8 +71,6 @@ export const addUser = async (data) => {
       userName: data.userName,
     },
   })
-
-  return response
 }
 
 /**
@@ -174,7 +172,7 @@ export const getUserPageList = async (params = {}) => {
  * }
  */
 export const updateUser = async (data) => {
-  const response = await request({
+  return await request({
     url: `/admin/user/update/${data.id}`,
     method: 'put',
     params: {
@@ -183,8 +181,6 @@ export const updateUser = async (data) => {
       'campus.id': data.campusId,
     },
   })
-
-  return response
 }
 
 /**
@@ -217,12 +213,10 @@ export const deleteUser = async (ids) => {
     idsStr = String(ids)
   }
 
-  const response = await request({
+  return await request({
     url: `/admin/user/deletes/${idsStr}`, // 修改为 deletes 匹配后端路径
     method: 'delete',
   })
-
-  return response
 }
 
 /**
@@ -243,13 +237,11 @@ export const deleteUser = async (ids) => {
  * }
  */
 export const resetPassword = async (userId) => {
-  const response = await request({
+  return await request({
     url: '/admin/user/resetPassword',
     method: 'post',
     params: {
       userId: userId,
     },
   })
-
-  return response
 }
