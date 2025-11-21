@@ -1,4 +1,4 @@
-import { Bell, Collection, House, Notebook, Timer, User, UserFilled } from '@element-plus/icons-vue'
+import { Bell, Collection, House, Notebook, Timer, User, UserFilled, TrophyBase } from '@element-plus/icons-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'
@@ -48,6 +48,12 @@ export const navigationMenus = [
       { key: 'homework-dashboard', label: '数据看板', path: '/homework/dashboard' },
       { key: 'homework-manage', label: '作业管理', path: '/homework/manage' },
     ],
+  },
+  {
+    key: 'score',
+    label: '成绩',
+    icon: TrophyBase,
+    children: [{ key: 'score-manage', label: '成绩管理', path: '/score/manage' }],
   },
   {
     key: 'notice',
@@ -133,6 +139,12 @@ const layoutChildren = [
     name: 'HomeworkDashboard',
     component: () => import('@/views/homework/HomeworkDashboard.vue'),
     meta: { title: '作业数据看板', menuKey: 'homework-dashboard', parentKey: 'homework' },
+  },
+  {
+    path: 'score/manage',
+    name: 'ScoreManagement',
+    component: () => import('@/views/score/ScoreManagement.vue'),
+    meta: { title: '成绩管理', menuKey: 'score-manage', parentKey: 'score' },
   },
   {
     path: 'notice/manage',
