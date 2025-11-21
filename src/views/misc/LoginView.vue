@@ -49,20 +49,12 @@
               class="mt-auto grid gap-4 pt-10 text-left text-xs uppercase tracking-[0.2em] text-white/70 sm:grid-cols-2"
             >
               <div>
-                <p class="text-[10px] text-white/50">
-                  Service Uptime
-                </p>
-                <p class="text-2xl font-semibold text-white">
-                  99.95%
-                </p>
+                <p class="text-[10px] text-white/50">Service Uptime</p>
+                <p class="text-2xl font-semibold text-white">99.95%</p>
               </div>
               <div>
-                <p class="text-[10px] text-white/50">
-                  Active Schools
-                </p>
-                <p class="text-2xl font-semibold text-white">
-                  120+
-                </p>
+                <p class="text-[10px] text-white/50">Active Schools</p>
+                <p class="text-2xl font-semibold text-white">120+</p>
               </div>
             </div>
           </div>
@@ -75,9 +67,7 @@
               <p class="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">
                 Account Center
               </p>
-              <h2 class="mt-3 text-2xl font-semibold text-slate-900">
-                欢迎登录托管后台
-              </h2>
+              <h2 class="mt-3 text-2xl font-semibold text-slate-900">欢迎登录托管后台</h2>
               <p class="mt-2 text-sm text-slate-500">
                 输入账号信息以继续。我们会保障您的数据安全。
               </p>
@@ -85,22 +75,11 @@
             <div
               class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600"
             >
-              <img
-                :src="logoUrl"
-                alt="logo"
-                class="h-8 w-8 object-contain"
-              >
+              <img :src="logoUrl" alt="logo" class="h-8 w-8 object-contain" />
             </div>
           </div>
-          <el-form
-            class="space-y-6"
-            label-position="top"
-            @submit.prevent="handleLogin"
-          >
-            <el-form-item
-              label="账号"
-              class="form-item"
-            >
+          <el-form class="space-y-6" label-position="top" @submit.prevent="handleLogin">
+            <el-form-item label="账号" class="form-item">
               <div :class="['field-shell', { 'field-shell--error': showFieldError('account') }]">
                 <el-input
                   v-model="form.account"
@@ -110,27 +89,18 @@
                   @blur="handleBlur('account')"
                 >
                   <template #prefix>
-                    <el-icon
-                      :size="18"
-                      class="text-emerald-500"
-                    >
+                    <el-icon :size="18" class="text-emerald-500">
                       <UserFilled />
                     </el-icon>
                   </template>
                 </el-input>
               </div>
-              <p
-                v-if="showFieldError('account')"
-                class="error-tip"
-              >
+              <p v-if="showFieldError('account')" class="error-tip">
                 {{ errors.account }}
               </p>
             </el-form-item>
 
-            <el-form-item
-              label="密码"
-              class="form-item"
-            >
+            <el-form-item label="密码" class="form-item">
               <div :class="['field-shell', { 'field-shell--error': showFieldError('password') }]">
                 <el-input
                   v-model="form.password"
@@ -142,19 +112,13 @@
                   @blur="handleBlur('password')"
                 >
                   <template #prefix>
-                    <el-icon
-                      :size="18"
-                      class="text-emerald-500"
-                    >
+                    <el-icon :size="18" class="text-emerald-500">
                       <Lock />
                     </el-icon>
                   </template>
                 </el-input>
               </div>
-              <p
-                v-if="showFieldError('password')"
-                class="error-tip"
-              >
+              <p v-if="showFieldError('password')" class="error-tip">
                 {{ errors.password }}
               </p>
             </el-form-item>
@@ -173,10 +137,9 @@
           </el-form>
           <div class="mt-6 text-center text-xs text-slate-400">
             登录即表示您同意
-            <a
-              class="font-medium text-emerald-500 hover:text-emerald-600"
-              href="javascript:void(0)"
-            >《安全与隐私政策》</a>
+            <a class="font-medium text-emerald-500 hover:text-emerald-600" href="javascript:void(0)"
+              >《安全与隐私政策》</a
+            >
           </div>
         </section>
       </div>

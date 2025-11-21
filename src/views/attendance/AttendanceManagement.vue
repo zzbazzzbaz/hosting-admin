@@ -4,25 +4,12 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">筛选条件</span>
-          <el-button
-            type="primary"
-            @click="handleQuery"
-          >
-            刷新
-          </el-button>
+          <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
         </div>
       </template>
-      <el-form
-        :model="filters"
-        label-width="90"
-        class="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
-      >
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <el-form-item label="学生姓名">
-          <el-input
-            v-model="filters.studentName"
-            placeholder="输入学生姓名"
-            clearable
-          />
+          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
         </el-form-item>
         <el-form-item label="签到教师">
           <el-select
@@ -73,62 +60,32 @@
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          @click="handleQuery"
-        >
-          查询
-        </el-button>
+        <el-button @click="handleReset"> 重置 </el-button>
+        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 
     <el-card class="pastel-card">
-      <el-table
-        :data="signinList"
-        :loading="loading"
-        stripe
-      >
-        <el-table-column
-          prop="id"
-          label="ID"
-          width="80"
-        />
-        <el-table-column
-          label="学生姓名"
-          min-width="180"
-        >
+      <el-table :data="signinList" :loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column label="学生姓名" min-width="180">
           <template #default="{ row }">
             <span class="font-medium text-slate-800">{{ row.studentName || '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="签到教师"
-          min-width="160"
-        >
+        <el-table-column label="签到教师" min-width="160">
           <template #default="{ row }">
             <span>{{ row.checkinTeacherName || '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="签到时间"
-          min-width="180"
-        >
+        <el-table-column label="签到时间" min-width="180">
           <template #default="{ row }">
             {{ formatDateTime(row.createTime) }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="签到图片"
-          min-width="240"
-        >
+        <el-table-column label="签到图片" min-width="240">
           <template #default="{ row }">
-            <div
-              v-if="row.picList?.length"
-              class="flex flex-wrap gap-2"
-            >
+            <div v-if="row.picList?.length" class="flex flex-wrap gap-2">
               <el-image
                 v-for="pic in row.picList"
                 :key="pic.id || pic"
@@ -139,32 +96,17 @@
                 preview-teleported
               />
             </div>
-            <span
-              v-else
-              class="text-xs text-slate-400"
-            >暂无图片</span>
+            <span v-else class="text-xs text-slate-400">暂无图片</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作"
-          width="120"
-          fixed="right"
-        >
+        <el-table-column label="操作" width="120" fixed="right">
           <template #default="{ row }">
-            <el-button
-              type="primary"
-              link
-              @click="handleViewDetail(row)"
-            >
-              查看详情
-            </el-button>
+            <el-button type="primary" link @click="handleViewDetail(row)"> 查看详情 </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">
-          共 {{ totalRecords }} 条签到记录
-        </div>
+        <div class="text-xs text-slate-500">共 {{ totalRecords }} 条签到记录</div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
@@ -175,17 +117,8 @@
       </div>
     </el-card>
 
-    <el-dialog
-      v-model="detailVisible"
-      title="签到详情"
-      width="720px"
-      :close-on-click-modal="false"
-    >
-      <el-descriptions
-        :column="2"
-        border
-        class="rounded-lg"
-      >
+    <el-dialog v-model="detailVisible" title="签到详情" width="720px" :close-on-click-modal="false">
+      <el-descriptions :column="2" border class="rounded-lg">
         <el-descriptions-item label="记录 ID">
           {{ currentRecord?.id || '-' }}
         </el-descriptions-item>
@@ -216,13 +149,8 @@
       </el-descriptions>
 
       <div class="mt-5">
-        <div class="mb-2 font-medium text-slate-700">
-          签到图片
-        </div>
-        <div
-          v-if="currentRecord?.picList?.length"
-          class="flex flex-wrap gap-3"
-        >
+        <div class="mb-2 font-medium text-slate-700">签到图片</div>
+        <div v-if="currentRecord?.picList?.length" class="flex flex-wrap gap-3">
           <el-image
             v-for="pic in currentRecord?.picList"
             :key="pic.id || pic"
@@ -233,12 +161,7 @@
             preview-teleported
           />
         </div>
-        <div
-          v-else
-          class="text-sm text-slate-400"
-        >
-          暂无签到图片
-        </div>
+        <div v-else class="text-sm text-slate-400">暂无签到图片</div>
       </div>
     </el-dialog>
   </div>

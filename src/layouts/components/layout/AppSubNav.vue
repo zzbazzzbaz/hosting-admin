@@ -1,24 +1,11 @@
 <template>
   <transition name="fade-slide">
-    <div
-      v-if="tabs.length"
-      class="mb-6"
-    >
+    <div v-if="tabs.length" class="mb-6">
       <div
         class="flex items-center justify-between gap-4 rounded-3xl bg-white/80 p-2 shadow-inner shadow-pink-100/40"
       >
-        <el-tabs
-          v-model="activeTab"
-          type="card"
-          class="secondary-tabs"
-          @tab-click="handleTabClick"
-        >
-          <el-tab-pane
-            v-for="tab in tabs"
-            :key="tab.path"
-            :label="tab.label"
-            :name="tab.path"
-          />
+        <el-tabs v-model="activeTab" type="card" class="secondary-tabs" @tab-click="handleTabClick">
+          <el-tab-pane v-for="tab in tabs" :key="tab.path" :label="tab.label" :name="tab.path" />
         </el-tabs>
         <slot name="suffix" />
       </div>

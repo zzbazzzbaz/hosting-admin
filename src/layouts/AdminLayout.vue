@@ -8,19 +8,11 @@
         <div
           class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-md shadow-pink-200/70 ring-1 ring-inset ring-sky-200/60"
         >
-          <img
-            :src="logoUrl"
-            alt="hosting-admin Logo"
-            class="h-10 w-10 object-contain"
-          >
+          <img :src="logoUrl" alt="hosting-admin Logo" class="h-10 w-10 object-contain" />
         </div>
         <div>
-          <p class="text-lg font-semibold text-slate-800">
-            hosting-admin
-          </p>
-          <p class="text-xs text-slate-600 tracking-wide">
-            Admin Portal
-          </p>
+          <p class="text-lg font-semibold text-slate-800">hosting-admin</p>
+          <p class="text-xs text-slate-600 tracking-wide">Admin Portal</p>
         </div>
       </div>
       <app-sidebar :menus="menus" />

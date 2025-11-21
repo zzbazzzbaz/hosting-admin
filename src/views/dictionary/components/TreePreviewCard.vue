@@ -4,29 +4,13 @@
     <template #header>
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p class="text-sm font-semibold text-slate-900">
-            树形结构总览
-          </p>
-          <p class="text-xs text-slate-500">
-            学校 → 年级 → 班级 → 科目
-          </p>
+          <p class="text-sm font-semibold text-slate-900">树形结构总览</p>
+          <p class="text-xs text-slate-500">学校 → 年级 → 班级 → 科目</p>
         </div>
         <!-- 展开/收起按钮组 -->
         <div class="flex gap-2">
-          <el-button
-            size="small"
-            class="btn-soft"
-            @click="expandAll"
-          >
-            展开全部
-          </el-button>
-          <el-button
-            size="small"
-            class="btn-soft"
-            @click="collapseAll"
-          >
-            收起全部
-          </el-button>
+          <el-button size="small" class="btn-soft" @click="expandAll"> 展开全部 </el-button>
+          <el-button size="small" class="btn-soft" @click="collapseAll"> 收起全部 </el-button>
         </div>
       </div>
     </template>
@@ -101,12 +85,7 @@
                 新增
               </el-button>
               <!-- 删除按钮 -->
-              <el-button
-                size="small"
-                text
-                class="btn-link danger"
-                @click.stop="handleRemove(data)"
-              >
+              <el-button size="small" text class="btn-link danger" @click.stop="handleRemove(data)">
                 删除
               </el-button>
             </div>
@@ -126,12 +105,7 @@ import { ref, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 
 // 组件属性定义
-const {
-  dictionaryTree,
-  treeProps,
-  typeMeta,
-  nextTypeMap,
-} = defineProps({
+const { dictionaryTree, treeProps, typeMeta, nextTypeMap } = defineProps({
   /** 树形数据源 */
   dictionaryTree: {
     type: Array,

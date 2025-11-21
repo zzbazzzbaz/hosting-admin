@@ -4,7 +4,7 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">筛选条件</span>
-          <el-button type="primary" @click="handleQuery">刷新</el-button>
+          <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
         </div>
       </template>
       <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -13,43 +13,94 @@
         </el-form-item>
         <el-form-item label="学校">
           <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
-            <el-option v-for="item in schoolOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in schoolOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
           <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
-            <el-option v-for="item in gradeOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in gradeOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
           <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
-            <el-option v-for="item in classOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in classOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="托管校区">
           <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
-            <el-option v-for="item in campusOptions" :key="item.id" :label="item.dicName" :value="item.id" />
+            <el-option
+              v-for="item in campusOptions"
+              :key="item.id"
+              :label="item.dicName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="家长">
-          <el-select v-model="filters.parentId" placeholder="输入手机号搜索家长" clearable filterable remote :remote-method="handleParentRemote" :loading="parentLoading">
-            <el-option v-for="item in parentOptions" :key="item.id" :label="formatParentLabel(item)" :value="item.id" />
+          <el-select
+            v-model="filters.parentId"
+            placeholder="输入手机号搜索家长"
+            clearable
+            filterable
+            remote
+            :remote-method="handleParentRemote"
+            :loading="parentLoading"
+          >
+            <el-option
+              v-for="item in parentOptions"
+              :key="item.id"
+              :label="formatParentLabel(item)"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="教师">
-          <el-select v-model="filters.teacherId" placeholder="输入手机号搜索教师" clearable filterable remote :remote-method="handleTeacherRemote" :loading="teacherLoading">
-            <el-option v-for="item in teacherOptions" :key="item.id" :label="formatTeacherLabel(item)" :value="item.id" />
+          <el-select
+            v-model="filters.teacherId"
+            placeholder="输入手机号搜索教师"
+            clearable
+            filterable
+            remote
+            :remote-method="handleTeacherRemote"
+            :loading="teacherLoading"
+          >
+            <el-option
+              v-for="item in teacherOptions"
+              :key="item.id"
+              :label="formatTeacherLabel(item)"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="学生">
           <el-select v-model="filters.studentId" placeholder="选择学生" clearable filterable>
-            <el-option v-for="item in studentOptions" :key="item.id" :label="item.studentName" :value="item.id" />
+            <el-option
+              v-for="item in studentOptions"
+              :key="item.id"
+              :label="item.studentName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">重置</el-button>
-        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button @click="handleReset"> 重置 </el-button>
+        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 
@@ -57,15 +108,19 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">成绩列表</span>
-          <el-button type="primary" @click="handleAdd">添加成绩</el-button>
+          <el-button type="primary" @click="handleAdd"> 添加成绩 </el-button>
         </div>
       </template>
       <el-table :data="scoreList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column label="学生" min-width="160">
           <template #default="{ row }">
-            <div class="font-medium text-slate-800">{{ row.studentName || '-' }}</div>
-            <div class="text-xs text-slate-400">{{ row.schoolName || '未分配学校' }}</div>
+            <div class="font-medium text-slate-800">
+              {{ row.studentName || '-' }}
+            </div>
+            <div class="text-xs text-slate-400">
+              {{ row.schoolName || '未分配学校' }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="gradeName" label="年级" min-width="100" />
@@ -83,62 +138,134 @@
         <el-table-column prop="description" label="备注" min-width="150" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="primary" @click="handleEdit(row)"> 编辑 </el-button>
+            <el-button link type="danger" @click="handleDelete(row)"> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
         <div class="text-xs text-slate-500">共 {{ totalRecords }} 条记录</div>
-        <el-pagination v-model:current-page="pagination.current" v-model:page-size="pagination.size" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" :total="totalRecords" />
+        <el-pagination
+          v-model:current-page="pagination.current"
+          v-model:page-size="pagination.size"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalRecords"
+        />
       </div>
     </el-card>
 
     <!-- 添加/编辑对话框 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="600px">
-      <el-form :model="formData" :rules="formRules" ref="formRef" label-width="100px">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
         <el-form-item label="学生" prop="studentId">
-          <el-select v-model="formData.studentId" placeholder="选择学生" filterable :disabled="isEdit">
-            <el-option v-for="item in studentOptions" :key="item.id" :label="item.studentName" :value="item.id" />
+          <el-select
+            v-model="formData.studentId"
+            placeholder="选择学生"
+            filterable
+            :disabled="isEdit"
+          >
+            <el-option
+              v-for="item in studentOptions"
+              :key="item.id"
+              :label="item.studentName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="年月" prop="yearmonth">
-          <el-date-picker v-model="formData.yearmonth" type="month" placeholder="选择年月" format="YYYY-MM" value-format="YYYY-MM" />
+          <el-date-picker
+            v-model="formData.yearmonth"
+            type="month"
+            placeholder="选择年月"
+            format="YYYY-MM"
+            value-format="YYYY-MM"
+          />
         </el-form-item>
         <el-form-item label="语文">
-          <el-input-number v-model="formData.chineseScore" :min="0" :max="150" placeholder="语文成绩" />
+          <el-input-number
+            v-model="formData.chineseScore"
+            :min="0"
+            :max="150"
+            placeholder="语文成绩"
+          />
         </el-form-item>
         <el-form-item label="数学">
-          <el-input-number v-model="formData.mathScore" :min="0" :max="150" placeholder="数学成绩" />
+          <el-input-number
+            v-model="formData.mathScore"
+            :min="0"
+            :max="150"
+            placeholder="数学成绩"
+          />
         </el-form-item>
         <el-form-item label="英语">
-          <el-input-number v-model="formData.englishScore" :min="0" :max="150" placeholder="英语成绩" />
+          <el-input-number
+            v-model="formData.englishScore"
+            :min="0"
+            :max="150"
+            placeholder="英语成绩"
+          />
         </el-form-item>
         <el-form-item label="物理">
-          <el-input-number v-model="formData.physicsScore" :min="0" :max="100" placeholder="物理成绩" />
+          <el-input-number
+            v-model="formData.physicsScore"
+            :min="0"
+            :max="100"
+            placeholder="物理成绩"
+          />
         </el-form-item>
         <el-form-item label="化学">
-          <el-input-number v-model="formData.chemistryScore" :min="0" :max="100" placeholder="化学成绩" />
+          <el-input-number
+            v-model="formData.chemistryScore"
+            :min="0"
+            :max="100"
+            placeholder="化学成绩"
+          />
         </el-form-item>
         <el-form-item label="生物">
-          <el-input-number v-model="formData.organismScore" :min="0" :max="100" placeholder="生物成绩" />
+          <el-input-number
+            v-model="formData.organismScore"
+            :min="0"
+            :max="100"
+            placeholder="生物成绩"
+          />
         </el-form-item>
         <el-form-item label="历史">
-          <el-input-number v-model="formData.historyScore" :min="0" :max="100" placeholder="历史成绩" />
+          <el-input-number
+            v-model="formData.historyScore"
+            :min="0"
+            :max="100"
+            placeholder="历史成绩"
+          />
         </el-form-item>
         <el-form-item label="政治">
-          <el-input-number v-model="formData.politicsScore" :min="0" :max="100" placeholder="政治成绩" />
+          <el-input-number
+            v-model="formData.politicsScore"
+            :min="0"
+            :max="100"
+            placeholder="政治成绩"
+          />
         </el-form-item>
         <el-form-item label="地理">
-          <el-input-number v-model="formData.geographyScore" :min="0" :max="100" placeholder="地理成绩" />
+          <el-input-number
+            v-model="formData.geographyScore"
+            :min="0"
+            :max="100"
+            placeholder="地理成绩"
+          />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="formData.description" type="textarea" :rows="3" placeholder="备注信息" />
+          <el-input
+            v-model="formData.description"
+            type="textarea"
+            :rows="3"
+            placeholder="备注信息"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确定</el-button>
+        <el-button @click="dialogVisible = false"> 取消 </el-button>
+        <el-button type="primary" @click="handleSubmit"> 确定 </el-button>
       </template>
     </el-dialog>
   </div>

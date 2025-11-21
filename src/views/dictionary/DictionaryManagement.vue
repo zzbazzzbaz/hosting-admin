@@ -4,32 +4,15 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">查询筛选</span>
-          <el-button
-            type="primary"
-            @click="handleCreate"
-          >
-            新增字典
-          </el-button>
+          <el-button type="primary" @click="handleCreate"> 新增字典 </el-button>
         </div>
       </template>
-      <el-form
-        :model="filters"
-        label-width="90"
-        class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
-      >
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <el-form-item label="字典名称">
-          <el-input
-            v-model="filters.dicName"
-            placeholder="支持模糊查询"
-            clearable
-          />
+          <el-input v-model="filters.dicName" placeholder="支持模糊查询" clearable />
         </el-form-item>
         <el-form-item label="字典类型">
-          <el-select
-            v-model="filters.type"
-            placeholder="请选择类型"
-            clearable
-          >
+          <el-select v-model="filters.type" placeholder="请选择类型" clearable>
             <el-option
               v-for="item in dictionaryTypeOptions"
               :key="item.value"
@@ -40,69 +23,29 @@
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          @click="handleQuery"
-        >
-          查询
-        </el-button>
+        <el-button @click="handleReset"> 重置 </el-button>
+        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 
     <el-card class="pastel-card">
-      <el-table
-        :data="dictionaryList"
-        :loading="loading"
-        stripe
-      >
-        <el-table-column
-          prop="id"
-          label="ID"
-          width="80"
-        />
-        <el-table-column
-          prop="dicName"
-          label="字典名称"
-          min-width="160"
-        />
-        <el-table-column
-          label="字典类型"
-          min-width="160"
-        >
+      <el-table :data="dictionaryList" :loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column prop="dicName" label="字典名称" min-width="160" />
+        <el-table-column label="字典类型" min-width="160">
           <template #default="{ row }">
             {{ getTypeLabel(row.type) }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作"
-          width="180"
-          fixed="right"
-        >
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button
-              type="primary"
-              link
-              @click="handleEdit(row)"
-            >
-              修改
-            </el-button>
-            <el-button
-              type="danger"
-              link
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
+            <el-button type="primary" link @click="handleEdit(row)"> 修改 </el-button>
+            <el-button type="danger" link @click="handleDelete(row)"> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">
-          共 {{ totalItems }} 条记录
-        </div>
+        <div class="text-xs text-slate-500">共 {{ totalItems }} 条记录</div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
@@ -120,16 +63,8 @@
       :close-on-click-modal="false"
       @close="handleDialogClose"
     >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="90px"
-      >
-        <el-form-item
-          label="字典名称"
-          prop="dicName"
-        >
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="90px">
+        <el-form-item label="字典名称" prop="dicName">
           <el-input
             v-model="formData.dicName"
             placeholder="请输入字典名称"
@@ -137,15 +72,8 @@
             clearable
           />
         </el-form-item>
-        <el-form-item
-          label="字典类型"
-          prop="type"
-        >
-          <el-select
-            v-model="formData.type"
-            placeholder="请选择类型"
-            clearable
-          >
+        <el-form-item label="字典类型" prop="type">
+          <el-select v-model="formData.type" placeholder="请选择类型" clearable>
             <el-option
               v-for="item in dictionaryTypeOptions"
               :key="item.value"
@@ -157,14 +85,8 @@
       </el-form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <el-button @click="dialogVisible = false">
-            取消
-          </el-button>
-          <el-button
-            type="primary"
-            :loading="submitLoading"
-            @click="handleSubmit"
-          >
+          <el-button @click="dialogVisible = false"> 取消 </el-button>
+          <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
             确定
           </el-button>
         </div>

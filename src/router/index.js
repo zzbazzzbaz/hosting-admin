@@ -1,4 +1,13 @@
-import { Bell, Collection, House, Notebook, Timer, User, UserFilled, TrophyBase } from '@element-plus/icons-vue'
+import {
+  Bell,
+  Collection,
+  House,
+  Notebook,
+  Timer,
+  User,
+  UserFilled,
+  TrophyBase,
+} from '@element-plus/icons-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/AdminLayout.vue'

@@ -2,10 +2,7 @@
   <div class="flex h-full w-full items-center justify-between gap-8 py-4">
     <div class="space-y-2">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item
-          v-for="(crumb, index) in breadcrumbs"
-          :key="crumb.label"
-        >
+        <el-breadcrumb-item v-for="(crumb, index) in breadcrumbs" :key="crumb.label">
           <router-link
             v-if="crumb.path && index !== breadcrumbs.length - 1"
             :to="crumb.path"
@@ -13,10 +10,7 @@
           >
             {{ crumb.label }}
           </router-link>
-          <span
-            v-else
-            class="text-slate-700"
-          >
+          <span v-else class="text-slate-700">
             {{ crumb.label }}
           </span>
         </el-breadcrumb-item>
@@ -30,9 +24,7 @@
         class="flex items-center gap-4 rounded-full bg-white/80 px-6 py-3 shadow-inner shadow-emerald-100/60 backdrop-blur"
       >
         <div class="text-left">
-          <p class="text-xs uppercase tracking-wide text-slate-400">
-            当前用户
-          </p>
+          <p class="text-xs uppercase tracking-wide text-slate-400">当前用户</p>
           <p class="text-base font-semibold text-slate-800">
             {{ profile.name }}
           </p>
@@ -43,10 +35,7 @@
           class="rounded-full border-none bg-emerald-400/90 px-5 text-sm font-semibold text-white shadow-md shadow-emerald-100/80 transition hover:bg-emerald-500 hover:text-white"
           @click="handleLogout"
         >
-          <el-icon
-            :size="18"
-            class="-ml-1 mr-1 text-white"
-          >
+          <el-icon :size="18" class="-ml-1 mr-1 text-white">
             <SwitchButton />
           </el-icon>
           退出登录

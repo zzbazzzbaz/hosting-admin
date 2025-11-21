@@ -11,53 +11,25 @@
       active-text-color="#f472b6"
       :unique-opened="false"
     >
-      <template
-        v-for="menu in menus"
-        :key="menu.key"
-      >
-        <el-menu-item
-          v-if="!menu.children?.length"
-          :index="menu.path"
-        >
-          <el-icon
-            v-if="menu.icon"
-            :size="menuIconSize"
-            class="mr-2 shrink-0"
-          >
+      <template v-for="menu in menus" :key="menu.key">
+        <el-menu-item v-if="!menu.children?.length" :index="menu.path">
+          <el-icon v-if="menu.icon" :size="menuIconSize" class="mr-2 shrink-0">
             <component :is="menu.icon" />
           </el-icon>
           <span class="text-sm font-medium">{{ menu.label }}</span>
         </el-menu-item>
-        <el-sub-menu
-          v-else
-          :index="menu.key"
-        >
+        <el-sub-menu v-else :index="menu.key">
           <template #title>
-            <el-icon
-              v-if="menu.icon"
-              :size="menuIconSize"
-              class="mr-2 shrink-0"
-            >
+            <el-icon v-if="menu.icon" :size="menuIconSize" class="mr-2 shrink-0">
               <component :is="menu.icon" />
             </el-icon>
             <span class="text-sm font-medium">{{ menu.label }}</span>
           </template>
-          <template
-            v-for="child in menu.children"
-            :key="child.key"
-          >
-            <el-menu-item
-              v-if="!child.children?.length"
-              :index="child.path"
-              class="rounded-md"
-            >
+          <template v-for="child in menu.children" :key="child.key">
+            <el-menu-item v-if="!child.children?.length" :index="child.path" class="rounded-md">
               <span class="text-sm">{{ child.label }}</span>
             </el-menu-item>
-            <el-sub-menu
-              v-else
-              :index="child.key"
-              class="ml-2"
-            >
+            <el-sub-menu v-else :index="child.key" class="ml-2">
               <template #title>
                 <span class="text-sm font-medium">{{ child.label }}</span>
               </template>

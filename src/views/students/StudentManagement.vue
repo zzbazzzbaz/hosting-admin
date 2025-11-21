@@ -4,33 +4,15 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">查询筛选</span>
-          <el-button
-            type="primary"
-            @click="handleCreate"
-          >
-            新增学生
-          </el-button>
+          <el-button type="primary" @click="handleCreate"> 新增学生 </el-button>
         </div>
       </template>
-      <el-form
-        :model="filters"
-        label-width="90"
-        class="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
-      >
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <el-form-item label="学生姓名">
-          <el-input
-            v-model="filters.studentName"
-            placeholder="支持模糊查询"
-            clearable
-          />
+          <el-input v-model="filters.studentName" placeholder="支持模糊查询" clearable />
         </el-form-item>
         <el-form-item label="学校">
-          <el-select
-            v-model="filters.schoolId"
-            placeholder="全部学校"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.schoolId" placeholder="全部学校" clearable filterable>
             <el-option
               v-for="item in schoolOptions"
               :key="item.id"
@@ -40,12 +22,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
-          <el-select
-            v-model="filters.gradeId"
-            placeholder="全部年级"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.gradeId" placeholder="全部年级" clearable filterable>
             <el-option
               v-for="item in gradeOptions"
               :key="item.id"
@@ -55,12 +32,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
-          <el-select
-            v-model="filters.clazzId"
-            placeholder="全部班级"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.clazzId" placeholder="全部班级" clearable filterable>
             <el-option
               v-for="item in classOptions"
               :key="item.id"
@@ -70,12 +42,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="校区">
-          <el-select
-            v-model="filters.campusId"
-            placeholder="全部校区"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.campusId" placeholder="全部校区" clearable filterable>
             <el-option
               v-for="item in campusOptions"
               :key="item.id"
@@ -122,116 +89,52 @@
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          @click="handleQuery"
-        >
-          查询
-        </el-button>
+        <el-button @click="handleReset"> 重置 </el-button>
+        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 
     <el-card class="pastel-card">
-      <el-table
-        :data="studentList"
-        :loading="loading"
-        stripe
-      >
-        <el-table-column
-          prop="id"
-          label="ID"
-          width="80"
-        />
-        <el-table-column
-          label="学生姓名"
-          min-width="140"
-        >
+      <el-table :data="studentList" :loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column label="学生姓名" min-width="140">
           <template #default="{ row }">
             {{ row.studentName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="家长"
-          min-width="160"
-        >
+        <el-table-column label="家长" min-width="160">
           <template #default="{ row }">
             {{ row.parentName || '-' }}（{{ row.parentPhone || '-' }}）
           </template>
         </el-table-column>
-        <el-table-column
-          prop="schoolName"
-          label="学校"
-          min-width="140"
-        />
-        <el-table-column
-          prop="gradeName"
-          label="年级"
-          min-width="120"
-        />
-        <el-table-column
-          prop="clazzName"
-          label="班级"
-          min-width="120"
-        />
-        <el-table-column
-          prop="campusName"
-          label="校区"
-          min-width="140"
-        />
-        <el-table-column
-          label="课时情况"
-          min-width="180"
-        >
+        <el-table-column prop="schoolName" label="学校" min-width="140" />
+        <el-table-column prop="gradeName" label="年级" min-width="120" />
+        <el-table-column prop="clazzName" label="班级" min-width="120" />
+        <el-table-column prop="campusName" label="校区" min-width="140" />
+        <el-table-column label="课时情况" min-width="180">
           <template #default="{ row }">
             {{ row.usedHours || 0 }}/{{ row.sumHours || 0 }}（剩余 {{ row.remainingHours || 0 }}）
           </template>
         </el-table-column>
-        <el-table-column
-          label="教师"
-          min-width="160"
-        >
+        <el-table-column label="教师" min-width="160">
           <template #default="{ row }">
             {{ row.teacherName || '-' }}（{{ row.teacherPhone || '-' }}）
           </template>
         </el-table-column>
-        <el-table-column
-          label="创建时间"
-          min-width="180"
-        >
+        <el-table-column label="创建时间" min-width="180">
           <template #default="{ row }">
             {{ formatDateTime(row.createTime) }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作"
-          width="180"
-          fixed="right"
-        >
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button
-              type="primary"
-              link
-              @click="handleEdit(row)"
-            >
-              修改
-            </el-button>
-            <el-button
-              type="danger"
-              link
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
+            <el-button type="primary" link @click="handleEdit(row)"> 修改 </el-button>
+            <el-button type="danger" link @click="handleDelete(row)"> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">
-          共 {{ totalStudents }} 名学生
-        </div>
+        <div class="text-xs text-slate-500">共 {{ totalStudents }} 名学生</div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"
@@ -256,10 +159,7 @@
         label-width="100px"
         class="grid gap-4 md:grid-cols-2"
       >
-        <el-form-item
-          label="学生姓名"
-          prop="studentName"
-        >
+        <el-form-item label="学生姓名" prop="studentName">
           <el-input
             v-model="formData.studentName"
             placeholder="请输入学生姓名"
@@ -267,16 +167,8 @@
             clearable
           />
         </el-form-item>
-        <el-form-item
-          label="学校"
-          prop="schoolId"
-        >
-          <el-select
-            v-model="formData.schoolId"
-            placeholder="请选择学校"
-            clearable
-            filterable
-          >
+        <el-form-item label="学校" prop="schoolId">
+          <el-select v-model="formData.schoolId" placeholder="请选择学校" clearable filterable>
             <el-option
               v-for="item in schoolOptions"
               :key="item.id"
@@ -285,16 +177,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="年级"
-          prop="gradeId"
-        >
-          <el-select
-            v-model="formData.gradeId"
-            placeholder="请选择年级"
-            clearable
-            filterable
-          >
+        <el-form-item label="年级" prop="gradeId">
+          <el-select v-model="formData.gradeId" placeholder="请选择年级" clearable filterable>
             <el-option
               v-for="item in gradeOptions"
               :key="item.id"
@@ -303,16 +187,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="班级"
-          prop="clazzId"
-        >
-          <el-select
-            v-model="formData.clazzId"
-            placeholder="请选择班级"
-            clearable
-            filterable
-          >
+        <el-form-item label="班级" prop="clazzId">
+          <el-select v-model="formData.clazzId" placeholder="请选择班级" clearable filterable>
             <el-option
               v-for="item in classOptions"
               :key="item.id"
@@ -321,16 +197,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="校区"
-          prop="campusId"
-        >
-          <el-select
-            v-model="formData.campusId"
-            placeholder="请选择校区"
-            clearable
-            filterable
-          >
+        <el-form-item label="校区" prop="campusId">
+          <el-select v-model="formData.campusId" placeholder="请选择校区" clearable filterable>
             <el-option
               v-for="item in campusOptions"
               :key="item.id"
@@ -339,10 +207,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="家长"
-          prop="parentId"
-        >
+        <el-form-item label="家长" prop="parentId">
           <el-select
             v-model="formData.parentId"
             placeholder="输入手机号搜索家长"
@@ -360,10 +225,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="教师"
-          prop="teacherId"
-        >
+        <el-form-item label="教师" prop="teacherId">
           <el-select
             v-model="formData.teacherId"
             placeholder="输入手机号搜索教师"
@@ -381,25 +243,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="总课时"
-          prop="sumHours"
-        >
-          <el-input-number
-            v-model="formData.sumHours"
-            :min="0"
-            class="w-full"
-          />
+        <el-form-item label="总课时" prop="sumHours">
+          <el-input-number v-model="formData.sumHours" :min="0" class="w-full" />
         </el-form-item>
-        <el-form-item
-          label="已用课时"
-          prop="usedHours"
-        >
-          <el-input-number
-            v-model="formData.usedHours"
-            :min="0"
-            class="w-full"
-          />
+        <el-form-item label="已用课时" prop="usedHours">
+          <el-input-number v-model="formData.usedHours" :min="0" class="w-full" />
         </el-form-item>
         <div class="col-span-2 text-right text-sm text-slate-500">
           剩余课时：{{ computedRemainingHours }} 节
@@ -407,14 +255,8 @@
       </el-form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <el-button @click="dialogVisible = false">
-            取消
-          </el-button>
-          <el-button
-            type="primary"
-            :loading="submitLoading"
-            @click="handleSubmit"
-          >
+          <el-button @click="dialogVisible = false"> 取消 </el-button>
+          <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
             确定
           </el-button>
         </div>

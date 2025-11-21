@@ -32,7 +32,7 @@ request.interceptors.request.use(
     // 请求错误处理
     console.error('请求错误：', error)
     return Promise.reject(error)
-  },
+  }
 )
 
 /**

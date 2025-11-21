@@ -4,33 +4,15 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">筛选条件</span>
-          <el-button
-            type="primary"
-            @click="handleQuery"
-          >
-            刷新
-          </el-button>
+          <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
         </div>
       </template>
-      <el-form
-        :model="filters"
-        label-width="90"
-        class="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
-      >
+      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <el-form-item label="学生姓名">
-          <el-input
-            v-model="filters.studentName"
-            placeholder="输入学生姓名"
-            clearable
-          />
+          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
         </el-form-item>
         <el-form-item label="学校">
-          <el-select
-            v-model="filters.schoolId"
-            placeholder="选择学校"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
             <el-option
               v-for="item in schoolOptions"
               :key="item.id"
@@ -40,12 +22,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
-          <el-select
-            v-model="filters.gradeId"
-            placeholder="选择年级"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
             <el-option
               v-for="item in gradeOptions"
               :key="item.id"
@@ -55,12 +32,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
-          <el-select
-            v-model="filters.clazzId"
-            placeholder="选择班级"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
             <el-option
               v-for="item in classOptions"
               :key="item.id"
@@ -70,12 +42,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="托管校区">
-          <el-select
-            v-model="filters.campusId"
-            placeholder="选择校区"
-            clearable
-            filterable
-          >
+          <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
             <el-option
               v-for="item in campusOptions"
               :key="item.id"
@@ -122,15 +89,8 @@
         </el-form-item>
       </el-form>
       <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset">
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          @click="handleQuery"
-        >
-          查询
-        </el-button>
+        <el-button @click="handleReset"> 重置 </el-button>
+        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 
@@ -138,20 +98,9 @@
       <template #header>
         <span class="font-semibold text-slate-800">签到次数列表</span>
       </template>
-      <el-table
-        :data="statsList"
-        :loading="loading"
-        stripe
-      >
-        <el-table-column
-          prop="id"
-          label="ID"
-          width="80"
-        />
-        <el-table-column
-          label="学生"
-          min-width="160"
-        >
+      <el-table :data="statsList" :loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column label="学生" min-width="160">
           <template #default="{ row }">
             <div class="font-medium text-slate-800">
               {{ row.studentName || '-' }}
@@ -161,25 +110,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="gradeName"
-          label="年级"
-          min-width="120"
-        />
-        <el-table-column
-          prop="clazzName"
-          label="班级"
-          min-width="120"
-        />
-        <el-table-column
-          prop="campusName"
-          label="托管校区"
-          min-width="140"
-        />
-        <el-table-column
-          label="家长"
-          min-width="160"
-        >
+        <el-table-column prop="gradeName" label="年级" min-width="120" />
+        <el-table-column prop="clazzName" label="班级" min-width="120" />
+        <el-table-column prop="campusName" label="托管校区" min-width="140" />
+        <el-table-column label="家长" min-width="160">
           <template #default="{ row }">
             <div>{{ row.parentName || '-' }}</div>
             <div class="text-xs text-slate-400">
@@ -187,10 +121,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          label="教师"
-          min-width="160"
-        >
+        <el-table-column label="教师" min-width="160">
           <template #default="{ row }">
             <div>{{ row.teacherName || '-' }}</div>
             <div class="text-xs text-slate-400">
@@ -198,20 +129,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="signinCount"
-          label="签到次数"
-          width="140"
-        >
+        <el-table-column prop="signinCount" label="签到次数" width="140">
           <template #default="{ row }">
             <span class="text-lg font-semibold text-slate-800">{{ row.signinCount ?? 0 }}</span>
           </template>
         </el-table-column>
       </el-table>
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs text-slate-500">
-          共 {{ totalRecords }} 位学生
-        </div>
+        <div class="text-xs text-slate-500">共 {{ totalRecords }} 位学生</div>
         <el-pagination
           v-model:current-page="pagination.current"
           v-model:page-size="pagination.size"

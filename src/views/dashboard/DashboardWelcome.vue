@@ -1,13 +1,8 @@
 <template>
   <div class="space-y-6">
-    <el-card
-      shadow="hover"
-      class="pastel-card"
-    >
+    <el-card shadow="hover" class="pastel-card">
       <div class="flex flex-col gap-2">
-        <h2 class="text-2xl font-semibold text-pink-500">
-          欢迎回来，{{ profile.name }}！
-        </h2>
+        <h2 class="text-2xl font-semibold text-pink-500">欢迎回来，{{ profile.name }}！</h2>
         <p class="text-slate-500">
           您可以通过左侧导航快捷进入用户、签到、作业等模块，管理托管机构的基础数据。
         </p>
@@ -15,11 +10,7 @@
     </el-card>
 
     <el-row :gutter="16">
-      <el-col
-        v-for="card in quickStats"
-        :key="card.title"
-        :span="6"
-      >
+      <el-col v-for="card in quickStats" :key="card.title" :span="6">
         <el-card class="pastel-card text-center">
           <p class="text-xs uppercase tracking-widest text-pink-400">
             {{ card.title }}
@@ -38,13 +29,7 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-700">快速操作</span>
-          <el-button
-            type="primary"
-            link
-            @click="navigateTo('/users/manage')"
-          >
-            管理用户
-          </el-button>
+          <el-button type="primary" link @click="navigateTo('/users/manage')"> 管理用户 </el-button>
         </div>
       </template>
       <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -66,13 +51,7 @@
             <p class="text-xs text-slate-500">
               {{ action.description }}
             </p>
-            <el-button
-              type="primary"
-              text
-              @click="navigateTo(action.path)"
-            >
-              进入
-            </el-button>
+            <el-button type="primary" text @click="navigateTo(action.path)"> 进入 </el-button>
           </div>
         </div>
       </div>
