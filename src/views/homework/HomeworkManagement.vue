@@ -1,114 +1,108 @@
 <template>
   <div class="space-y-4">
-    <el-card class="pastel-card">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-semibold text-slate-50">筛选条件</span>
-          <div class="space-x-3">
-            <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
-          </div>
+    <el-card class="pastel-card" shadow="never">
+      <div class="flex items-end justify-between gap-4">
+        <el-form :model="filters" label-width="80" size="small" class="flex gap-3 flex-1 flex-wrap">
+          <el-form-item label="学生姓名">
+            <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
+          </el-form-item>
+          <el-form-item label="教师">
+            <el-select
+              v-model="filters.teacherId"
+              placeholder="输入手机号搜索教师"
+              clearable
+              filterable
+              remote
+              :remote-method="handleTeacherRemote"
+              :loading="teacherLoading"
+            >
+              <el-option
+                v-for="item in teacherOptions"
+                :key="item.id"
+                :label="formatTeacherLabel(item)"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="家长">
+            <el-select
+              v-model="filters.parentId"
+              placeholder="输入手机号搜索家长"
+              clearable
+              filterable
+              remote
+              :remote-method="handleParentRemote"
+              :loading="parentLoading"
+            >
+              <el-option
+                v-for="item in parentOptions"
+                :key="item.id"
+                :label="formatParentLabel(item)"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="学校">
+            <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
+              <el-option
+                v-for="item in schoolOptions"
+                :key="item.id"
+                :label="item.dicName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="年级">
+            <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
+              <el-option
+                v-for="item in gradeOptions"
+                :key="item.id"
+                :label="item.dicName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="班级">
+            <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
+              <el-option
+                v-for="item in classOptions"
+                :key="item.id"
+                :label="item.dicName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="校区">
+            <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
+              <el-option
+                v-for="item in campusOptions"
+                :key="item.id"
+                :label="item.dicName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="学科">
+            <el-select v-model="filters.subjectId" placeholder="选择学科" clearable filterable>
+              <el-option
+                v-for="item in subjectOptions"
+                :key="item.id"
+                :label="item.dicName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="完成状态">
+            <el-select v-model="filters.state" placeholder="选择状态" clearable>
+              <el-option label="未完成" :value="0" />
+              <el-option label="已完成" :value="1" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div class="flex gap-2 flex-shrink-0">
+          <el-button size="small" @click="handleReset">重置</el-button>
+          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
         </div>
-      </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <el-form-item label="学生姓名">
-          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
-        </el-form-item>
-        <el-form-item label="教师">
-          <el-select
-            v-model="filters.teacherId"
-            placeholder="输入手机号搜索教师"
-            clearable
-            filterable
-            remote
-            :remote-method="handleTeacherRemote"
-            :loading="teacherLoading"
-          >
-            <el-option
-              v-for="item in teacherOptions"
-              :key="item.id"
-              :label="formatTeacherLabel(item)"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="家长">
-          <el-select
-            v-model="filters.parentId"
-            placeholder="输入手机号搜索家长"
-            clearable
-            filterable
-            remote
-            :remote-method="handleParentRemote"
-            :loading="parentLoading"
-          >
-            <el-option
-              v-for="item in parentOptions"
-              :key="item.id"
-              :label="formatParentLabel(item)"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="学校">
-          <el-select v-model="filters.schoolId" placeholder="选择学校" clearable filterable>
-            <el-option
-              v-for="item in schoolOptions"
-              :key="item.id"
-              :label="item.dicName"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="年级">
-          <el-select v-model="filters.gradeId" placeholder="选择年级" clearable filterable>
-            <el-option
-              v-for="item in gradeOptions"
-              :key="item.id"
-              :label="item.dicName"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="班级">
-          <el-select v-model="filters.clazzId" placeholder="选择班级" clearable filterable>
-            <el-option
-              v-for="item in classOptions"
-              :key="item.id"
-              :label="item.dicName"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="校区">
-          <el-select v-model="filters.campusId" placeholder="选择校区" clearable filterable>
-            <el-option
-              v-for="item in campusOptions"
-              :key="item.id"
-              :label="item.dicName"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="学科">
-          <el-select v-model="filters.subjectId" placeholder="选择学科" clearable filterable>
-            <el-option
-              v-for="item in subjectOptions"
-              :key="item.id"
-              :label="item.dicName"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="完成状态">
-          <el-select v-model="filters.state" placeholder="选择状态" clearable>
-            <el-option label="未完成" :value="0" />
-            <el-option label="已完成" :value="1" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset"> 重置 </el-button>
-        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 

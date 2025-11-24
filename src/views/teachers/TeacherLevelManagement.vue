@@ -1,58 +1,51 @@
 <template>
   <div class="space-y-4">
-    <el-card class="pastel-card">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-semibold text-slate-800">筛选条件</span>
-          <div class="space-x-3">
-            <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
-            <el-button type="primary" @click="handleCreate"> 新增评级 </el-button>
-          </div>
+    <el-card class="pastel-card" shadow="never">
+      <div class="flex items-end justify-between gap-4">
+        <el-form :model="filters" label-width="80" size="small" class="flex gap-3 flex-1">
+          <el-form-item label="所属月份">
+            <el-date-picker
+              v-model="filters.yearmonth"
+              type="month"
+              value-format="YYYY-MM"
+              placeholder="选择年月"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="评级等级">
+            <el-select v-model="filters.levelId" placeholder="选择评级" clearable filterable>
+              <el-option
+                v-for="level in levelOptions"
+                :key="level.id"
+                :label="level.dicName"
+                :value="level.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="教师">
+            <el-select
+              v-model="filters.teacherId"
+              placeholder="输入手机号搜索教师"
+              clearable
+              filterable
+              remote
+              :remote-method="handleTeacherRemote"
+              :loading="teacherLoading"
+            >
+              <el-option
+                v-for="teacher in teacherOptions"
+                :key="teacher.id"
+                :label="formatTeacherLabel(teacher)"
+                :value="teacher.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div class="flex gap-2">
+          <el-button size="small" @click="handleReset">重置</el-button>
+          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
+          <el-button size="small" type="primary" @click="handleCreate">新增评级</el-button>
         </div>
-      </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <el-form-item label="所属月份">
-          <el-date-picker
-            v-model="filters.yearmonth"
-            type="month"
-            value-format="YYYY-MM"
-            placeholder="选择年月"
-            class="w-full"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item label="评级等级">
-          <el-select v-model="filters.levelId" placeholder="选择评级" clearable filterable>
-            <el-option
-              v-for="level in levelOptions"
-              :key="level.id"
-              :label="level.dicName"
-              :value="level.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="教师">
-          <el-select
-            v-model="filters.teacherId"
-            placeholder="输入手机号搜索教师"
-            clearable
-            filterable
-            remote
-            :remote-method="handleTeacherRemote"
-            :loading="teacherLoading"
-          >
-            <el-option
-              v-for="teacher in teacherOptions"
-              :key="teacher.id"
-              :label="formatTeacherLabel(teacher)"
-              :value="teacher.id"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset"> 重置 </el-button>
-        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 

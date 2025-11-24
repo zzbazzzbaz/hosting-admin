@@ -1,33 +1,30 @@
 <template>
   <div class="space-y-4">
-    <el-card class="pastel-card">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-semibold text-slate-800">筛选条件</span>
-          <el-button type="primary" @click="handleCreate"> 新增教师 </el-button>
+    <el-card class="pastel-card" shadow="never">
+      <div class="flex items-end justify-between gap-4">
+        <el-form :model="filters" label-width="80" size="small" class="flex gap-3 flex-1">
+          <el-form-item label="教师姓名">
+            <el-input v-model="filters.teacherName" placeholder="支持模糊查询" clearable />
+          </el-form-item>
+          <el-form-item label="手机号">
+            <el-input v-model="filters.phone" placeholder="支持模糊查询" clearable />
+          </el-form-item>
+          <el-form-item label="所在校区">
+            <el-select v-model="filters.campusId" placeholder="全部校区" clearable filterable>
+              <el-option
+                v-for="campus in campusList"
+                :key="campus.id"
+                :label="campus.dicName"
+                :value="campus.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div class="flex gap-2">
+          <el-button size="small" @click="handleReset">重置</el-button>
+          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
+          <el-button size="small" type="primary" @click="handleCreate">新增教师</el-button>
         </div>
-      </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <el-form-item label="教师姓名">
-          <el-input v-model="filters.teacherName" placeholder="支持模糊查询" clearable />
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="filters.phone" placeholder="支持模糊查询" clearable />
-        </el-form-item>
-        <el-form-item label="所在校区">
-          <el-select v-model="filters.campusId" placeholder="全部校区" clearable filterable>
-            <el-option
-              v-for="campus in campusList"
-              :key="campus.id"
-              :label="campus.dicName"
-              :value="campus.id"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset"> 重置 </el-button>
-        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 

@@ -1,67 +1,62 @@
 <template>
   <div class="space-y-4">
-    <el-card class="pastel-card">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <span class="font-semibold text-slate-800">筛选条件</span>
-          <el-button type="primary" @click="handleQuery"> 刷新 </el-button>
+    <el-card class="pastel-card" shadow="never">
+      <div class="flex items-end justify-between gap-4">
+        <el-form :model="filters" label-width="80" size="small" class="flex gap-3 flex-1 flex-wrap">
+          <el-form-item label="学生姓名">
+            <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
+          </el-form-item>
+          <el-form-item label="签到教师">
+            <el-select
+              v-model="filters.teacherId"
+              placeholder="输入手机号搜索教师"
+              clearable
+              filterable
+              remote
+              :remote-method="handleTeacherRemote"
+              :loading="teacherLoading"
+            >
+              <el-option
+                v-for="teacher in teacherOptions"
+                :key="teacher.id"
+                :label="formatTeacherLabel(teacher)"
+                :value="teacher.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="家长">
+            <el-select
+              v-model="filters.parentId"
+              placeholder="输入手机号搜索家长"
+              clearable
+              filterable
+              remote
+              :remote-method="handleParentRemote"
+              :loading="parentLoading"
+            >
+              <el-option
+                v-for="parent in parentOptions"
+                :key="parent.id"
+                :label="formatParentLabel(parent)"
+                :value="parent.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="签到日期">
+            <el-date-picker
+              v-model="filters.createDate"
+              type="date"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
+              placeholder="选择日期"
+              clearable
+            />
+          </el-form-item>
+        </el-form>
+        <div class="flex gap-2 flex-shrink-0">
+          <el-button size="small" @click="handleReset">重置</el-button>
+          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
         </div>
-      </template>
-      <el-form :model="filters" label-width="90" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <el-form-item label="学生姓名">
-          <el-input v-model="filters.studentName" placeholder="输入学生姓名" clearable />
-        </el-form-item>
-        <el-form-item label="签到教师">
-          <el-select
-            v-model="filters.teacherId"
-            placeholder="输入手机号搜索教师"
-            clearable
-            filterable
-            remote
-            :remote-method="handleTeacherRemote"
-            :loading="teacherLoading"
-          >
-            <el-option
-              v-for="teacher in teacherOptions"
-              :key="teacher.id"
-              :label="formatTeacherLabel(teacher)"
-              :value="teacher.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="家长">
-          <el-select
-            v-model="filters.parentId"
-            placeholder="输入手机号搜索家长"
-            clearable
-            filterable
-            remote
-            :remote-method="handleParentRemote"
-            :loading="parentLoading"
-          >
-            <el-option
-              v-for="parent in parentOptions"
-              :key="parent.id"
-              :label="formatParentLabel(parent)"
-              :value="parent.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="签到日期">
-          <el-date-picker
-            v-model="filters.createDate"
-            type="date"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            placeholder="选择日期"
-            class="w-full"
-            clearable
-          />
-        </el-form-item>
-      </el-form>
-      <div class="mt-4 flex justify-end gap-3">
-        <el-button @click="handleReset"> 重置 </el-button>
-        <el-button type="primary" @click="handleQuery"> 查询 </el-button>
       </div>
     </el-card>
 
