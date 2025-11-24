@@ -27,18 +27,16 @@ export const navigationMenus = [
     icon: UserFilled,
     children: [
       { key: 'users-manage', label: '管理员管理', path: '/users/manage' },
-      {
-        key: 'users-teacher-directory',
-        label: '教师目录',
-        icon: User,
-        children: [
-          { key: 'teachers-manage', label: '教师管理', path: '/teachers/manage' },
-          { key: 'teachers-level', label: '教师评级管理', path: '/teachers/levels' },
-        ],
-      },
+      { key: 'teachers-manage', label: '教师管理', path: '/teachers/manage' },
       { key: 'users-parents', label: '家长管理', path: '/users/parents' },
       { key: 'users-students', label: '学生管理', path: '/users/students' },
     ],
+  },
+  {
+    key: 'teacher-assessment',
+    label: '教师月度考核',
+    icon: User,
+    children: [{ key: 'teachers-level', label: '教师评级管理', path: '/teachers/levels' }],
   },
   {
     key: 'attendance',
@@ -107,23 +105,13 @@ const layoutChildren = [
     path: 'teachers/manage',
     name: 'TeacherManagement',
     component: () => import('@/views/teachers/TeacherManagement.vue'),
-    meta: {
-      title: '教师管理',
-      menuKey: 'teachers-manage',
-      parentKey: 'users-teacher-directory',
-      grandParentKey: 'users',
-    },
+    meta: { title: '教师管理', menuKey: 'teachers-manage', parentKey: 'users' },
   },
   {
     path: 'teachers/levels',
     name: 'TeacherLevelManagement',
     component: () => import('@/views/teachers/TeacherLevelManagement.vue'),
-    meta: {
-      title: '教师评级管理',
-      menuKey: 'teachers-level',
-      parentKey: 'users-teacher-directory',
-      grandParentKey: 'users',
-    },
+    meta: { title: '教师评级管理', menuKey: 'teachers-level', parentKey: 'teacher-assessment' },
   },
   {
     path: 'attendance/dashboard',

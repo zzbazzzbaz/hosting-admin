@@ -91,3 +91,38 @@ export const getCampusList = async (params = {}) => fetchDictionaryByType(params
 export const getTeacherRatingList = async (params = {}) => fetchDictionaryByType(params, 5)
 export const getClassList = async (params = {}) => fetchDictionaryByType(params, 6)
 export const getStudentStatusList = async (params = {}) => fetchDictionaryByType(params, 7)
+
+// ========== 下拉框接口 ==========
+
+/**
+ * 获取教师下拉框列表
+ * @returns {Promise} 返回教师列表 [{teacherName, phone, id}]
+ */
+export const getTeacherComboxList = () => {
+  return request({
+    url: '/common/teacher/getComboxList',
+    method: 'get',
+  })
+}
+
+/**
+ * 获取家长下拉框列表
+ * @returns {Promise} 返回家长列表 [{parentName, phone, id}]
+ */
+export const getParentComboxList = () => {
+  return request({
+    url: '/common/parent/getComboxList',
+    method: 'get',
+  })
+}
+
+/**
+ * 获取所有学生下拉框列表
+ * @returns {Promise} 返回学生列表 [{studentName, id}]
+ */
+export const getStudentComboxList = () => {
+  return request({
+    url: '/common/student/getComboxList',
+    method: 'get',
+  })
+}
