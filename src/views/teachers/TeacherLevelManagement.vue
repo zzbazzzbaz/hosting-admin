@@ -175,8 +175,7 @@ import {
   deleteTeacherLevels,
   addTeacherLevel,
 } from '@/api/curd/teacherLevel'
-import { getTeacherRatingList } from '@/api/curd/dictionary'
-import { getTeacherPageList } from '@/api/curd/teacher'
+import { getTeacherRatingList, getTeacherComboxList } from '@/api/curd/dictionary'
 
 const filters = reactive({
   yearmonth: '',
@@ -244,12 +243,12 @@ const fetchLevelOptions = async () => {
 const fetchTeacherOptions = async (keyword = '') => {
   try {
     teacherLoading.value = true
-    const result = await getTeacherPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    teacherOptions.value = result.data?.list || []
+    const result = await getTeacherComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+    }
+    teacherOptions.value = list
   } catch (error) {
     console.error('获取教师列表失败:', error)
     ElMessage.error('获取教师列表失败，请稍后重试')

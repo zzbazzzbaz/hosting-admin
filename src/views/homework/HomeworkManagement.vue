@@ -115,7 +115,11 @@
         <el-table-column prop="studentName" label="学生姓名" min-width="160" />
         <el-table-column prop="state" label="完成状态" width="120">
           <template #default="{ row }">
-            <el-tag :type="row.state === 1 ? 'success' : 'info'" effect="dark">
+            <el-tag
+              :type="row.state === 1 ? 'success' : 'info'"
+              :effect="row.state === 1 ? 'light' : 'dark'"
+              :style="row.state === 1 ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;' : ''"
+            >
               {{ row.state === 1 ? '已完成' : '未完成' }}
             </el-tag>
           </template>
@@ -163,12 +167,16 @@
           {{ currentRecord?.finishTime || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="完成状态">
-          <el-tag :type="currentRecord?.state === 1 ? 'success' : 'info'" effect="dark">
+          <el-tag
+            :type="currentRecord?.state === 1 ? 'success' : 'info'"
+            :effect="currentRecord?.state === 1 ? 'light' : 'dark'"
+            :style="currentRecord?.state === 1 ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;' : ''"
+          >
             {{ currentRecord?.state === 1 ? '已完成' : '未完成' }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="教师评语">
-          {{ currentRecord?.evaluation || '—' }}
+          {{ currentRecord?.evaluation || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="托管校区">
           {{ currentRecord?.campusName || '-' }}
@@ -227,9 +235,9 @@ import {
   getClassList,
   getCampusList,
   getSubjectList,
+  getTeacherComboxList,
+  getParentComboxList,
 } from '@/api/curd/dictionary'
-import { getTeacherPageList } from '@/api/curd/teacher'
-import { getParentPageList } from '@/api/curd/parent'
 
 const filters = reactive({
   studentName: '',
@@ -287,12 +295,12 @@ const ensureOptionExists = (listRef, option, key = 'id') => {
 const fetchTeacherOptions = async (keyword = '') => {
   try {
     teacherLoading.value = true
-    const result = await getTeacherPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    teacherOptions.value = result.data?.list || []
+    const result = await getTeacherComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+    }
+    teacherOptions.value = list
   } catch (error) {
     console.error('获取教师列表失败', error)
   } finally {
@@ -303,12 +311,12 @@ const fetchTeacherOptions = async (keyword = '') => {
 const fetchParentOptions = async (keyword = '') => {
   try {
     parentLoading.value = true
-    const result = await getParentPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    parentOptions.value = result.data?.list || []
+    const result = await getParentComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword))
+    }
+    parentOptions.value = list
   } catch (error) {
     console.error('获取家长列表失败', error)
   } finally {

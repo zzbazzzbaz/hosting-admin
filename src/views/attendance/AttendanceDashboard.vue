@@ -149,9 +149,14 @@
 import { reactive, ref, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getStudentSigninStatsPageList } from '@/api/curd/signin'
-import { getSchoolList, getGradeList, getClassList, getCampusList } from '@/api/curd/dictionary'
-import { getParentPageList } from '@/api/curd/parent'
-import { getTeacherPageList } from '@/api/curd/teacher'
+import {
+  getSchoolList,
+  getGradeList,
+  getClassList,
+  getCampusList,
+  getTeacherComboxList,
+  getParentComboxList,
+} from '@/api/curd/dictionary'
 
 const filters = reactive({
   studentName: '',
@@ -202,12 +207,12 @@ const fetchDictionaryOptions = async () => {
 const fetchParentOptions = async (keyword = '') => {
   try {
     parentLoading.value = true
-    const result = await getParentPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    parentOptions.value = result.data?.list || []
+    const result = await getParentComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword))
+    }
+    parentOptions.value = list
   } catch (error) {
     console.error('获取家长列表失败:', error)
     ElMessage.error('获取家长列表失败，请稍后重试')
@@ -219,12 +224,12 @@ const fetchParentOptions = async (keyword = '') => {
 const fetchTeacherOptions = async (keyword = '') => {
   try {
     teacherLoading.value = true
-    const result = await getTeacherPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    teacherOptions.value = result.data?.list || []
+    const result = await getTeacherComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+    }
+    teacherOptions.value = list
   } catch (error) {
     console.error('获取教师列表失败:', error)
     ElMessage.error('获取教师列表失败，请稍后重试')

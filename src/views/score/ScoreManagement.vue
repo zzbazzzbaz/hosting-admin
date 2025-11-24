@@ -271,10 +271,15 @@
 import { reactive, ref, onMounted, watch, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getScorePageList, addScore, updateScore, deleteScore } from '@/api/curd/score'
-import { getSchoolList, getGradeList, getClassList, getCampusList } from '@/api/curd/dictionary'
-import { getParentPageList } from '@/api/curd/parent'
-import { getTeacherPageList } from '@/api/curd/teacher'
-import { getStudentPageList } from '@/api/curd/student'
+import {
+  getSchoolList,
+  getGradeList,
+  getClassList,
+  getCampusList,
+  getTeacherComboxList,
+  getParentComboxList,
+  getStudentComboxList,
+} from '@/api/curd/dictionary'
 
 // 筛选条件
 const filters = reactive({
@@ -360,12 +365,12 @@ const fetchDictionaryOptions = async () => {
 const fetchParentOptions = async (keyword = '') => {
   try {
     parentLoading.value = true
-    const result = await getParentPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    parentOptions.value = result.data?.list || []
+    const result = await getParentComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword))
+    }
+    parentOptions.value = list
   } catch (error) {
     console.error('获取家长列表失败:', error)
   } finally {
@@ -377,12 +382,12 @@ const fetchParentOptions = async (keyword = '') => {
 const fetchTeacherOptions = async (keyword = '') => {
   try {
     teacherLoading.value = true
-    const result = await getTeacherPageList({
-      page: 1,
-      pageSize: 50,
-      phone: keyword || undefined,
-    })
-    teacherOptions.value = result.data?.list || []
+    const result = await getTeacherComboxList()
+    let list = result.data || []
+    if (keyword) {
+      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+    }
+    teacherOptions.value = list
   } catch (error) {
     console.error('获取教师列表失败:', error)
   } finally {
@@ -393,11 +398,8 @@ const fetchTeacherOptions = async (keyword = '') => {
 // 加载学生选项
 const fetchStudentOptions = async () => {
   try {
-    const result = await getStudentPageList({
-      page: 1,
-      pageSize: 200,
-    })
-    studentOptions.value = result.data?.list || []
+    const result = await getStudentComboxList()
+    studentOptions.value = result.data || []
   } catch (error) {
     console.error('获取学生列表失败:', error)
   }

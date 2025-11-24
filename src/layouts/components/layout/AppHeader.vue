@@ -52,7 +52,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { SwitchButton } from '@element-plus/icons-vue'
 
-import { navigationMenus } from '@/router/index.js'
+import { navigationMenus, resetTokenCheck } from '@/router/index.js'
 import { useUserStore } from '@/stores/user.js'
 import { useAuthStore } from '@/stores/auth.js'
 import { logOut } from '@/api/auth'
@@ -120,7 +120,8 @@ const currentTitle = computed(() => breadcrumbs.value.at(-1)?.label ?? route.met
  * 1. 弹出确认对话框
  * 2. 调用退出登录接口
  * 3. 清除本地 token 和用户信息
- * 4. 跳转到登录页
+ * 4. 重置 token 验证状态
+ * 5. 跳转到登录页
  */
 const handleLogout = async () => {
   try {
@@ -138,6 +139,9 @@ const handleLogout = async () => {
     authStore.clearToken()
     userStore.clearProfile()
 
+    // 重置 token 验证状态，下次登录时重新验证
+    resetTokenCheck()
+
     // 显示退出成功消息
     ElMessage.success('已退出登录')
 
@@ -150,6 +154,7 @@ const handleLogout = async () => {
       // 即使接口失败，也清除本地数据
       authStore.clearToken()
       userStore.clearProfile()
+      resetTokenCheck()
       await router.push('/login')
     }
   }
