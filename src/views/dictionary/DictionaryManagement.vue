@@ -243,7 +243,7 @@ const handleSubmit = async () => {
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || (isEdit.value ? '修改字典成功' : '新增字典成功'))
       dialogVisible.value = false
-      fetchDictionaryList()
+      await fetchDictionaryList()
     } else {
       ElMessage.error(result.message || (isEdit.value ? '修改字典失败' : '新增字典失败'))
     }
@@ -283,7 +283,7 @@ const handleDelete = async (row) => {
 
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || '删除成功')
-      fetchDictionaryList()
+      await fetchDictionaryList()
     } else {
       ElMessage.error(result.message || '删除失败')
     }

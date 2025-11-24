@@ -242,7 +242,7 @@ const handleSubmit = async () => {
         ElMessage.success('通知已创建')
       }
       dialogVisible.value = false
-      fetchNoticeList()
+      await fetchNoticeList()
     } catch (error) {
       console.error('提交通知失败:', error)
       ElMessage.error(error?.message || '提交失败，请稍后重试')
@@ -260,7 +260,7 @@ const handleDelete = async (row) => {
     })
     await deleteNotice(row.id)
     ElMessage.success('删除成功')
-    fetchNoticeList()
+    await fetchNoticeList()
   } catch (error) {
     if (error !== 'cancel' && error !== 'close') {
       console.error('删除通知失败:', error)

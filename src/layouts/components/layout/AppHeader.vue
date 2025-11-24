@@ -142,7 +142,7 @@ const handleLogout = async () => {
     ElMessage.success('已退出登录')
 
     // 跳转到登录页
-    router.push('/login')
+    await router.push('/login')
   } catch (error) {
     // 用户取消或接口调用失败
     if (error !== 'cancel') {
@@ -150,7 +150,7 @@ const handleLogout = async () => {
       // 即使接口失败，也清除本地数据
       authStore.clearToken()
       userStore.clearProfile()
-      router.push('/login')
+      await router.push('/login')
     }
   }
 }

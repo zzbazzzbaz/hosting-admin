@@ -382,7 +382,7 @@ const handleSubmit = () => {
       }
       ElMessage.success(isEdit.value ? '更新成功' : '新增成功')
       dialogVisible.value = false
-      fetchLevelList()
+      await fetchLevelList()
     } catch (error) {
       console.error('提交评级失败:', error)
       ElMessage.error(error.message || '操作失败，请稍后重试')
@@ -405,7 +405,7 @@ const handleDelete = (row) => {
     .then(async () => {
       await deleteTeacherLevels(row.id)
       ElMessage.success('删除成功')
-      fetchLevelList()
+      await fetchLevelList()
     })
     .catch(() => {})
 }

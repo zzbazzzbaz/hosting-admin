@@ -226,7 +226,7 @@ const handleSubmit = async () => {
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || (isEdit.value ? '修改家长成功' : '新增家长成功'))
       dialogVisible.value = false
-      fetchParentList()
+      await fetchParentList()
     } else {
       ElMessage.error(result.message || (isEdit.value ? '修改家长失败' : '新增家长失败'))
     }
@@ -266,7 +266,7 @@ const handleDelete = async (row) => {
 
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || '删除成功')
-      fetchParentList()
+      await fetchParentList()
     } else {
       ElMessage.error(result.message || '删除失败')
     }

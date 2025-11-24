@@ -276,7 +276,7 @@ const handleSubmit = async () => {
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || (isEdit.value ? '修改教师成功' : '新增教师成功'))
       dialogVisible.value = false
-      fetchTeacherList()
+      await fetchTeacherList()
     } else {
       ElMessage.error(result.message || (isEdit.value ? '修改教师失败' : '新增教师失败'))
     }
@@ -344,7 +344,7 @@ const handleDelete = async (row) => {
 
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || '删除成功')
-      fetchTeacherList()
+      await fetchTeacherList()
     } else {
       ElMessage.error(result.message || '删除失败')
     }

@@ -367,7 +367,7 @@ const handleSubmit = async () => {
       ElMessage.success(result.message || '新增用户成功')
       dialogVisible.value = false
       // 刷新用户列表
-      fetchUserList()
+      await fetchUserList()
     } else {
       ElMessage.error(result.message || '新增用户失败')
     }
@@ -430,7 +430,7 @@ const handleEditSubmit = async () => {
       ElMessage.success(result.message || '修改用户成功')
       editDialogVisible.value = false
       // 刷新用户列表
-      fetchUserList()
+      await fetchUserList()
     } else {
       ElMessage.error(result.message || '修改用户失败')
     }
@@ -464,7 +464,7 @@ const handleDelete = async (row) => {
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || '删除成功')
       // 刷新列表
-      fetchUserList()
+      await fetchUserList()
     } else {
       ElMessage.error(result.message || '删除失败')
     }

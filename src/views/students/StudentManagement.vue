@@ -552,7 +552,7 @@ const handleSubmit = async () => {
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || (isEdit.value ? '修改学生成功' : '新增学生成功'))
       dialogVisible.value = false
-      fetchStudentList()
+      await fetchStudentList()
     } else {
       ElMessage.error(result.message || (isEdit.value ? '修改学生失败' : '新增学生失败'))
     }
@@ -615,7 +615,7 @@ const handleDelete = async (row) => {
 
     if (result.code === 200 || result.code === 0) {
       ElMessage.success(result.message || '删除成功')
-      fetchStudentList()
+      await fetchStudentList()
     } else {
       ElMessage.error(result.message || '删除失败')
     }

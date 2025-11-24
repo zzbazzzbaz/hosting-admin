@@ -534,7 +534,7 @@ const handleSubmit = async () => {
     }
 
     dialogVisible.value = false
-    fetchScoreList()
+    await fetchScoreList()
   } catch (error) {
     if (error !== false) {
       console.error('提交失败:', error)
@@ -554,7 +554,7 @@ const handleDelete = async (row) => {
 
     await deleteScore(row.id)
     ElMessage.success('删除成功')
-    fetchScoreList()
+    await fetchScoreList()
   } catch (error) {
     if (error !== 'cancel') {
       console.error('删除失败:', error)
