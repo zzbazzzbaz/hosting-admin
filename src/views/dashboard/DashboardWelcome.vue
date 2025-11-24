@@ -9,27 +9,11 @@
       </div>
     </el-card>
 
-    <el-row :gutter="16">
-      <el-col v-for="card in quickStats" :key="card.title" :span="6">
-        <el-card class="pastel-card text-center">
-          <p class="text-xs uppercase tracking-widest text-pink-400">
-            {{ card.title }}
-          </p>
-          <p class="mt-2 text-3xl font-semibold text-slate-800">
-            {{ card.value }}
-          </p>
-          <p class="mt-1 text-xs text-slate-500">
-            {{ card.description }}
-          </p>
-        </el-card>
-      </el-col>
-    </el-row>
-
     <el-card class="pastel-card">
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-700">快速操作</span>
-          <el-button type="primary" link @click="navigateTo('/users/manage')"> 管理用户 </el-button>
+          <el-button type="primary" link @click="navigateTo('/users/manage')"> 管理用户</el-button>
         </div>
       </template>
       <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -51,7 +35,7 @@
             <p class="text-xs text-slate-500">
               {{ action.description }}
             </p>
-            <el-button type="primary" text @click="navigateTo(action.path)"> 进入 </el-button>
+            <el-button type="primary" text @click="navigateTo(action.path)"> 进入</el-button>
           </div>
         </div>
       </div>
@@ -70,13 +54,6 @@ const userStore = useUserStore()
 
 const { profile } = userStore
 const actionIconSize = 24
-
-const quickStats = [
-  { title: '活跃用户', value: 128, description: '最近 7 天活跃的管理员、教师与家长数量' },
-  { title: '今日签到', value: 56, description: '今日学生签到记录数' },
-  { title: '待批改作业', value: 14, description: '教师待处理的作业数量' },
-  { title: '待审核信息', value: 8, description: '待完善的学生档案或异常记录' },
-]
 
 const quickActions = [
   {
