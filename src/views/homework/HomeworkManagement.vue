@@ -93,7 +93,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="完成状态">
-            <el-select v-model="filters.state" placeholder="选择状态" clearable>
+            <el-select v-model="filters.state" placeholder="选择状态" clearable style="width: 200px">
               <el-option label="未完成" :value="0" />
               <el-option label="已完成" :value="1" />
             </el-select>

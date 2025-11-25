@@ -4,10 +4,10 @@
       <div class="flex items-end justify-between gap-4">
         <el-form :model="filters" label-width="80" size="small" class="flex gap-3 flex-1">
           <el-form-item label="字典名称">
-            <el-input v-model="filters.dicName" placeholder="支持模糊查询" clearable />
+            <el-input v-model="filters.dicName" placeholder="支持模糊查询" clearable style="width: 200px" />
           </el-form-item>
           <el-form-item label="字典类型">
-            <el-select v-model="filters.type" placeholder="请选择类型" clearable>
+            <el-select v-model="filters.type" placeholder="请选择类型" clearable style="width: 200px">
               <el-option
                 v-for="item in dictionaryTypeOptions"
                 :key="item.value"
