@@ -36,7 +36,10 @@ export const navigationMenus = [
     key: 'teacher-assessment',
     label: '教师月度考核',
     icon: User,
-    children: [{ key: 'teachers-level', label: '历史评级管理', path: '/teachers/levels' }],
+    children: [
+      { key: 'teachers-assessment', label: '月度考核管理', path: '/teachers/assessment' },
+      { key: 'teachers-level', label: '历史评级管理', path: '/teachers/levels' },
+    ],
   },
   {
     key: 'attendance',
@@ -106,6 +109,12 @@ const layoutChildren = [
     name: 'TeacherManagement',
     component: () => import('@/views/teachers/TeacherManagement.vue'),
     meta: { title: '教师管理', menuKey: 'teachers-manage', parentKey: 'users' },
+  },
+  {
+    path: 'teachers/assessment',
+    name: 'MonthlyAssessment',
+    component: () => import('@/views/teachers/MonthlyAssessment.vue'),
+    meta: { title: '月度考核管理', menuKey: 'teachers-assessment', parentKey: 'teacher-assessment' },
   },
   {
     path: 'teachers/levels',
