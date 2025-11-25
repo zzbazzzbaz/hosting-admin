@@ -32,6 +32,29 @@ const adaptLevelPageListResponse = (response) => {
   }
 }
 
+const adaptTeacherLevelListResponse = (response) => {
+  if (!response || !response.data) {
+    return response
+  }
+
+  const list = Array.isArray(response.data) ? response.data : []
+
+  return {
+    code: response.code,
+    message: response.message,
+    data: list.map((record, index) => ({
+      teacherId: record.teacherId ?? null,
+      teacherName: record.teacherName ?? null,
+      campusName: record.campusName ?? null,
+      teacherPhone: record.teacherPhone ?? null,
+      levelName: record.levelName ?? '',
+      yearmonth: record.yearmonth ?? '',
+      descption: record.descption ?? '',
+      userName: record.userName ?? '',
+    })),
+  }
+}
+
 // ========== API 接口 ==========
 
 /**
@@ -153,6 +176,22 @@ export const addTeacherLevelBatch = async (data = {}) => {
       teacherIds: data.teacherIds,
     },
   })
+}
+
+/**
+ * 获取教师及评价信息列表
+ */
+export const getTeacherLevelList = async (params = {}) => {
+  const response = await request({
+    url: '/admin/level/teacherList',
+    method: 'get',
+    params: {
+      campusId: params.campusId,
+      yearMonth: params.yearMonth,
+    },
+  })
+
+  return adaptTeacherLevelListResponse(response)
 }
 
 

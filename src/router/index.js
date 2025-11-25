@@ -109,8 +109,8 @@ const layoutChildren = [
   },
   {
     path: 'teachers/levels',
-    name: 'TeacherLevelManagement',
-    component: () => import('@/views/teachers/TeacherLevelManagement.vue'),
+    name: 'TeacherLevelHistory',
+    component: () => import('@/views/teachers/TeacherLevelHistory.vue'),
     meta: { title: '历史评级管理', menuKey: 'teachers-level', parentKey: 'teacher-assessment' },
   },
   {
