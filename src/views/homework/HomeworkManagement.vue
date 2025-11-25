@@ -93,15 +93,20 @@
             </el-select>
           </el-form-item>
           <el-form-item label="完成状态">
-            <el-select v-model="filters.state" placeholder="选择状态" clearable style="width: 200px">
+            <el-select
+              v-model="filters.state"
+              placeholder="选择状态"
+              clearable
+              style="width: 200px"
+            >
               <el-option label="未完成" :value="0" />
               <el-option label="已完成" :value="1" />
             </el-select>
           </el-form-item>
         </el-form>
         <div class="flex gap-2 flex-shrink-0">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
         </div>
       </div>
     </el-card>
@@ -118,7 +123,11 @@
             <el-tag
               :type="row.state === 1 ? 'success' : 'info'"
               :effect="row.state === 1 ? 'light' : 'dark'"
-              :style="row.state === 1 ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;' : ''"
+              :style="
+                row.state === 1
+                  ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;'
+                  : ''
+              "
             >
               {{ row.state === 1 ? '已完成' : '未完成' }}
             </el-tag>
@@ -170,7 +179,11 @@
           <el-tag
             :type="currentRecord?.state === 1 ? 'success' : 'info'"
             :effect="currentRecord?.state === 1 ? 'light' : 'dark'"
-            :style="currentRecord?.state === 1 ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;' : ''"
+            :style="
+              currentRecord?.state === 1
+                ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;'
+                : ''
+            "
           >
             {{ currentRecord?.state === 1 ? '已完成' : '未完成' }}
           </el-tag>
@@ -298,7 +311,9 @@ const fetchTeacherOptions = async (keyword = '') => {
     const result = await getTeacherComboxList()
     let list = result.data || []
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword)
+      )
     }
     teacherOptions.value = list
   } catch (error) {
@@ -314,7 +329,9 @@ const fetchParentOptions = async (keyword = '') => {
     const result = await getParentComboxList()
     let list = result.data || []
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword)
+      )
     }
     parentOptions.value = list
   } catch (error) {

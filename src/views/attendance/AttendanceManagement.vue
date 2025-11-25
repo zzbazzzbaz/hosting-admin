@@ -54,8 +54,8 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2 flex-shrink-0">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
         </div>
       </div>
     </el-card>
@@ -287,7 +287,9 @@ const fetchTeacherOptions = async (keyword = '') => {
     const result = await getTeacherComboxList()
     let list = result.data || []
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword)
+      )
     }
     teacherOptions.value = list
   } catch (error) {
@@ -304,7 +306,9 @@ const fetchParentOptions = async (keyword = '') => {
     const result = await getParentComboxList()
     let list = result.data || []
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword)
+      )
     }
     parentOptions.value = list
   } catch (error) {

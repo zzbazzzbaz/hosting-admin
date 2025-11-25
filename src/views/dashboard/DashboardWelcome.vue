@@ -13,7 +13,7 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-700">快速操作</span>
-          <el-button type="primary" link @click="navigateTo('/users/manage')"> 管理用户</el-button>
+          <el-button type="primary" link @click="navigateTo('/users/manage')"> 管理用户 </el-button>
         </div>
       </template>
       <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -35,7 +35,7 @@
             <p class="text-xs text-slate-500">
               {{ action.description }}
             </p>
-            <el-button type="primary" text @click="navigateTo(action.path)"> 进入</el-button>
+            <el-button type="primary" text @click="navigateTo(action.path)"> 进入 </el-button>
           </div>
         </div>
       </div>

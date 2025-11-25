@@ -42,7 +42,7 @@ const adaptTeacherLevelListResponse = (response) => {
   return {
     code: response.code,
     message: response.message,
-    data: list.map((record, index) => ({
+    data: list.map((record) => ({
       teacherId: record.teacherId ?? null,
       teacherName: record.teacherName ?? null,
       campusName: record.campusName ?? null,
@@ -193,5 +193,3 @@ export const getTeacherLevelList = async (params = {}) => {
 
   return adaptTeacherLevelListResponse(response)
 }
-
-

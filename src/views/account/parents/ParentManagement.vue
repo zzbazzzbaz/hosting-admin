@@ -11,9 +11,9 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
-          <el-button size="small" type="primary" @click="handleCreate">新增家长</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
+          <el-button size="small" type="primary" @click="handleCreate"> 新增家长 </el-button>
         </div>
       </div>
     </el-card>
@@ -93,7 +93,7 @@ import {
   updateParent,
   deleteParent,
   resetParentPassword,
-} from '@/api/curd/parent'
+} from '@/api/curd/parent.js'
 
 const filters = reactive({
   parentName: '',

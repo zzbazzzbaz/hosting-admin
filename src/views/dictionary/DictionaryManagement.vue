@@ -4,10 +4,20 @@
       <div class="flex items-end justify-between gap-4">
         <el-form :model="filters" label-width="80" size="small" class="flex gap-3 flex-1">
           <el-form-item label="字典名称">
-            <el-input v-model="filters.dicName" placeholder="支持模糊查询" clearable style="width: 200px" />
+            <el-input
+              v-model="filters.dicName"
+              placeholder="支持模糊查询"
+              clearable
+              style="width: 200px"
+            />
           </el-form-item>
           <el-form-item label="字典类型">
-            <el-select v-model="filters.type" placeholder="请选择类型" clearable style="width: 200px">
+            <el-select
+              v-model="filters.type"
+              placeholder="请选择类型"
+              clearable
+              style="width: 200px"
+            >
               <el-option
                 v-for="item in dictionaryTypeOptions"
                 :key="item.value"
@@ -18,9 +28,9 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
-          <el-button size="small" type="primary" @click="handleCreate">新增字典</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
+          <el-button size="small" type="primary" @click="handleCreate"> 新增字典 </el-button>
         </div>
       </div>
     </el-card>

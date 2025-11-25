@@ -84,9 +84,9 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2 flex-shrink-0">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
-          <el-button size="small" type="primary" @click="handleCreate">新增学生</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
+          <el-button size="small" type="primary" @click="handleCreate"> 新增学生 </el-button>
         </div>
       </div>
     </el-card>
@@ -265,7 +265,7 @@
 <script setup>
 import { reactive, ref, watch, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getStudentPageList, addStudent, updateStudent, deleteStudent } from '@/api/curd/student'
+import { getStudentPageList, addStudent, updateStudent, deleteStudent } from '@/api/curd/student.js'
 import {
   getSchoolList,
   getGradeList,
@@ -273,7 +273,7 @@ import {
   getCampusList,
   getTeacherComboxList,
   getParentComboxList,
-} from '@/api/curd/dictionary'
+} from '@/api/curd/dictionary.js'
 
 const filters = reactive({
   studentName: '',
@@ -386,7 +386,9 @@ const fetchParentOptions = async (keyword = '') => {
     let list = result.data || []
     // 如果有搜索关键词，进行本地过滤
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.parentName?.includes(keyword)
+      )
     }
     parentOptions.value = list
   } catch (error) {
@@ -404,7 +406,9 @@ const fetchTeacherOptions = async (keyword = '') => {
     let list = result.data || []
     // 如果有搜索关键词，进行本地过滤
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword)
+      )
     }
     teacherOptions.value = list
   } catch (error) {

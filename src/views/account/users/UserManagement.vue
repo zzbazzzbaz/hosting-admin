@@ -21,16 +21,16 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
-          <el-button size="small" type="primary" @click="handleCreate">新增用户</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
+          <el-button size="small" type="primary" @click="handleCreate"> 新增用户 </el-button>
           <el-dropdown @command="handleExcelCommand">
-            <el-button size="small" type="success">Excel 操作</el-button>
+            <el-button size="small" type="success"> Excel 操作 </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="import">Excel 导入用户</el-dropdown-item>
-                <el-dropdown-item command="export">Excel 导出用户</el-dropdown-item>
-                <el-dropdown-item command="template">Excel 模板下载</el-dropdown-item>
+                <el-dropdown-item command="import"> Excel 导入用户 </el-dropdown-item>
+                <el-dropdown-item command="export"> Excel 导出用户 </el-dropdown-item>
+                <el-dropdown-item command="template"> Excel 模板下载 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -164,7 +164,7 @@
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { addUser, getUserPageList, updateUser, deleteUser, resetPassword } from '@/api/curd/user'
+import { addUser, getUserPageList, updateUser, deleteUser, resetPassword } from '@/api/curd/user.js'
 import { getCampusList } from '@/api/curd/dictionary.js'
 
 // ========== 筛选条件 ==========

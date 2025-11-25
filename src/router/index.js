@@ -89,37 +89,41 @@ const layoutChildren = [
   {
     path: 'users/manage',
     name: 'UserManagement',
-    component: () => import('@/views/users/UserManagement.vue'),
+    component: () => import('@/views/account/users/UserManagement.vue'),
     meta: { title: '用户管理', menuKey: 'users-manage', parentKey: 'users' },
   },
   {
     path: 'users/parents',
     name: 'ParentManagement',
-    component: () => import('@/views/parents/ParentManagement.vue'),
+    component: () => import('@/views/account/parents/ParentManagement.vue'),
     meta: { title: '家长管理', menuKey: 'users-parents', parentKey: 'users' },
   },
   {
     path: 'users/students',
     name: 'StudentManagement',
-    component: () => import('@/views/students/StudentManagement.vue'),
+    component: () => import('@/views/account/students/StudentManagement.vue'),
     meta: { title: '学生管理', menuKey: 'users-students', parentKey: 'users' },
   },
   {
     path: 'teachers/manage',
     name: 'TeacherManagement',
-    component: () => import('@/views/teachers/TeacherManagement.vue'),
+    component: () => import('@/views/account/teachers/TeacherManagement.vue'),
     meta: { title: '教师管理', menuKey: 'teachers-manage', parentKey: 'users' },
   },
   {
     path: 'teachers/assessment',
     name: 'MonthlyAssessment',
-    component: () => import('@/views/teachers/MonthlyAssessment.vue'),
-    meta: { title: '月度考核管理', menuKey: 'teachers-assessment', parentKey: 'teacher-assessment' },
+    component: () => import('@/views/teacherEvaluation/MonthlyAssessment.vue'),
+    meta: {
+      title: '月度考核管理',
+      menuKey: 'teachers-assessment',
+      parentKey: 'teacher-assessment',
+    },
   },
   {
     path: 'teachers/levels',
     name: 'TeacherLevelHistory',
-    component: () => import('@/views/teachers/TeacherLevelHistory.vue'),
+    component: () => import('@/views/teacherEvaluation/TeacherLevelHistory.vue'),
     meta: { title: '历史评级管理', menuKey: 'teachers-level', parentKey: 'teacher-assessment' },
   },
   {
@@ -242,7 +246,7 @@ router.beforeEach(async (to, from, next) => {
         authStore.clearToken()
         next('/login')
       }
-    } catch (error) {
+    } catch {
       // 验证失败，清除 token 并跳转到登录页
       authStore.clearToken()
       next('/login')

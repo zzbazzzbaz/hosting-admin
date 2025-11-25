@@ -42,8 +42,8 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
         </div>
       </div>
     </el-card>
@@ -173,8 +173,8 @@ import {
   updateTeacherLevel,
   deleteTeacherLevels,
   addTeacherLevel,
-} from '@/api/curd/teacherLevel'
-import { getTeacherRatingList, getTeacherComboxList } from '@/api/curd/dictionary'
+} from '@/api/curd/teacherLevel.js'
+import { getTeacherRatingList, getTeacherComboxList } from '@/api/curd/dictionary.js'
 
 const filters = reactive({
   yearmonth: '',
@@ -245,7 +245,9 @@ const fetchTeacherOptions = async (keyword = '') => {
     const result = await getTeacherComboxList()
     let list = result.data || []
     if (keyword) {
-      list = list.filter((item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword))
+      list = list.filter(
+        (item) => item.phone?.includes(keyword) || item.teacherName?.includes(keyword)
+      )
     }
     teacherOptions.value = list
   } catch (error) {
@@ -308,17 +310,6 @@ const handleReset = () => {
   })
   pagination.current = 1
   fetchLevelList()
-}
-
-const resetFormData = () => {
-  Object.assign(formData, {
-    id: null,
-    teacherId: null,
-    teacherName: '',
-    yearmonth: '',
-    levelId: null,
-    descption: '',
-  })
 }
 
 const handleEdit = (row) => {

@@ -25,8 +25,8 @@
           </el-form-item>
         </el-form>
         <div class="flex gap-2">
-          <el-button size="small" @click="handleReset">重置</el-button>
-          <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
+          <el-button size="small" @click="handleReset"> 重置 </el-button>
+          <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
         </div>
       </div>
     </el-card>
@@ -46,11 +46,7 @@
           </div>
         </div>
       </template>
-      <el-table
-        :data="teacherList"
-        :loading="loading"
-        stripe
-      >
+      <el-table :data="teacherList" :loading="loading" stripe>
         <el-table-column prop="teacherId" label="ID" width="80" />
         <el-table-column label="教师信息" min-width="200">
           <template #default="{ row }">
@@ -77,7 +73,12 @@
       width="520px"
       :close-on-click-modal="false"
     >
-      <el-form ref="singleFormRef" :model="singleFormData" :rules="singleFormRules" label-width="80px">
+      <el-form
+        ref="singleFormRef"
+        :model="singleFormData"
+        :rules="singleFormRules"
+        label-width="80px"
+      >
         <el-form-item label="教师" prop="teacherId">
           <el-select
             v-model="singleFormData.teacherId"
@@ -214,12 +215,8 @@ import {
   getTeacherLevelList,
   addTeacherLevel,
   addTeacherLevelBatch,
-} from '@/api/curd/teacherLevel'
-import {
-  getCampusList,
-  getTeacherRatingList,
-  getTeacherComboxList,
-} from '@/api/curd/dictionary'
+} from '@/api/curd/teacherLevel.js'
+import { getCampusList, getTeacherRatingList, getTeacherComboxList } from '@/api/curd/dictionary.js'
 
 // ========== 筛选条件 ==========
 const filters = reactive({

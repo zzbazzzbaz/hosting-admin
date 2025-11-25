@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{js,vue}\"",
-    "format": "prettier -w \"src/**/*.{js,vue,css}\""
+    "format": "prettier -w \"src/**/*.{js,vue,css}\"",
+    "checkCode": "npm run format && npm run lint"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
