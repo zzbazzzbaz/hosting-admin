@@ -21,10 +21,6 @@ function adaptDictionaryListResponse(response) {
 // ========== API 接口 ==========
 
 export const getDictionaryList = async ({ page = 1, pageSize = 10, type, dicName } = {}) => {
-  if (!type) {
-    throw new Error('type 为必传参数')
-  }
-
   const response = await request({
     url: `/admin/dictionary/pageList/${page}/${pageSize}`,
     method: 'get',

@@ -147,17 +147,12 @@ const formRules = {
 }
 
 const fetchDictionaryList = async () => {
-  if (!filters.type) {
-    ElMessage.warning('请先选择字典类型')
-    return
-  }
-
   try {
     loading.value = true
     const result = await getDictionaryList({
       page: pagination.current,
       pageSize: pagination.size,
-      type: filters.type,
+      type: filters.type || undefined,
       dicName: filters.dicName || undefined,
     })
 
@@ -180,16 +175,10 @@ watch([() => pagination.current, () => pagination.size], () => {
 })
 
 onMounted(() => {
-  if (filters.type) {
-    fetchDictionaryList()
-  }
+  fetchDictionaryList()
 })
 
 const handleQuery = () => {
-  if (!filters.type) {
-    ElMessage.warning('请选择字典类型')
-    return
-  }
   pagination.current = 1
   fetchDictionaryList()
 }
