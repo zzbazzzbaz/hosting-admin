@@ -44,14 +44,13 @@
         <div class="flex gap-2">
           <el-button size="small" @click="handleReset">重置</el-button>
           <el-button size="small" type="primary" @click="handleQuery">查询</el-button>
-          <el-button size="small" type="primary" @click="handleCreate">新增评级</el-button>
         </div>
       </div>
     </el-card>
 
     <el-card class="pastel-card">
       <template #header>
-        <span class="font-semibold text-slate-800">教师评级列表</span>
+        <span class="font-semibold text-slate-800">历史评级列表</span>
       </template>
       <el-table :data="levelList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
@@ -319,15 +318,6 @@ const resetFormData = () => {
     yearmonth: '',
     levelId: null,
     descption: '',
-  })
-}
-
-const handleCreate = () => {
-  isEdit.value = false
-  resetFormData()
-  dialogVisible.value = true
-  nextTick(() => {
-    formRef.value?.clearValidate?.()
   })
 }
 

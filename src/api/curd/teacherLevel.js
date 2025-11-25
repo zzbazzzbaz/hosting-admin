@@ -83,6 +83,25 @@ export const updateTeacherLevel = async (data) => {
 }
 
 /**
+ * 批量删除教师评级
+ */
+export const deleteTeacherLevels = async (ids) => {
+  if (!ids || (Array.isArray(ids) && !ids.length)) {
+    throw new Error('删除评级需要提供有效 id')
+  }
+
+  const idList = Array.isArray(ids) ? ids : [ids]
+  const idStr = idList.join(',')
+
+  return request({
+    url: `/admin/level/deletes/${idStr}`,
+    method: 'delete',
+  })
+}
+
+// ======= //
+
+/**
  * 新增教师评级
  */
 export const addTeacherLevel = async (data = {}) => {
@@ -110,18 +129,30 @@ export const addTeacherLevel = async (data = {}) => {
 }
 
 /**
- * 批量删除教师评级
+ * 批量新增教师评级
  */
-export const deleteTeacherLevels = async (ids) => {
-  if (!ids || (Array.isArray(ids) && !ids.length)) {
-    throw new Error('删除评级需要提供有效 id')
+export const addTeacherLevelBatch = async (data = {}) => {
+  if (!data.teacherIds || data.teacherIds.length === 0) {
+    throw new Error('批量新增评级需要选择教师')
+  }
+  if (!data.levelId) {
+    throw new Error('批量新增评级需要选择等级')
+  }
+  if (!data.yearMonth) {
+    throw new Error('批量新增评级需要选择月份')
   }
 
-  const idList = Array.isArray(ids) ? ids : [ids]
-  const idStr = idList.join(',')
-
   return request({
-    url: `/admin/level/deletes/${idStr}`,
-    method: 'delete',
+    url: '/admin/level/adds',
+    method: 'post',
+    params: {
+      yearMonth: data.yearMonth,
+      description: data.description,
+      levelId: data.levelId,
+      userId: getUserId(),
+      teacherIds: data.teacherIds,
+    },
   })
 }
+
+
