@@ -11,7 +11,7 @@
           <img :src="logoUrl" alt="hosting-admin Logo" class="h-10 w-10 object-contain" />
         </div>
         <div>
-          <p class="text-lg font-semibold text-slate-800">hosting-admin</p>
+          <p class="text-lg font-semibold text-slate-800">思倍得托管</p>
           <p class="text-xs text-slate-600 tracking-wide">Admin Portal</p>
         </div>
       </div>
@@ -35,7 +35,7 @@
 import AppHeader from '@/layouts/components/layout/AppHeader.vue'
 import AppSidebar from '@/layouts/components/layout/AppSidebar.vue'
 import { navigationMenus } from '@/router'
-import logoUrl from '@/assets/logo.png'
+import logoUrl from '@/assets/logo.svg'
 
 const menus = navigationMenus
 </script>

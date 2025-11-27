@@ -19,7 +19,7 @@
               hosting admin
             </div>
             <h1 class="mt-6 text-3xl font-semibold leading-tight text-white lg:text-4xl">
-              托管平台智能控制台
+              思倍得托管管理后台
             </h1>
             <p class="mt-4 max-w-md text-sm text-white/80">
               统一的课堂排程、考勤打卡、家校沟通与统计分析工具，为托管机构提供开箱即用的数字化能力。
@@ -67,7 +67,7 @@
               <p class="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-500">
                 Account Center
               </p>
-              <h2 class="mt-3 text-2xl font-semibold text-slate-900">欢迎登录托管后台</h2>
+              <h2 class="mt-3 text-2xl font-semibold text-slate-900">欢迎登录思倍得托管后台</h2>
               <p class="mt-2 text-sm text-slate-500">
                 输入账号信息以继续。我们会保障您的数据安全。
               </p>
@@ -154,7 +154,7 @@ import { ElMessage } from 'element-plus'
 
 import { CircleCheck, Lock, UserFilled } from '@element-plus/icons-vue'
 
-import logoUrl from '@/assets/logo.png'
+import logoUrl from '@/assets/logo.svg'
 import { login } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
