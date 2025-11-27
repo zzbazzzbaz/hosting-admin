@@ -135,12 +135,6 @@
               </template>
             </el-button>
           </el-form>
-          <div class="mt-6 text-center text-xs text-slate-400">
-            登录即表示您同意
-            <a class="font-medium text-emerald-500 hover:text-emerald-600" href="javascript:void(0)"
-              >《安全与隐私政策》</a
-            >
-          </div>
         </section>
       </div>
     </div>
