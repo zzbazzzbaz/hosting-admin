@@ -11,7 +11,7 @@
           <img :src="logoUrl" alt="hosting-admin Logo" class="h-10 w-10 object-contain" />
         </div>
         <div>
-          <p class="text-lg font-semibold text-slate-800">思倍得托管</p>
+          <p class="text-lg font-semibold text-slate-800">开来伴学管家</p>
           <p class="text-xs text-slate-600 tracking-wide">Admin Portal</p>
         </div>
       </div>
