@@ -20,9 +20,11 @@ function adaptScorePageListResponse(response) {
     const campus = student.campus || {}
     const clazz = student.clazz || {}
     const teacher = student.teacher || {}
+    const exam = record.exam || {}
 
     return {
       ...record,
+      name: record.name ?? record.examName ?? exam.name ?? null,
       studentId: record.studentId ?? student.id ?? null,
       studentName: record.studentName ?? student.studentName ?? null,
       parentId: record.parentId ?? parent.id ?? null,

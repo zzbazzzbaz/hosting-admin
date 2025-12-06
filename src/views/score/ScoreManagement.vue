@@ -136,6 +136,7 @@
         <el-table-column prop="schoolName" label="学校" min-width="140" />
         <el-table-column prop="gradeName" label="年级" min-width="100" />
         <el-table-column prop="clazzName" label="班级" min-width="100" />
+        <el-table-column prop="name" label="考试名称" min-width="140" show-overflow-tooltip />
         <el-table-column prop="yearmonth" label="年月" width="120" />
         <el-table-column prop="chineseScore" label="语文" width="80" />
         <el-table-column prop="mathScore" label="数学" width="80" />
