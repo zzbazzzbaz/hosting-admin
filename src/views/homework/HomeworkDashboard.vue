@@ -96,7 +96,14 @@
       </template>
       <el-table :data="statsList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="studentName" label="学生姓名" min-width="160" />
+        <el-table-column label="学生" min-width="180">
+          <template #default="{ row }">
+            <div class="font-medium text-slate-800">
+              {{ row.studentName || '-' }}
+            </div>
+            <div class="text-xs text-black">家长：{{ row.parentName || '-' }}</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="teacherName" label="教师" min-width="140" />
         <el-table-column prop="sumCount" label="总作业数" width="120" />
         <el-table-column prop="finishCount" label="已完成" width="120" />

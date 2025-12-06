@@ -109,16 +109,15 @@
       </template>
       <el-table :data="scoreList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column label="学生" min-width="160">
+        <el-table-column label="学生" min-width="180">
           <template #default="{ row }">
             <div class="font-medium text-slate-800">
               {{ row.studentName || '-' }}
             </div>
-            <div class="text-xs text-slate-400">
-              {{ row.schoolName || '未分配学校' }}
-            </div>
+            <div class="text-xs text-black">家长：{{ row.parentName || '-' }}</div>
           </template>
         </el-table-column>
+        <el-table-column prop="schoolName" label="学校" min-width="140" />
         <el-table-column prop="gradeName" label="年级" min-width="100" />
         <el-table-column prop="clazzName" label="班级" min-width="100" />
         <el-table-column prop="yearmonth" label="年月" width="120" />
@@ -131,7 +130,7 @@
         <el-table-column prop="historyScore" label="历史" width="80" />
         <el-table-column prop="politicsScore" label="政治" width="80" />
         <el-table-column prop="geographyScore" label="地理" width="80" />
-        <el-table-column prop="description" label="备注" min-width="150" />
+        <el-table-column prop="description" label="备注" min-width="150" show-overflow-tooltip />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" @click="handleEdit(row)"> 编辑 </el-button>
@@ -154,13 +153,8 @@
     <!-- 添加/编辑对话框 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="600px">
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
-        <el-form-item label="学生" prop="studentId">
-          <el-select
-            v-model="formData.studentId"
-            placeholder="选择学生"
-            filterable
-            :disabled="isEdit"
-          >
+        <el-form-item v-if="!isEdit" label="学生" prop="studentId">
+          <el-select v-model="formData.studentId" placeholder="选择学生" filterable>
             <el-option
               v-for="item in studentOptions"
               :key="item.id"
@@ -168,6 +162,9 @@
               :value="item.id"
             />
           </el-select>
+        </el-form-item>
+        <el-form-item v-else label="学生">
+          <div class="font-medium text-slate-800">{{ formData.studentName || '-' }}</div>
         </el-form-item>
         <el-form-item label="年月" prop="yearmonth">
           <el-date-picker
@@ -183,6 +180,8 @@
             v-model="formData.chineseScore"
             :min="0"
             :max="150"
+            :step="0.1"
+            :precision="1"
             placeholder="语文成绩"
           />
         </el-form-item>
@@ -191,6 +190,8 @@
             v-model="formData.mathScore"
             :min="0"
             :max="150"
+            :step="0.1"
+            :precision="1"
             placeholder="数学成绩"
           />
         </el-form-item>
@@ -199,6 +200,8 @@
             v-model="formData.englishScore"
             :min="0"
             :max="150"
+            :step="0.1"
+            :precision="1"
             placeholder="英语成绩"
           />
         </el-form-item>
@@ -207,6 +210,8 @@
             v-model="formData.physicsScore"
             :min="0"
             :max="100"
+            :step="0.1"
+            :precision="1"
             placeholder="物理成绩"
           />
         </el-form-item>
@@ -215,6 +220,8 @@
             v-model="formData.chemistryScore"
             :min="0"
             :max="100"
+            :step="0.1"
+            :precision="1"
             placeholder="化学成绩"
           />
         </el-form-item>
@@ -223,6 +230,8 @@
             v-model="formData.organismScore"
             :min="0"
             :max="100"
+            :step="0.1"
+            :precision="1"
             placeholder="生物成绩"
           />
         </el-form-item>
@@ -231,6 +240,8 @@
             v-model="formData.historyScore"
             :min="0"
             :max="100"
+            :step="0.1"
+            :precision="1"
             placeholder="历史成绩"
           />
         </el-form-item>
@@ -239,6 +250,8 @@
             v-model="formData.politicsScore"
             :min="0"
             :max="100"
+            :step="0.1"
+            :precision="1"
             placeholder="政治成绩"
           />
         </el-form-item>
@@ -247,6 +260,8 @@
             v-model="formData.geographyScore"
             :min="0"
             :max="100"
+            :step="0.1"
+            :precision="1"
             placeholder="地理成绩"
           />
         </el-form-item>
@@ -322,6 +337,7 @@ const formRef = ref(null)
 const formData = reactive({
   id: null,
   studentId: null,
+  studentName: '',
   yearmonth: '',
   chineseScore: null,
   mathScore: null,
@@ -486,6 +502,7 @@ const handleAdd = () => {
   Object.assign(formData, {
     id: null,
     studentId: null,
+    studentName: '',
     yearmonth: '',
     chineseScore: null,
     mathScore: null,
@@ -507,6 +524,7 @@ const handleEdit = (row) => {
   Object.assign(formData, {
     id: row.id,
     studentId: row.studentId,
+    studentName: row.studentName,
     yearmonth: row.yearmonth,
     chineseScore: row.chineseScore,
     mathScore: row.mathScore,

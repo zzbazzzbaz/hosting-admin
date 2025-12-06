@@ -23,7 +23,7 @@ request.interceptors.request.use(
 
     // 如果存在 token，则在请求头中添加 Authorization
     if (authStore.token) {
-      config.headers.Authorization = `Bearer ${authStore.token}`
+      config.headers.Authorization = authStore.token
     }
 
     return config

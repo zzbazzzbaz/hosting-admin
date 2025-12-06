@@ -34,7 +34,7 @@ export const navigationMenus = [
   },
   {
     key: 'teacher-assessment',
-    label: '教师月度考核',
+    label: '考核',
     icon: User,
     children: [
       { key: 'teachers-assessment', label: '月度考核管理', path: '/teachers/assessment' },

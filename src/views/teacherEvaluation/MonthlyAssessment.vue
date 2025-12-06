@@ -218,10 +218,18 @@ import {
 } from '@/api/curd/teacherLevel.js'
 import { getCampusList, getTeacherRatingList, getTeacherComboxList } from '@/api/curd/dictionary.js'
 
+// ========== 工具函数 ==========
+const getCurrentYearMonth = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
+
 // ========== 筛选条件 ==========
 const filters = reactive({
   campusId: null,
-  yearMonth: '',
+  yearMonth: getCurrentYearMonth(),
 })
 
 // ========== 教师列表 ==========
@@ -239,7 +247,7 @@ const singleDialogVisible = ref(false)
 const singleFormRef = ref(null)
 const singleFormData = reactive({
   teacherId: null,
-  yearmonth: '',
+  yearmonth: getCurrentYearMonth(),
   levelId: null,
   descption: '',
 })
@@ -255,7 +263,7 @@ const batchDialogVisible = ref(false)
 const batchFormRef = ref(null)
 const batchFormData = reactive({
   teacherIds: [],
-  yearMonth: '',
+  yearMonth: getCurrentYearMonth(),
   levelId: null,
   description: '',
 })
@@ -372,7 +380,7 @@ const handleQuery = () => {
 const handleReset = () => {
   Object.assign(filters, {
     campusId: null,
-    yearMonth: '',
+    yearMonth: getCurrentYearMonth(),
   })
   fetchTeacherLevelList()
 }
@@ -384,7 +392,7 @@ const handleReset = () => {
 const handleOpenSingleAdd = () => {
   Object.assign(singleFormData, {
     teacherId: null,
-    yearmonth: '',
+    yearmonth: getCurrentYearMonth(),
     levelId: null,
     descption: '',
   })
@@ -427,7 +435,7 @@ const handleSingleSubmit = () => {
 const handleOpenBatchAdd = () => {
   Object.assign(batchFormData, {
     teacherIds: [],
-    yearMonth: '',
+    yearMonth: getCurrentYearMonth(),
     levelId: null,
     description: '',
   })
@@ -465,12 +473,6 @@ const handleBatchSubmit = () => {
 
 // ========== 组件挂载 ==========
 onMounted(() => {
-  // 设置默认查询月份为当月
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  filters.yearMonth = `${year}-${month}`
-
   fetchCampusOptions()
   fetchLevelOptions()
   fetchTeacherOptions()
