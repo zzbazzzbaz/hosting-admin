@@ -115,6 +115,7 @@ export const getScorePageList = async (params = {}) => {
  * 添加成绩
  * @param {Object} data - 成绩数据
  * @param {number} data.studentId - 学生 ID
+ * @param {string} data.name - 考试名称
  * @param {number} [data.chineseScore] - 语文成绩
  * @param {number} [data.mathScore] - 数学成绩
  * @param {number} [data.englishScore] - 英语成绩
@@ -133,6 +134,7 @@ export const addScore = (data) => {
     method: 'post',
     params: {
       'student.id': data.studentId,
+      name: data.name,
       chineseScore: data.chineseScore,
       mathScore: data.mathScore,
       englishScore: data.englishScore,
@@ -152,12 +154,14 @@ export const addScore = (data) => {
  * 更新成绩
  * @param {number} id - 成绩记录 ID
  * @param {Object} data - 成绩数据
+ * @param {string} [data.name] - 考试名称
  */
 export const updateScore = (id, data) => {
   return request({
     url: `/admin/score/update/${id}`,
     method: 'put',
     params: {
+      name: data.name,
       chineseScore: data.chineseScore,
       mathScore: data.mathScore,
       englishScore: data.englishScore,

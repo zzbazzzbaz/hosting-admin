@@ -183,6 +183,9 @@
         <el-form-item v-else label="学生">
           <div class="font-medium text-slate-800">{{ formData.studentName || '-' }}</div>
         </el-form-item>
+        <el-form-item label="考试名称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入考试名称" />
+        </el-form-item>
         <el-form-item label="年月" prop="yearmonth">
           <el-date-picker
             v-model="formData.yearmonth"
@@ -359,6 +362,7 @@ const formData = reactive({
   id: null,
   studentId: null,
   studentName: '',
+  name: '',
   yearmonth: '',
   chineseScore: null,
   mathScore: null,
@@ -374,6 +378,7 @@ const formData = reactive({
 
 const formRules = {
   studentId: [{ required: true, message: '请选择学生', trigger: 'change' }],
+  name: [{ required: true, message: '请输入考试名称', trigger: 'blur' }],
   yearmonth: [{ required: true, message: '请选择年月', trigger: 'change' }],
 }
 
@@ -571,6 +576,7 @@ const handleAdd = () => {
     id: null,
     studentId: null,
     studentName: '',
+    name: '',
     yearmonth: '',
     chineseScore: null,
     mathScore: null,
@@ -593,6 +599,7 @@ const handleEdit = (row) => {
     id: row.id,
     studentId: row.studentId,
     studentName: row.studentName,
+    name: row.name || '',
     yearmonth: row.yearmonth,
     chineseScore: row.chineseScore,
     mathScore: row.mathScore,
