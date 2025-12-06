@@ -104,7 +104,23 @@
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-semibold text-slate-800">成绩列表</span>
-          <el-button type="primary" @click="handleAdd"> 添加成绩 </el-button>
+          <div class="flex items-center gap-2">
+            <el-button size="small" :loading="templateLoading" @click="handleDownloadTemplate">
+              下载模板
+            </el-button>
+            <el-upload
+              ref="scoreUploadRef"
+              :show-file-list="false"
+              :auto-upload="false"
+              accept=".xls,.xlsx"
+              :on-change="handleScoreImport"
+            >
+              <el-button size="small" type="primary" plain :loading="importLoading">
+                导入成绩
+              </el-button>
+            </el-upload>
+            <el-button size="small" type="primary" @click="handleAdd"> 添加成绩 </el-button>
+          </div>
         </div>
       </template>
       <el-table :data="scoreList" :loading="loading" stripe>
@@ -295,6 +311,7 @@ import {
   getParentComboxList,
   getStudentComboxList,
 } from '@/api/curd/dictionary'
+import { downloadTypeTemplate, importScoreData } from '@/api/common/file'
 
 // 筛选条件
 const filters = reactive({
@@ -329,6 +346,9 @@ const parentLoading = ref(false)
 const teacherOptions = ref([])
 const teacherLoading = ref(false)
 const studentOptions = ref([])
+const templateLoading = ref(false)
+const importLoading = ref(false)
+const scoreUploadRef = ref(null)
 
 // 对话框
 const dialogVisible = ref(false)
@@ -494,6 +514,53 @@ const handleReset = () => {
   })
   pagination.current = 1
   fetchScoreList()
+}
+
+// 模板下载
+const handleDownloadTemplate = async () => {
+  try {
+    templateLoading.value = true
+    const blob = await downloadTypeTemplate(2)
+    if (blob?.type?.includes('application/json')) {
+      const text = await blob.text()
+      const json = JSON.parse(text || '{}')
+      ElMessage.error(json.message || '模板下载失败')
+      return
+    }
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '成绩导入模板.xlsx'
+    link.click()
+    URL.revokeObjectURL(url)
+    ElMessage.success('模板已开始下载')
+  } catch (error) {
+    console.error('下载成绩模板失败:', error)
+    ElMessage.error('模板下载失败，请稍后重试')
+  } finally {
+    templateLoading.value = false
+  }
+}
+
+// 导入成绩
+const handleScoreImport = async (uploadFile) => {
+  if (!uploadFile?.raw) return
+  try {
+    importLoading.value = true
+    const result = await importScoreData(uploadFile.raw)
+    if (result.code === 200) {
+      ElMessage.success(result.message || '导入成功')
+      await fetchScoreList()
+    } else {
+      ElMessage.error(result.message || '导入失败')
+    }
+  } catch (error) {
+    console.error('导入成绩失败:', error)
+    ElMessage.error('导入失败，请稍后重试')
+  } finally {
+    importLoading.value = false
+    scoreUploadRef.value?.clearFiles()
+  }
 }
 
 // 添加

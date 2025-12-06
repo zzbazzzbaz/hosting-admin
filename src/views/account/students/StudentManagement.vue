@@ -86,6 +86,20 @@
         <div class="flex gap-2 flex-shrink-0">
           <el-button size="small" @click="handleReset"> 重置 </el-button>
           <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
+          <el-button size="small" :loading="templateLoading" @click="handleDownloadTemplate">
+            下载模板
+          </el-button>
+          <el-upload
+            ref="studentUploadRef"
+            :show-file-list="false"
+            :auto-upload="false"
+            accept=".xls,.xlsx"
+            :on-change="handleStudentImport"
+          >
+            <el-button size="small" type="primary" plain :loading="importLoading">
+              导入学生
+            </el-button>
+          </el-upload>
           <el-button size="small" type="primary" @click="handleCreate"> 新增学生 </el-button>
         </div>
       </div>
@@ -274,6 +288,7 @@ import {
   getTeacherComboxList,
   getParentComboxList,
 } from '@/api/curd/dictionary.js'
+import { downloadTypeTemplate, importStudentData } from '@/api/common/file'
 
 const filters = reactive({
   studentName: '',
@@ -302,6 +317,9 @@ const parentOptions = ref([])
 const parentLoading = ref(false)
 const teacherOptions = ref([])
 const teacherLoading = ref(false)
+const templateLoading = ref(false)
+const importLoading = ref(false)
+const studentUploadRef = ref(null)
 
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
@@ -514,6 +532,51 @@ const handleReset = () => {
 const handleCreate = () => {
   isEdit.value = false
   dialogVisible.value = true
+}
+
+const handleDownloadTemplate = async () => {
+  try {
+    templateLoading.value = true
+    const blob = await downloadTypeTemplate(1)
+    if (blob?.type?.includes('application/json')) {
+      const text = await blob.text()
+      const json = JSON.parse(text || '{}')
+      ElMessage.error(json.message || '模板下载失败')
+      return
+    }
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '学生导入模板.xlsx'
+    link.click()
+    URL.revokeObjectURL(url)
+    ElMessage.success('模板已开始下载')
+  } catch (error) {
+    console.error('下载学生模板失败:', error)
+    ElMessage.error('模板下载失败，请稍后重试')
+  } finally {
+    templateLoading.value = false
+  }
+}
+
+const handleStudentImport = async (uploadFile) => {
+  if (!uploadFile?.raw) return
+  try {
+    importLoading.value = true
+    const result = await importStudentData(uploadFile.raw)
+    if (result.code === 200) {
+      ElMessage.success(result.message || '导入成功')
+      await fetchStudentList()
+    } else {
+      ElMessage.error(result.message || '导入失败')
+    }
+  } catch (error) {
+    console.error('导入学生信息失败:', error)
+    ElMessage.error('导入失败，请稍后重试')
+  } finally {
+    importLoading.value = false
+    studentUploadRef.value?.clearFiles()
+  }
 }
 
 const handleDialogClose = () => {
