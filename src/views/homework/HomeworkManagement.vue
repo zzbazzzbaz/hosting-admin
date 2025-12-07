@@ -118,19 +118,11 @@
       <el-table :data="homeworkList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="studentName" label="学生姓名" min-width="160" />
-        <el-table-column prop="state" label="完成状态" width="120">
+        <el-table-column label="家长姓名" min-width="160">
           <template #default="{ row }">
-            <el-tag
-              :type="row.state === 1 ? 'success' : 'info'"
-              :effect="row.state === 1 ? 'light' : 'dark'"
-              :style="
-                row.state === 1
-                  ? 'background-color: #d4edda; color: #155724; border-color: #c3e6cb;'
-                  : ''
-              "
-            >
-              {{ row.state === 1 ? '已完成' : '未完成' }}
-            </el-tag>
+            <span class="font-medium text-slate-800">
+              {{ row.parentName || row.student?.parent?.parentName || '-' }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="布置时间" min-width="160" />

@@ -64,7 +64,7 @@ function adaptPageListResponse(response) {
  */
 export const addUser = async (data) => {
   return await request({
-    url: '/admin/user/add',
+    url: '/api/admin/user/add',
     method: 'post',
     params: {
       phone: data.phone,
@@ -136,7 +136,7 @@ export const getUserPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/user/pageList',
+    url: '/api/admin/user/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -173,7 +173,7 @@ export const getUserPageList = async (params = {}) => {
  */
 export const updateUser = async (data) => {
   return await request({
-    url: `/admin/user/update/${data.id}`,
+    url: `/api/admin/user/update/${data.id}`,
     method: 'put',
     params: {
       userName: data.userName,
@@ -214,7 +214,7 @@ export const deleteUser = async (ids) => {
   }
 
   return await request({
-    url: `/admin/user/deletes/${idsStr}`, // 修改为 deletes 匹配后端路径
+    url: `/api/admin/user/deletes/${idsStr}`, // 修改为 deletes 匹配后端路径
     method: 'delete',
   })
 }
@@ -238,7 +238,7 @@ export const deleteUser = async (ids) => {
  */
 export const resetPassword = async (userId) => {
   return await request({
-    url: '/admin/user/resetPassword',
+    url: '/api/admin/user/resetPassword',
     method: 'post',
     params: {
       userId: userId,

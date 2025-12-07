@@ -103,7 +103,7 @@ export const getScorePageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/score/pageList',
+    url: '/api/admin/score/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -130,7 +130,7 @@ export const getScorePageList = async (params = {}) => {
  */
 export const addScore = (data) => {
   return request({
-    url: '/admin/score/add',
+    url: '/api/admin/score/add',
     method: 'post',
     params: {
       'student.id': data.studentId,
@@ -158,7 +158,7 @@ export const addScore = (data) => {
  */
 export const updateScore = (id, data) => {
   return request({
-    url: `/admin/score/update/${id}`,
+    url: `/api/admin/score/update/${id}`,
     method: 'put',
     params: {
       name: data.name,
@@ -183,7 +183,7 @@ export const updateScore = (id, data) => {
  */
 export const deleteScore = (ids) => {
   return request({
-    url: `/admin/score/deletes/${ids}`,
+    url: `/api/admin/score/deletes/${ids}`,
     method: 'delete',
   })
 }

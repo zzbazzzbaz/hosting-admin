@@ -40,7 +40,7 @@ export const getNoticePageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/notice/pageList',
+    url: '/api/admin/notice/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -50,7 +50,7 @@ export const getNoticePageList = async (params = {}) => {
 
 export const addNotice = async (data) => {
   return request({
-    url: '/admin/notice/add',
+    url: '/api/admin/notice/add',
     method: 'post',
     params: {
       title: data.title,
@@ -62,7 +62,7 @@ export const addNotice = async (data) => {
 
 export const updateNotice = async (data) => {
   return request({
-    url: `/admin/notice/update/${data.id}`,
+    url: `/api/admin/notice/update/${data.id}`,
     method: 'put',
     params: {
       title: data.title,
@@ -76,7 +76,7 @@ export const deleteNotice = async (ids) => {
   const idsStr = Array.isArray(ids) ? ids.join(',') : String(ids)
 
   return request({
-    url: `/admin/notice/delete/${idsStr}`,
+    url: `/api/admin/notice/delete/${idsStr}`,
     method: 'delete',
   })
 }

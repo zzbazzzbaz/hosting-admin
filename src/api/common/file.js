@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export const downloadTypeTemplate = (type) => {
   return request({
-    url: '/common/file/downTypeTemplate',
+    url: '/api/common/file/downTypeTemplate',
     method: 'get',
     params: { type },
     responseType: 'blob',
@@ -23,7 +23,7 @@ export const importStudentData = (file) => {
   formData.append('file', file)
 
   return request({
-    url: '/common/file/importStudentData',
+    url: '/api/common/file/importStudentData',
     method: 'post',
     data: formData,
     headers: {
@@ -41,7 +41,7 @@ export const importScoreData = (file) => {
   formData.append('file', file)
 
   return request({
-    url: '/common/file/importScoreData',
+    url: '/api/common/file/importScoreData',
     method: 'post',
     data: formData,
     headers: {

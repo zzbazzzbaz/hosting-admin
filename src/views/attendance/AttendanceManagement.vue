@@ -68,6 +68,13 @@
             <span class="font-medium text-slate-800">{{ row.studentName || '-' }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="家长姓名" min-width="160">
+          <template #default="{ row }">
+            <span class="font-medium text-slate-800">
+              {{ row.parentName || row.student?.parent?.parentName || '-' }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="签到教师" min-width="160">
           <template #default="{ row }">
             <span>{{ row.checkinTeacherName || '-' }}</span>
@@ -78,7 +85,7 @@
             {{ formatDateTime(row.createTime) }}
           </template>
         </el-table-column>
-        <el-table-column label="签到图片" min-width="240">
+        <el-table-column label="签到照片" min-width="240">
           <template #default="{ row }">
             <div v-if="row.picList?.length" class="flex flex-wrap gap-2">
               <el-image

@@ -180,7 +180,7 @@ export const getSigninPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/signin/pageList',
+    url: '/api/admin/signin/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -230,7 +230,7 @@ export const getStudentSigninStatsPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/signin/pageStudentList',
+    url: '/api/admin/signin/pageStudentList',
     method: 'get',
     params: requestParams,
   })

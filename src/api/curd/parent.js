@@ -36,7 +36,7 @@ export const getParentPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/parent/pageList',
+    url: '/api/admin/parent/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -46,7 +46,7 @@ export const getParentPageList = async (params = {}) => {
 
 export const addParent = async (data) => {
   return request({
-    url: '/admin/parent/add',
+    url: '/api/admin/parent/add',
     method: 'post',
     params: {
       parentName: data.parentName,
@@ -57,7 +57,7 @@ export const addParent = async (data) => {
 
 export const updateParent = async (data) => {
   return request({
-    url: `/admin/parent/update/${data.id}`,
+    url: `/api/admin/parent/update/${data.id}`,
     method: 'put',
     params: {
       parentName: data.parentName,
@@ -75,14 +75,14 @@ export const deleteParent = async (ids) => {
   }
 
   return request({
-    url: `/admin/parent/deletes/${idsStr}`,
+    url: `/api/admin/parent/deletes/${idsStr}`,
     method: 'delete',
   })
 }
 
 export const resetParentPassword = async (parentId) => {
   return request({
-    url: '/admin/parent/resetPassword',
+    url: '/api/admin/parent/resetPassword',
     method: 'post',
     params: {
       parentId,

@@ -69,7 +69,7 @@ export const getTeacherPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/teacher/pageList',
+    url: '/api/admin/teacher/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -82,7 +82,7 @@ export const getTeacherPageList = async (params = {}) => {
  */
 export const addTeacher = async (data) => {
   return request({
-    url: '/admin/teacher/add',
+    url: '/api/admin/teacher/add',
     method: 'post',
     params: {
       teacherName: data.teacherName,
@@ -96,7 +96,7 @@ export const addTeacher = async (data) => {
  */
 export const updateTeacher = async (data) => {
   return request({
-    url: `/admin/teacher/update/${data.id}`,
+    url: `/api/admin/teacher/update/${data.id}`,
     method: 'put',
     params: {
       teacherName: data.teacherName,
@@ -118,7 +118,7 @@ export const deleteTeacher = async (ids) => {
   }
 
   return request({
-    url: `/admin/teacher/deletes/${idsStr}`,
+    url: `/api/admin/teacher/deletes/${idsStr}`,
     method: 'delete',
   })
 }
@@ -128,7 +128,7 @@ export const deleteTeacher = async (ids) => {
  */
 export const resetTeacherPassword = async (teacherId) => {
   return request({
-    url: '/admin/teacher/resetPassword',
+    url: '/api/admin/teacher/resetPassword',
     method: 'post',
     params: {
       teacherId,

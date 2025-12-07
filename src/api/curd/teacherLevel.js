@@ -77,7 +77,7 @@ export const getTeacherLevelPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/level/pageList',
+    url: '/api/admin/level/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -94,7 +94,7 @@ export const updateTeacherLevel = async (data) => {
   }
 
   return request({
-    url: `/admin/level/update/${data.id}`,
+    url: `/api/admin/level/update/${data.id}`,
     method: 'put',
     params: {
       yearmonth: data.yearmonth,
@@ -117,7 +117,7 @@ export const deleteTeacherLevels = async (ids) => {
   const idStr = idList.join(',')
 
   return request({
-    url: `/admin/level/deletes/${idStr}`,
+    url: `/api/admin/level/deletes/${idStr}`,
     method: 'delete',
   })
 }
@@ -139,7 +139,7 @@ export const addTeacherLevel = async (data = {}) => {
   }
 
   return request({
-    url: '/admin/level/add',
+    url: '/api/admin/level/add',
     method: 'post',
     params: {
       yearmonth: data.yearmonth,
@@ -166,7 +166,7 @@ export const addTeacherLevelBatch = async (data = {}) => {
   }
 
   return request({
-    url: '/admin/level/adds',
+    url: '/api/admin/level/adds',
     method: 'post',
     params: {
       yearMonth: data.yearMonth,
@@ -183,7 +183,7 @@ export const addTeacherLevelBatch = async (data = {}) => {
  */
 export const getTeacherLevelList = async (params = {}) => {
   const response = await request({
-    url: '/admin/level/teacherList',
+    url: '/api/admin/level/teacherList',
     method: 'get',
     params: {
       campusId: params.campusId,
