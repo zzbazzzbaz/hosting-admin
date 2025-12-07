@@ -89,7 +89,7 @@ export const getStudentPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/student/pageList',
+    url: '/api/admin/student/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -99,7 +99,7 @@ export const getStudentPageList = async (params = {}) => {
 
 export const addStudent = async (data) => {
   return request({
-    url: '/admin/student/add',
+    url: '/api/admin/student/add',
     method: 'post',
     params: {
       studentName: data.studentName,
@@ -118,7 +118,7 @@ export const addStudent = async (data) => {
 
 export const updateStudent = async (data) => {
   return request({
-    url: `/admin/student/update/${data.id}`,
+    url: `/api/admin/student/update/${data.id}`,
     method: 'put',
     params: {
       studentName: data.studentName,
@@ -144,7 +144,7 @@ export const deleteStudent = async (ids) => {
   }
 
   return request({
-    url: `/admin/student/deletes/${idsStr}`,
+    url: `/api/admin/student/deletes/${idsStr}`,
     method: 'delete',
   })
 }

@@ -22,7 +22,7 @@ function adaptDictionaryListResponse(response) {
 
 export const getDictionaryList = async ({ page = 1, pageSize = 10, type, dicName } = {}) => {
   const response = await request({
-    url: `/admin/dictionary/pageList/${page}/${pageSize}`,
+    url: `/api/admin/dictionary/pageList/${page}/${pageSize}`,
     method: 'get',
     params: {
       type,
@@ -35,7 +35,7 @@ export const getDictionaryList = async ({ page = 1, pageSize = 10, type, dicName
 
 export const addDictionary = async (data) => {
   return request({
-    url: '/admin/dictionary/add',
+    url: '/api/admin/dictionary/add',
     method: 'post',
     params: {
       dicName: data.dicName,
@@ -46,7 +46,7 @@ export const addDictionary = async (data) => {
 
 export const updateDictionary = async (data) => {
   return request({
-    url: `/admin/dictionary/update/${data.id}`,
+    url: `/api/admin/dictionary/update/${data.id}`,
     method: 'put',
     params: {
       dicName: data.dicName,
@@ -64,7 +64,7 @@ export const deleteDictionary = async (ids) => {
   }
 
   return request({
-    url: `/admin/dictionary/delete/${idsStr}`,
+    url: `/api/admin/dictionary/delete/${idsStr}`,
     method: 'delete',
   })
 }
@@ -96,7 +96,7 @@ export const getStudentStatusList = async (params = {}) => fetchDictionaryByType
  */
 export const getTeacherComboxList = () => {
   return request({
-    url: '/common/teacher/getComboxList',
+    url: '/api/common/teacher/getComboxList',
     method: 'get',
   })
 }
@@ -107,7 +107,7 @@ export const getTeacherComboxList = () => {
  */
 export const getParentComboxList = () => {
   return request({
-    url: '/common/parent/getComboxList',
+    url: '/api/common/parent/getComboxList',
     method: 'get',
   })
 }
@@ -118,7 +118,7 @@ export const getParentComboxList = () => {
  */
 export const getStudentComboxList = () => {
   return request({
-    url: '/common/student/getComboxList',
+    url: '/api/common/student/getComboxList',
     method: 'get',
   })
 }

@@ -125,7 +125,7 @@ export const getHomeworkPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/homework/pageList',
+    url: '/api/admin/homework/pageList',
     method: 'get',
     params: requestParams,
   })
@@ -195,7 +195,7 @@ export const getHomeworkStudentStatsPageList = async (params = {}) => {
   }
 
   const response = await request({
-    url: '/admin/homework/pageStudentList',
+    url: '/api/admin/homework/pageStudentList',
     method: 'get',
     params: requestParams,
   })
