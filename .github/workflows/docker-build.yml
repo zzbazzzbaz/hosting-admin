@@ -4,7 +4,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - test
+#      - test
       - prod
   # 允许手动触发
   workflow_dispatch:
