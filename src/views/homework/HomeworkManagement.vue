@@ -103,6 +103,15 @@
               <el-option label="已完成" :value="1" />
             </el-select>
           </el-form-item>
+          <el-form-item label="布置时间">
+            <el-date-picker
+              v-model="filters.createDate"
+              type="date"
+              placeholder="选择日期"
+              value-format="YYYY-MM-DD"
+              clearable
+            />
+          </el-form-item>
         </el-form>
         <div class="flex gap-2 flex-shrink-0">
           <el-button size="small" @click="handleReset"> 重置 </el-button>
@@ -117,12 +126,26 @@
       </template>
       <el-table :data="homeworkList" :loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="studentName" label="学生姓名" min-width="160" />
-        <el-table-column label="家长姓名" min-width="160">
+        <el-table-column prop="studentName" label="学生姓名" min-width="100" />
+        <el-table-column label="家长姓名" min-width="100">
           <template #default="{ row }">
             <span class="font-medium text-slate-800">
               {{ row.parentName || row.student?.parent?.parentName || '-' }}
             </span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="schoolName" label="学校" min-width="100" />
+        <el-table-column prop="gradeName" label="年级" min-width="80" />
+        <el-table-column prop="teacherName" label="教师" min-width="100" />
+        <el-table-column label="作业状态" min-width="100">
+          <template #default="{ row }">
+            <el-tag
+              :type="row.state === 1 ? 'success' : 'info'"
+              size="small"
+              :style="row.state === 1 ? 'background-color: #67c23a; color: #fff; border-color: #67c23a;' : ''"
+            >
+              {{ row.state === 1 ? '已完成' : '未完成' }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="布置时间" min-width="160" />
@@ -254,6 +277,7 @@ const filters = reactive({
   campusId: null,
   clazzId: null,
   state: '',
+  createDate: null,
 })
 
 const pagination = reactive({
@@ -361,11 +385,22 @@ const fetchHomeworkList = async () => {
       pageSize: pagination.size,
       ...filters,
       state: filters.state === '' ? undefined : filters.state,
+      createDate: undefined,
     })
 
     if (result.code === 200 || result.code === 0) {
-      homeworkList.value = result.data.list || []
-      totalRecords.value = result.data.total || 0
+      let list = result.data.list || []
+      
+      // 前端按布置日期过滤
+      if (filters.createDate) {
+        list = list.filter((item) => {
+          if (!item.createTime) return false
+          return item.createTime.startsWith(filters.createDate)
+        })
+      }
+      
+      homeworkList.value = list
+      totalRecords.value = filters.createDate ? list.length : (result.data.total || 0)
 
       homeworkList.value.forEach((item) => {
         if (item.teacherId) {
@@ -418,6 +453,7 @@ const handleReset = () => {
     campusId: null,
     clazzId: null,
     state: '',
+    createDate: null,
   })
   pagination.current = 1
   fetchHomeworkList()
