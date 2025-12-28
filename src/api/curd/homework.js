@@ -123,6 +123,9 @@ export const getHomeworkPageList = async (params = {}) => {
   if (params.state !== undefined && params.state !== null && params.state !== '') {
     requestParams.state = params.state
   }
+  if (params.homeworkTime) {
+    requestParams.homeworkTime = params.homeworkTime
+  }
 
   const response = await request({
     url: '/api/admin/homework/pageList',

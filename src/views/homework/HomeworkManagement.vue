@@ -385,22 +385,13 @@ const fetchHomeworkList = async () => {
       pageSize: pagination.size,
       ...filters,
       state: filters.state === '' ? undefined : filters.state,
+      homeworkTime: filters.createDate || undefined,
       createDate: undefined,
     })
 
     if (result.code === 200 || result.code === 0) {
-      let list = result.data.list || []
-      
-      // 前端按布置日期过滤
-      if (filters.createDate) {
-        list = list.filter((item) => {
-          if (!item.createTime) return false
-          return item.createTime.startsWith(filters.createDate)
-        })
-      }
-      
-      homeworkList.value = list
-      totalRecords.value = filters.createDate ? list.length : (result.data.total || 0)
+      homeworkList.value = result.data.list || []
+      totalRecords.value = result.data.total || 0
 
       homeworkList.value.forEach((item) => {
         if (item.teacherId) {
