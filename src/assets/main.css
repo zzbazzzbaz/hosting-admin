@@ -176,4 +176,8 @@
   .el-tag {
     @apply rounded-full border-none bg-pink-100/80 text-pink-500 font-medium;
   }
+
+    /*光标移动到GO TO时改变样式*/
+  .pastel-card .el-pagination__jump .el-pagination__goto,
+  .pastel-card .el-pagination__jump span:first-of-type { cursor: pointer !important; }
 }
