@@ -24,16 +24,6 @@
           <el-button size="small" @click="handleReset"> 重置 </el-button>
           <el-button size="small" type="primary" @click="handleQuery"> 查询 </el-button>
           <el-button size="small" type="primary" @click="handleCreate"> 新增用户 </el-button>
-          <el-dropdown @command="handleExcelCommand">
-            <el-button size="small" type="success"> Excel 操作 </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="import"> Excel 导入用户 </el-dropdown-item>
-                <el-dropdown-item command="export"> Excel 导出用户 </el-dropdown-item>
-                <el-dropdown-item command="template"> Excel 模板下载 </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
         </div>
       </div>
     </el-card>
@@ -494,14 +484,5 @@ const handleResetPassword = async (row) => {
       ElMessage.error('重置密码失败，请稍后重试')
     }
   }
-}
-
-const handleExcelCommand = (command) => {
-  const actionMap = {
-    import: '执行 Excel 导入用户',
-    export: '执行 Excel 导出用户',
-    template: '下载 Excel 模板',
-  }
-  ElMessage.info(actionMap[command])
 }
 </script>
