@@ -337,11 +337,24 @@ const formData = reactive({
   campusId: null,
   teacherId: null,
 })
+//校验:修改时已用课时不能大于总课时
+const validateUsedHours = (rule,value,callback) => {
+    const sum = Number(formData.sumHours ?? 0)
+    const used = Number(value ?? 0)
+    if(used > sum) {
+        callback(new Error('已用课时不能大于总课时'))
+    } else {
+        callback()
+    }
+}
 
 const formRules = {
   studentName: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
   sumHours: [{ required: true, message: '请输入总课时', trigger: 'blur' }],
-  usedHours: [{ required: true, message: '请输入已用课时', trigger: 'blur' }],
+  usedHours: [
+    { required: true, message: '请输入已用课时', trigger: 'blur' },
+    { validator: validateUsedHours, trigger: ['change', 'blur'] },
+  ],
   parentId: [{ required: true, message: '请选择家长', trigger: 'change' }],
   schoolId: [{ required: true, message: '请选择学校', trigger: 'change' }],
   gradeId: [{ required: true, message: '请选择年级', trigger: 'change' }],
